@@ -15,7 +15,7 @@ public class MessageDTOTest
     private ObjectMapper mapper;
 
     @Rule
-    public ExpectedException thrown= ExpectedException.none();
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before public void setUp()
     {
