@@ -1,6 +1,7 @@
 package com.github.xavierlepretre.tmdb.model;
 
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -11,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public class StatusCode
 {
-    @IntRange(from = 1)
-    private final int code;
+    @IntRange(from = 1) @NonNull
+    private final Integer code;
 
     @JsonCreator
     public StatusCode(@IntRange(from = 1) int code)
@@ -24,5 +25,16 @@ public class StatusCode
     public int getCode()
     {
         return code;
+    }
+
+    @Override public int hashCode()
+    {
+        return code.hashCode();
+    }
+
+    @Override public boolean equals(Object obj)
+    {
+        return obj instanceof StatusCode
+                && ((StatusCode) obj).code.equals(code);
     }
 }
