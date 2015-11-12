@@ -30,7 +30,11 @@ project.ext {
 
     SUPPORT = "23.1.0"
     JACKSON = "2.6.3"
+    OKHTTP = "2.5.0"
+    RETROFIT = "2.0.0-beta2"
 
     JUNIT = "4.12"
     FEST_ASSERT = "2.0M10"
+    ESPRESSO = "2.2.1"
+    RUNNER = "0.4.1"
 }
