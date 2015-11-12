@@ -1,0 +1,13 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+    maven { url "$SDK_PATH/extras/android/m2repository" }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile "com.fasterxml.jackson.core:jackson-annotations:$JACKSON"
+    compile "com.android.support:support-annotations:$SUPPORT"
+}
