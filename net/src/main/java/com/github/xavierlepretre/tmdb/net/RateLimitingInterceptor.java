@@ -1,5 +1,6 @@
 package com.github.xavierlepretre.tmdb.net;
 
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -22,6 +23,8 @@ import java.util.logging.Logger;
  */
 public class RateLimitingInterceptor implements Interceptor
 {
+    private static final int MAX_RETRIES = 3;
+
     @Nullable private final Logger logger;
     @NonNull private final AtomicInteger remainingRequests;
     // Contains the date in seconds.
@@ -43,6 +46,13 @@ public class RateLimitingInterceptor implements Interceptor
     }
 
     @Override public Response intercept(@NonNull Chain chain) throws IOException
+    {
+        return intercept(chain, MAX_RETRIES);
+    }
+
+    protected Response intercept(
+            @NonNull Chain chain,
+            @IntRange(from = 0, to = MAX_RETRIES) int retriesLeft) throws IOException
     {
         Request request = chain.request();
         if (remainingRequests.get() == 0)
@@ -78,6 +88,22 @@ public class RateLimitingInterceptor implements Interceptor
             {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
+        }
+        if (response.code() == TmdbConstants.HTTP_CODE_REQUEST_LIMIT_EXCEEDED
+                && 0 < retriesLeft)
+        {
+            try
+            {
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e)
+            {
+                if (logger != null)
+                {
+                    logger.log(Level.SEVERE, e.getMessage(), e);
+                }
+            }
+            return intercept(chain, retriesLeft - 1);
         }
 
         return response;

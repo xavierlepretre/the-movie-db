@@ -20,6 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -137,5 +138,45 @@ public class RateLimitingInterceptorTest
         verify(logger).log(eq(Level.SEVERE), anyString(), any(NumberFormatException.class));
         assertThat(remaining.get()).isEqualTo(1);
         assertThat(remainingReset.get()).isEqualTo(1);
+    }
+
+    @Test
+    public void whenReceivesLimitExceeded_callsAgainWithDelay() throws Exception
+    {
+        Request request = fakeRequestBuilder.build();
+        Response response = fakeResponseBuilder
+                .code(TmdbConstants.HTTP_CODE_REQUEST_LIMIT_EXCEEDED)
+                .request(request).build();
+
+        when(mockedChain.request()).thenReturn(request);
+        when(mockedChain.proceed(any(Request.class))).thenReturn(response);
+
+        long before = System.currentTimeMillis();
+        new RateLimitingInterceptor().intercept(mockedChain, 1);
+        long after = System.currentTimeMillis();
+
+        assertThat(after - before).isGreaterThan(300);
+        verify(mockedChain, times(2)).request();
+        verify(mockedChain, times(2)).proceed(eq(request));
+    }
+
+    @Test
+    public void whenReceivesLimitExceeded_callsAgain3TimesWithDelay() throws Exception
+    {
+        Request request = fakeRequestBuilder.build();
+        Response response = fakeResponseBuilder
+                .code(TmdbConstants.HTTP_CODE_REQUEST_LIMIT_EXCEEDED)
+                .request(request).build();
+
+        when(mockedChain.request()).thenReturn(request);
+        when(mockedChain.proceed(any(Request.class))).thenReturn(response);
+
+        long before = System.currentTimeMillis();
+        new RateLimitingInterceptor().intercept(mockedChain, 2);
+        long after = System.currentTimeMillis();
+
+        assertThat(after - before).isGreaterThan(1300);
+        verify(mockedChain, times(3)).request();
+        verify(mockedChain, times(3)).proceed(eq(request));
     }
 }

@@ -7,6 +7,7 @@ public class TmdbConstants
     public static final String RESPONSE_HEADER_REQUEST_LIMIT = "X-RateLimit-Limit";
     public static final String RESPONSE_HEADER_REQUEST_REMAINING = "X-RateLimit-Remaining";
     public static final String RESPONSE_HEADER_REQUEST_REMAINING_RESET = "X-RateLimit-Reset";
+    public static final int HTTP_CODE_REQUEST_LIMIT_EXCEEDED = 429;
 
     public static final String QUERY_API_KEY = "api_key";
 
