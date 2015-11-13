@@ -37,4 +37,6 @@ project.ext {
     FEST_ASSERT = "2.0M10"
     ESPRESSO = "2.2.1"
     RUNNER = "0.4.1"
+    MOCKITO = "1.10.19"
+    DEX_MOCKITO = "1.4"
 }

@@ -30,15 +30,7 @@ public class TmdbRetrofitFactory
     @NonNull public OkHttpClient createOkHttpClient()
     {
         OkHttpClient client = new OkHttpClient();
-        client.interceptors().add(new Interceptor()
-        {
-            @Override public Response intercept(Chain chain) throws IOException
-            {
-                Request request = chain.request();
-                Response response = chain.proceed(request);
-                return response;
-            }
-        });
+        client.interceptors().add(new RateLimitingInterceptor());
         return client;
     }
 

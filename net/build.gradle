@@ -42,12 +42,17 @@ dependencies {
 
     testCompile "junit:junit:$JUNIT"
     testCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
+    testCompile "org.mockito:mockito-core:$MOCKITO"
 
     androidTestCompile "junit:junit:$JUNIT"
     androidTestCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
     androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO"
     androidTestCompile "com.android.support.test:rules:$RUNNER"
     androidTestCompile "com.android.support.test:runner:$RUNNER"
+    androidTestCompile "org.mockito:mockito-core:$MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker:$DEX_MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-dx:$DEX_MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:$DEX_MOCKITO"
 }
 
 
