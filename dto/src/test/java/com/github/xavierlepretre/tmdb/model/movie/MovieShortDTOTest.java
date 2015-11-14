@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -40,6 +41,7 @@ public class MovieShortDTOTest
         assertThat(dto.getOriginalTitle()).isEqualTo("Spectre");
         assertThat(dto.getOverview()).startsWith("A cryptic message from Bond’s");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertThat(dto.getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         assertThat(dto.getPosterPath()).isEqualTo("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg");
         assertThat(dto.getPopularity()).isEqualTo(57.231904f, Offset.offset(0.01f));
