@@ -11,6 +11,7 @@ import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Configuration;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Discover;
@@ -60,6 +61,11 @@ public interface TmdbRetrofit
 
     @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_RELEASES)
     @NonNull Call<ReleasesWithIdDTO> getMovieReleases(
+            @Path("movieId") long movieId,
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
+    @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_VIDEOS)
+    @NonNull Call<VideosWithIdDTO> getMovieVideos(
             @Path("movieId") long movieId,
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
 }

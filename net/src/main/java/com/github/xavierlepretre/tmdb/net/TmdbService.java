@@ -11,6 +11,7 @@ import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 
 import java.util.Locale;
@@ -84,6 +85,13 @@ public class TmdbService
     @NonNull public Call<ReleasesWithIdDTO> getMovieReleases(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieReleases(
+                movieId.getId(),
+                apiKey);
+    }
+
+    @NonNull public Call<VideosWithIdDTO> getMovieVideos(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieVideos(
                 movieId.getId(),
                 apiKey);
     }

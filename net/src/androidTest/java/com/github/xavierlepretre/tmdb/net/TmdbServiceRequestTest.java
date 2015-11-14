@@ -16,6 +16,8 @@ import com.github.xavierlepretre.tmdb.model.people.CreditId;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.people.PersonId;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.show.VideoId;
+import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordId;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 import com.neovisionaries.i18n.CountryCode;
@@ -196,5 +198,24 @@ public class TmdbServiceRequestTest
         assertThat(dto.getCountries().get(1).isPrimary()).isTrue();
         assertThat(dto.getCountries().get(1).getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetVideos() throws Exception
+    {
+        Response<VideosWithIdDTO> response = service
+                .getMovieVideos(new MovieId(206647))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        VideosWithIdDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getResults().size()).isEqualTo(3);
+        assertThat(dto.getResults().get(0).getId()).isEqualTo(new VideoId("5641eb2fc3a3685bdc002e0b"));
+        assertThat(dto.getResults().get(0).getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getResults().get(0).getKey()).isEqualTo("BOVriTeIypQ");
+        assertThat(dto.getResults().get(0).getName()).isEqualTo("Spectre Ultimate 007 Trailer 2015 HD");
+        assertThat(dto.getResults().get(0).getSite()).isEqualTo("YouTube");
+        assertThat(dto.getResults().get(0).getSize()).isEqualTo(1080);
+        assertThat(dto.getResults().get(0).getType()).isEqualTo("Trailer");
     }
 }
