@@ -39,4 +39,6 @@ project.ext {
     RUNNER = "0.4.1"
     MOCKITO = "1.10.19"
     DEX_MOCKITO = "1.4"
+    SPOCK = "1.0-groovy-2.4"
+    EQUALS_VERIFIER = "1.7.5"
 }
