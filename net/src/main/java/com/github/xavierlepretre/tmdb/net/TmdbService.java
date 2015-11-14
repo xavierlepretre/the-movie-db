@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
+import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
@@ -46,4 +47,10 @@ public class TmdbService
                 movieRequest.getAppendToResponse().toString());
     }
 
+    @NonNull Call<AlternativeTitlesDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieAlternativeTitles(
+                movieId.getId(),
+                BuildConfig.TMDB_API_KEY);
+    }
 }

@@ -6,9 +6,11 @@ import android.test.FlakyTest;
 import com.github.xavierlepretre.tmdb.helper.IsConnectedTestRule;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
+import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
+import com.neovisionaries.i18n.CountryCode;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,5 +84,19 @@ public class TmdbRetrofitRequestTest
         assertThat(dto.getVideo()).isFalse();
         assertThat(dto.getVoteAverage()).isGreaterThan(5f);
         assertThat(dto.getVoteCount()).isGreaterThanOrEqualTo(453);
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetAlternativeTitles() throws Exception
+    {
+        Response<AlternativeTitlesDTO> response = retrofit
+                .getMovieAlternativeTitles(206647, BuildConfig.TMDB_API_KEY)
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        AlternativeTitlesDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getTitles().size()).isGreaterThanOrEqualTo(6);
+        assertThat(dto.getTitles().get(1).getIso3166Dash1()).isEqualTo(CountryCode.ES);
+        assertThat(dto.getTitles().get(1).getTitle()).isEqualTo("007 James Bond: Spectre");
     }
 }

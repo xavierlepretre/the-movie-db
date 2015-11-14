@@ -52,4 +52,13 @@ public class TmdbServiceTest
                 eq("de"),
                 eq("a_call,other_call"));
     }
+
+    @Test
+    public void getAlternativeMoviesIsCalled() throws Exception
+    {
+        tmdbService.getMovieAlternativeTitles(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieAlternativeTitles(
+                eq(98L),
+                eq(BuildConfig.TMDB_API_KEY));
+    }
 }

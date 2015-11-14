@@ -3,8 +3,10 @@ package com.github.xavierlepretre.tmdb.net;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.xavierlepretre.tmdb.TmdbDtoConstants;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
+import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Configuration;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Discover;
@@ -31,4 +33,11 @@ public interface TmdbRetrofit
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey,
             @Query(TmdbConstants.QUERY_LANGUAGE) @Nullable String language,
             @Query(TmdbConstants.QUERY_APPEND_TO_RESPONSE) @Nullable String appendToResponse);
+
+
+    @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_ALTERNATIVE_TITLES)
+    @NonNull Call<AlternativeTitlesDTO> getMovieAlternativeTitles(
+            @Path("movieId") long movieId,
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
 }
