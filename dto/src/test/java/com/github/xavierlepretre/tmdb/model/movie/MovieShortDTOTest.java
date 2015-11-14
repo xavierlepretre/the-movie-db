@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class MovieDTOTest
+public class MovieShortDTOTest
 {
     private ObjectMapper mapper;
 
@@ -31,7 +31,7 @@ public class MovieDTOTest
     @Test
     public void canDeserialise() throws Exception
     {
-        MovieDTO dto = mapper.readValue(getClass().getResourceAsStream("movie_dto_1.json"), MovieDTO.class);
+        MovieShortDTO dto = mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1.json"), MovieShortDTO.class);
         assertThat(dto.getAdult()).isFalse();
         assertThat(dto.getBackdropPath()).isEqualTo("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg");
         assertThat(dto.getGenreIds()).isEqualTo(Arrays.asList(new GenreId(28), new GenreId(12), new GenreId(80)));
@@ -54,7 +54,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("adult");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_adult.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_adult.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("backdrop_path");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_backdrop_path.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_backdrop_path.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("genre_ids");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_genre_ids.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_genre_ids.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("id");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_id.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_id.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("original_language");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_original_language.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_original_language.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("original_title");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_original_title.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_original_title.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("overview");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_overview.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_overview.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("popularity");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_popularity.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_popularity.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("poster_path");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_poster_path.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_poster_path.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("release_date");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_release_date.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_release_date.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("title");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_title.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_title.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -142,7 +142,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("video");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_video.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_video.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -150,7 +150,7 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("vote_average");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_vote_average.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_vote_average.json"), MovieShortDTO.class);
     }
 
     @Test
@@ -158,6 +158,6 @@ public class MovieDTOTest
     {
         thrown.expect(JsonMappingException.class);
         thrown.expectMessage("vote_count");
-        mapper.readValue(getClass().getResourceAsStream("movie_dto_1_missing_vote_count.json"), MovieDTO.class);
+        mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1_missing_vote_count.json"), MovieShortDTO.class);
     }
 }
