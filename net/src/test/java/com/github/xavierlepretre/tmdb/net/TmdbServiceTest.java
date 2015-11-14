@@ -54,10 +54,64 @@ public class TmdbServiceTest
     }
 
     @Test
-    public void getAlternativeMoviesIsCalled() throws Exception
+    public void getMovieAlternativeTitlesIsCalled() throws Exception
     {
         tmdbService.getMovieAlternativeTitles(new MovieId(98L));
         verify(tmdbRetrofit).getMovieAlternativeTitles(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieCreditsIsCalled() throws Exception
+    {
+        tmdbService.getMovieCredits(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieCredits(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieImagesIsCalled() throws Exception
+    {
+        tmdbService.getMovieImages(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieImages(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieKeywordsIsCalled() throws Exception
+    {
+        tmdbService.getMovieKeywords(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieKeywords(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieReleasesIsCalled() throws Exception
+    {
+        tmdbService.getMovieReleases(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieReleases(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieTranslationsIsCalled() throws Exception
+    {
+        tmdbService.getMovieTranslations(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieTranslations(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieVideosIsCalled() throws Exception
+    {
+        tmdbService.getMovieVideos(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieVideos(
                 eq(98L),
                 eq("some_key"));
     }

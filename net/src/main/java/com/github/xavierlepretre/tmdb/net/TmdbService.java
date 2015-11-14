@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
+import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
@@ -85,6 +86,13 @@ public class TmdbService
     @NonNull public Call<ReleasesWithIdDTO> getMovieReleases(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieReleases(
+                movieId.getId(),
+                apiKey);
+    }
+
+    @NonNull public Call<TranslationsWithIdDTO> getMovieTranslations(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieTranslations(
                 movieId.getId(),
                 apiKey);
     }

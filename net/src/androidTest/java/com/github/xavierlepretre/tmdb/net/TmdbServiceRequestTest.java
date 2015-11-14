@@ -6,6 +6,7 @@ import android.test.FlakyTest;
 import com.github.xavierlepretre.tmdb.helper.IsConnectedTestRule;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
+import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
@@ -198,6 +199,21 @@ public class TmdbServiceRequestTest
         assertThat(dto.getCountries().get(1).isPrimary()).isTrue();
         assertThat(dto.getCountries().get(1).getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetTranslations() throws Exception
+    {
+        Response<TranslationsWithIdDTO> response = service
+                .getMovieTranslations(new MovieId(206647))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        TranslationsWithIdDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getTranslations().size()).isEqualTo(22);
+        assertThat(dto.getTranslations().get(1).getEnglishName()).isEqualTo("French");
+        assertThat(dto.getTranslations().get(1).getIso639Dash1()).isEqualTo(new Locale("fr"));
+        assertThat(dto.getTranslations().get(1).getName()).isEqualTo("Français");
     }
 
     @Test @FlakyTest(tolerance = 3)
