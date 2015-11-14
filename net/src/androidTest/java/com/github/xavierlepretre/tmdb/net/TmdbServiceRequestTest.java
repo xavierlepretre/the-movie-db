@@ -15,6 +15,9 @@ import com.github.xavierlepretre.tmdb.model.people.CastId;
 import com.github.xavierlepretre.tmdb.model.people.CreditId;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.people.PersonId;
+import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.tag.KeywordId;
+import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 import com.neovisionaries.i18n.CountryCode;
 
 import org.fest.assertions.data.Offset;
@@ -157,5 +160,41 @@ public class TmdbServiceRequestTest
         assertThat(dto.getPosters().get(4).getVoteAverage()).isEqualTo(5.31292517006803f, Offset.offset(0.001f));
         assertThat(dto.getPosters().get(4).getVoteCount()).isEqualTo(7);
         assertThat(dto.getPosters().get(4).getWidth()).isEqualTo(2000);
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetKeywords() throws Exception
+    {
+        Response<KeywordsWithIdDTO> response = service
+                .getMovieKeywords(new MovieId(206647))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        KeywordsWithIdDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getKeywords().size()).isEqualTo(4);
+        assertThat(dto.getKeywords().get(0).getId()).isEqualTo(new KeywordId(12360));
+        assertThat(dto.getKeywords().get(0).getName()).isEqualTo("james bond");
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetReleases() throws Exception
+    {
+        Response<ReleasesWithIdDTO> response = service
+                .getMovieReleases(new MovieId(206647))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        ReleasesWithIdDTO dto = response.body();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        assertThat(dto.getCountries().size()).isEqualTo(59);
+        assertThat(dto.getCountries().get(0).getCertification()).isEmpty();
+        assertThat(dto.getCountries().get(0).getIso3166Dash1()).isEqualTo(CountryCode.GB);
+        assertThat(dto.getCountries().get(0).isPrimary()).isFalse();
+        assertThat(dto.getCountries().get(0).getReleaseDate()).isEqualTo(formatter.parse("2015-10-26"));
+        assertThat(dto.getCountries().get(1).getCertification()).isEqualTo("PG-13");
+        assertThat(dto.getCountries().get(1).getIso3166Dash1()).isEqualTo(CountryCode.US);
+        assertThat(dto.getCountries().get(1).isPrimary()).isTrue();
+        assertThat(dto.getCountries().get(1).getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
     }
 }

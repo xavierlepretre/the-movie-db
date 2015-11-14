@@ -10,6 +10,8 @@ import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 
 import java.util.Locale;
 
@@ -24,22 +26,22 @@ public class TmdbService
         this.tmdbRetrofit = tmdbRetrofit;
     }
 
-    @NonNull Call<ConfigurationDTO> getConfiguration()
+    @NonNull public Call<ConfigurationDTO> getConfiguration()
     {
         return tmdbRetrofit.getConfiguration(BuildConfig.TMDB_API_KEY);
     }
 
-    @NonNull Call<DiscoverMoviesDTO> discoverMovies()
+    @NonNull public Call<DiscoverMoviesDTO> discoverMovies()
     {
         return tmdbRetrofit.discoverMovies(BuildConfig.TMDB_API_KEY);
     }
 
-    @NonNull Call<MovieDTO> getMovie(@NonNull MovieId movieId)
+    @NonNull public Call<MovieDTO> getMovie(@NonNull MovieId movieId)
     {
         return getMovie(new MovieRequest(movieId));
     }
 
-    @NonNull Call<MovieDTO> getMovie(@NonNull MovieRequest movieRequest)
+    @NonNull public Call<MovieDTO> getMovie(@NonNull MovieRequest movieRequest)
     {
         Locale language = movieRequest.getLanguage();
         return tmdbRetrofit.getMovie(
@@ -49,23 +51,37 @@ public class TmdbService
                 movieRequest.getAppendToResponse().toString());
     }
 
-    @NonNull Call<AlternativeTitlesDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
+    @NonNull public Call<AlternativeTitlesDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieAlternativeTitles(
                 movieId.getId(),
                 BuildConfig.TMDB_API_KEY);
     }
 
-    @NonNull Call<CreditsWithIdDTO> getMovieCredits(@NonNull MovieId movieId)
+    @NonNull public Call<CreditsWithIdDTO> getMovieCredits(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieCredits(
                 movieId.getId(),
                 BuildConfig.TMDB_API_KEY);
     }
 
-    @NonNull Call<ImagesWithIdDTO> getMovieImages(@NonNull MovieId movieId)
+    @NonNull public Call<ImagesWithIdDTO> getMovieImages(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieImages(
+                movieId.getId(),
+                BuildConfig.TMDB_API_KEY);
+    }
+
+    @NonNull public Call<KeywordsWithIdDTO> getMovieKeywords(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieKeywords(
+                movieId.getId(),
+                BuildConfig.TMDB_API_KEY);
+    }
+
+    @NonNull public Call<ReleasesWithIdDTO> getMovieReleases(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieReleases(
                 movieId.getId(),
                 BuildConfig.TMDB_API_KEY);
     }
