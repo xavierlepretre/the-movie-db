@@ -27,12 +27,12 @@ public class StatusCode
         return code;
     }
 
-    @Override public int hashCode()
+    @Override public final int hashCode()
     {
         return code.hashCode();
     }
 
-    @Override public boolean equals(Object obj)
+    @Override public final boolean equals(Object obj)
     {
         return obj instanceof StatusCode
                 && ((StatusCode) obj).code.equals(code);

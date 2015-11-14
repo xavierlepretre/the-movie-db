@@ -20,12 +20,12 @@ public class GenreId
         return id;
     }
 
-    @Override public int hashCode()
+    @Override public final int hashCode()
     {
         return id.hashCode();
     }
 
-    @Override public boolean equals(Object obj)
+    @Override public final boolean equals(Object obj)
     {
         return obj instanceof GenreId
                 && ((GenreId) obj).getId() == id;
