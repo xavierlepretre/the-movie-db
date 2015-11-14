@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ImagesDTO
@@ -15,8 +16,8 @@ public class ImagesDTO
             @JsonProperty(value = "backdrops", required = true) @NonNull List<ImageDTO> backdrops,
             @JsonProperty(value = "posters", required = true) @NonNull List<ImageDTO> posters)
     {
-        this.backdrops = backdrops;
-        this.posters = posters;
+        this.backdrops = Collections.unmodifiableList(backdrops);
+        this.posters = Collections.unmodifiableList(posters);
     }
 
     @NonNull public List<ImageDTO> getBackdrops()
