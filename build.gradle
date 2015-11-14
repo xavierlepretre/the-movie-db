@@ -32,6 +32,7 @@ project.ext {
     JACKSON = "2.6.3"
     OKHTTP = "2.5.0"
     RETROFIT = "2.0.0-beta2"
+    NV_I18N = "1.17"
 
     JUNIT = "4.12"
     FEST_ASSERT = "2.0M10"
