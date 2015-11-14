@@ -40,6 +40,18 @@ public class ReleaseCountryDTOTest
     }
 
     @Test
+    public void canDeserialise2() throws Exception
+    {
+        ReleaseCountryDTO dto = mapper.readValue(getClass().getResourceAsStream("release_country_dto_2.json"), ReleaseCountryDTO.class);
+        assertThat(dto.getCertification()).isEqualTo("PG-13");
+        assertThat(dto.getIso3166Dash1()).isEqualTo(CountryCode.US);
+        assertThat(dto.isPrimary()).isTrue();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        assertThat(dto.getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
+    }
+
+    @Test
     public void cannotDeserialiseMissingCertification() throws Exception
     {
         thrown.expect(JsonMappingException.class);
