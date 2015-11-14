@@ -18,8 +18,8 @@ public class MovieShortDTO
     @NonNull private final Locale originalLanguage;
     @NonNull private final String originalTitle;
     @NonNull private final String overview;
-    @NonNull private final String posterPath;
     @NonNull private final Float popularity;
+    @NonNull private final String posterPath;
     @NonNull private final Date releaseDate;
     @NonNull private final String title;
     @NonNull private final Boolean video;
@@ -41,10 +41,10 @@ public class MovieShortDTO
             String originalTitle,
             @JsonProperty(value = "overview", required = true) @NonNull
             String overview,
-            @JsonProperty(value = "poster_path", required = true) @NonNull
-            String posterPath,
             @JsonProperty(value = "popularity", required = true)
             float popularity,
+            @JsonProperty(value = "poster_path", required = true) @NonNull
+            String posterPath,
             @JsonProperty(value = "release_date", required = true) @NonNull
             Date releaseDate,
             @JsonProperty(value = "title", required = true) @NonNull
@@ -63,8 +63,8 @@ public class MovieShortDTO
         this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
         this.overview = overview;
-        this.posterPath = posterPath;
         this.popularity = popularity;
+        this.posterPath = posterPath;
         this.releaseDate = releaseDate;
         this.title = title;
         this.video = video;
@@ -112,14 +112,14 @@ public class MovieShortDTO
         return releaseDate;
     }
 
-    @NonNull public String getPosterPath()
-    {
-        return posterPath;
-    }
-
     public float getPopularity()
     {
         return popularity;
+    }
+
+    @NonNull public String getPosterPath()
+    {
+        return posterPath;
     }
 
     @NonNull public String getTitle()
