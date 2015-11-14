@@ -20,21 +20,21 @@ public class TmdbServiceTest
     public void setUp()
     {
         this.tmdbRetrofit = mock(TmdbRetrofit.class);
-        this.tmdbService = new TmdbService(tmdbRetrofit);
+        this.tmdbService = new TmdbService(tmdbRetrofit, "some_key");
     }
 
     @Test
     public void configurationIsCalled() throws Exception
     {
         tmdbService.getConfiguration();
-        verify(tmdbRetrofit).getConfiguration(eq(BuildConfig.TMDB_API_KEY));
+        verify(tmdbRetrofit).getConfiguration(eq("some_key"));
     }
 
     @Test
     public void discoverMoviesIsCalled() throws Exception
     {
         tmdbService.discoverMovies();
-        verify(tmdbRetrofit).discoverMovies(eq(BuildConfig.TMDB_API_KEY));
+        verify(tmdbRetrofit).discoverMovies(eq("some_key"));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class TmdbServiceTest
         tmdbService.getMovie(movieRequest);
         verify(tmdbRetrofit).getMovie(
                 eq(22L),
-                eq(BuildConfig.TMDB_API_KEY),
+                eq("some_key"),
                 eq("de"),
                 eq("a_call,other_call"));
     }
@@ -59,6 +59,6 @@ public class TmdbServiceTest
         tmdbService.getMovieAlternativeTitles(new MovieId(98L));
         verify(tmdbRetrofit).getMovieAlternativeTitles(
                 eq(98L),
-                eq(BuildConfig.TMDB_API_KEY));
+                eq("some_key"));
     }
 }

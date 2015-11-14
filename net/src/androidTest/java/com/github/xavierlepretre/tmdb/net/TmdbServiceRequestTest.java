@@ -48,7 +48,7 @@ public class TmdbServiceRequestTest
     public void setUp()
     {
         TmdbRetrofit retrofit = new TmdbRetrofitFactory().create();
-        this.service = new TmdbService(retrofit);
+        this.service = new TmdbService(retrofit, BuildConfig.TMDB_API_KEY);
     }
 
     @Test @FlakyTest(tolerance = 3)
