@@ -1,6 +1,6 @@
 package com.github.xavierlepretre.tmdb.net;
 
-import com.github.xavierlepretre.tmdb.model.AppendableRequest;
+import com.github.xavierlepretre.tmdb.model.AppendableRequestFactory;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
 
@@ -42,8 +42,8 @@ public class TmdbServiceTest
     {
         MovieRequest movieRequest = new MovieRequest.Builder(new MovieId(22))
                 .language("de")
-                .add(new AppendableRequest("a_call"))
-                .add(new AppendableRequest("other_call"))
+                .appendToResponse(new AppendableRequestFactory().create("a_call"))
+                .appendToResponse(new AppendableRequestFactory().create("other_call"))
                 .build();
         tmdbService.getMovie(movieRequest);
         verify(tmdbRetrofit).getMovie(

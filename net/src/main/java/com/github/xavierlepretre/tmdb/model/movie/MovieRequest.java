@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import com.github.xavierlepretre.tmdb.model.AppendableRequest;
 import com.github.xavierlepretre.tmdb.model.AppendableRequestSet;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 
 public class MovieRequest
@@ -89,13 +91,19 @@ public class MovieRequest
             return this;
         }
 
-        @NonNull public Builder appendToResponse(@NonNull AppendableRequestSet appendToResponse)
+        @NonNull public Builder appendToResponse(@NonNull Collection<? extends AppendableRequest> appendToResponse)
         {
-            this.appendToResponse = appendToResponse;
+            this.appendToResponse.addAll(appendToResponse);
             return this;
         }
 
-        @NonNull public Builder add(@NonNull AppendableRequest appendToResponse)
+        @NonNull public Builder appendToResponse(@NonNull AppendableRequest[] appendToResponse)
+        {
+            Collections.addAll(this.appendToResponse, appendToResponse);
+            return this;
+        }
+
+        @NonNull public Builder appendToResponse(@NonNull AppendableRequest appendToResponse)
         {
             this.appendToResponse.add(appendToResponse);
             return this;
