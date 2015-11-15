@@ -16,6 +16,8 @@ import com.github.xavierlepretre.tmdb.model.people.CastId;
 import com.github.xavierlepretre.tmdb.model.people.CreditId;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.people.PersonId;
+import com.github.xavierlepretre.tmdb.model.rate.ReviewId;
+import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.VideoId;
 import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
@@ -43,6 +45,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class TmdbRetrofitRequestTest
 {
     private TmdbRetrofit retrofit;
+    private String apiKey;
     private DateFormat formatter;
 
     @Rule
@@ -52,6 +55,7 @@ public class TmdbRetrofitRequestTest
     public void setUp()
     {
         this.retrofit = new TmdbRetrofitFactory().create();
+        this.apiKey = BuildConfig.TMDB_API_KEY;
         this.formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
@@ -60,7 +64,7 @@ public class TmdbRetrofitRequestTest
     public void canGetConfiguration() throws Exception
     {
         Response<ConfigurationDTO> response = retrofit
-                .getConfiguration(BuildConfig.TMDB_API_KEY)
+                .getConfiguration(apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         assertThat(response.body().getImagesConf().getBaseUrl()).isEqualTo("http://image.tmdb.org/t/p/");
@@ -70,7 +74,7 @@ public class TmdbRetrofitRequestTest
     public void canDiscoverMovies() throws Exception
     {
         Response<DiscoverMoviesDTO> response = retrofit
-                .discoverMovies(BuildConfig.TMDB_API_KEY)
+                .discoverMovies(apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
     }
@@ -79,7 +83,7 @@ public class TmdbRetrofitRequestTest
     public void canGetMovie() throws Exception
     {
         Response<MovieDTO> response = retrofit
-                .getMovie(206647, BuildConfig.TMDB_API_KEY, null, null)
+                .getMovie(206647, apiKey, null, null)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         MovieDTO dto = response.body();
@@ -103,7 +107,7 @@ public class TmdbRetrofitRequestTest
     public void canGetAlternativeTitles() throws Exception
     {
         Response<AlternativeTitlesDTO> response = retrofit
-                .getMovieAlternativeTitles(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieAlternativeTitles(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         AlternativeTitlesDTO dto = response.body();
@@ -117,7 +121,7 @@ public class TmdbRetrofitRequestTest
     public void canGetCredits() throws Exception
     {
         Response<CreditsWithIdDTO> response = retrofit
-                .getMovieCredits(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieCredits(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         CreditsWithIdDTO dto = response.body();
@@ -142,7 +146,7 @@ public class TmdbRetrofitRequestTest
     public void canGetImages() throws Exception
     {
         Response<ImagesWithIdDTO> response = retrofit
-                .getMovieImages(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieImages(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         ImagesWithIdDTO dto = response.body();
@@ -169,7 +173,7 @@ public class TmdbRetrofitRequestTest
     public void canGetKeywords() throws Exception
     {
         Response<KeywordsWithIdDTO> response = retrofit
-                .getMovieKeywords(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieKeywords(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         KeywordsWithIdDTO dto = response.body();
@@ -183,7 +187,7 @@ public class TmdbRetrofitRequestTest
     public void canGetReleases() throws Exception
     {
         Response<ReleasesWithIdDTO> response = retrofit
-                .getMovieReleases(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieReleases(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         ReleasesWithIdDTO dto = response.body();
@@ -200,10 +204,29 @@ public class TmdbRetrofitRequestTest
     }
 
     @Test @FlakyTest(tolerance = 3)
+    public void canGetReviews() throws Exception
+    {
+        Response<ReviewsWithIdDTO> response = retrofit
+                .getMovieReviews(206647, apiKey)
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        ReviewsWithIdDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getPage()).isEqualTo(1);
+        assertThat(dto.getResults().size()).isEqualTo(2);
+        assertThat(dto.getResults().get(0).getAuthor()).isEqualTo("cutprintchris");
+        assertThat(dto.getResults().get(0).getContent()).startsWith("<a href=\"http://www.cutprintfilm.com/r");
+        assertThat(dto.getResults().get(0).getId()).isEqualTo(new ReviewId("563e06159251413b1300c821"));
+        assertThat(dto.getResults().get(0).getUrl()).isEqualTo("http://j.mp/1MPodnZ");
+        assertThat(dto.getTotalPages()).isGreaterThanOrEqualTo(1);
+        assertThat(dto.getTotalResults()).isGreaterThanOrEqualTo(2);
+    }
+
+    @Test @FlakyTest(tolerance = 3)
     public void canGetSimilar() throws Exception
     {
         Response<DiscoverMoviesDTO> response = retrofit
-                .getMovieSimilar(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieSimilar(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         DiscoverMoviesDTO dto = response.body();
@@ -234,7 +257,7 @@ public class TmdbRetrofitRequestTest
     public void canGetTranslations() throws Exception
     {
         Response<TranslationsWithIdDTO> response = retrofit
-                .getMovieTranslations(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieTranslations(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         TranslationsWithIdDTO dto = response.body();
@@ -249,7 +272,7 @@ public class TmdbRetrofitRequestTest
     public void canGetVideos() throws Exception
     {
         Response<VideosWithIdDTO> response = retrofit
-                .getMovieVideos(206647, BuildConfig.TMDB_API_KEY)
+                .getMovieVideos(206647, apiKey)
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         VideosWithIdDTO dto = response.body();

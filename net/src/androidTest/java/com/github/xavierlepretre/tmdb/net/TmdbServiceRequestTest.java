@@ -16,6 +16,8 @@ import com.github.xavierlepretre.tmdb.model.people.CastId;
 import com.github.xavierlepretre.tmdb.model.people.CreditId;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.people.PersonId;
+import com.github.xavierlepretre.tmdb.model.rate.ReviewId;
+import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.VideoId;
 import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
@@ -29,7 +31,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Locale;
@@ -198,6 +199,25 @@ public class TmdbServiceRequestTest
         assertThat(dto.getCountries().get(1).isPrimary()).isTrue();
         assertThat(dto.getCountries().get(1).getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetReviews() throws Exception
+    {
+        Response<ReviewsWithIdDTO> response = service
+                .getMovieReviews(new MovieId(206647))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        ReviewsWithIdDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getPage()).isEqualTo(1);
+        assertThat(dto.getResults().size()).isEqualTo(2);
+        assertThat(dto.getResults().get(0).getAuthor()).isEqualTo("cutprintchris");
+        assertThat(dto.getResults().get(0).getContent()).startsWith("<a href=\"http://www.cutprintfilm.com/r");
+        assertThat(dto.getResults().get(0).getId()).isEqualTo(new ReviewId("563e06159251413b1300c821"));
+        assertThat(dto.getResults().get(0).getUrl()).isEqualTo("http://j.mp/1MPodnZ");
+        assertThat(dto.getTotalPages()).isGreaterThanOrEqualTo(1);
+        assertThat(dto.getTotalResults()).isGreaterThanOrEqualTo(2);
     }
 
     @Test @FlakyTest(tolerance = 3)

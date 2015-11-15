@@ -11,6 +11,7 @@ import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
@@ -86,6 +87,13 @@ public class TmdbService
     @NonNull public Call<ReleasesWithIdDTO> getMovieReleases(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieReleases(
+                movieId.getId(),
+                apiKey);
+    }
+
+    @NonNull public Call<ReviewsWithIdDTO> getMovieReviews(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieReviews(
                 movieId.getId(),
                 apiKey);
     }
