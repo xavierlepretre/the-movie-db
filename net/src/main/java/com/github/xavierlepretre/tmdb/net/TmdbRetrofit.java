@@ -15,6 +15,7 @@ import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.tag.ListsWithIdDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Configuration;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Discover;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Movie;
@@ -58,6 +59,11 @@ public interface TmdbRetrofit
 
     @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_KEYWORDS)
     @NonNull Call<KeywordsWithIdDTO> getMovieKeywords(
+            @Path("movieId") long movieId,
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
+    @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_LISTS)
+    @NonNull Call<ListsWithIdDTO> getMovieLists(
             @Path("movieId") long movieId,
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
 

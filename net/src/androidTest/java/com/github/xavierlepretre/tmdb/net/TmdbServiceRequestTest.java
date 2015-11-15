@@ -23,6 +23,8 @@ import com.github.xavierlepretre.tmdb.model.show.VideoId;
 import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordId;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.tag.ListId;
+import com.github.xavierlepretre.tmdb.model.tag.ListsWithIdDTO;
 import com.neovisionaries.i18n.CountryCode;
 
 import org.fest.assertions.data.Offset;
@@ -179,6 +181,29 @@ public class TmdbServiceRequestTest
         assertThat(dto.getKeywords().size()).isEqualTo(4);
         assertThat(dto.getKeywords().get(0).getId()).isEqualTo(new KeywordId(12360));
         assertThat(dto.getKeywords().get(0).getName()).isEqualTo("james bond");
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetLists() throws Exception
+    {
+        Response<ListsWithIdDTO> response = service
+                .getMovieLists(new MovieId(206647))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        ListsWithIdDTO dto = response.body();
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getPage()).isEqualTo(1);
+        assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+        assertThat(dto.getResults().size()).isEqualTo(20);
+        assertThat(dto.getResults().get(0).getDescription()).isEqualTo("James Bond");
+        assertThat(dto.getResults().get(0).getFavoriteCount()).isGreaterThanOrEqualTo(5);
+        assertThat(dto.getResults().get(0).getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getResults().get(0).getItemCount()).isGreaterThanOrEqualTo(26);
+        assertThat(dto.getResults().get(0).getId()).isEqualTo(new ListId("5308b87fc3a36842010027be"));
+        assertThat(dto.getResults().get(0).getName()).isEqualTo("James Bond - Movie Collection");
+        assertThat(dto.getResults().get(0).getPosterPath()).isEqualTo("/jHt3L6rxboCMHULYGdmv6TqjvZr.jpg");
+        assertThat(dto.getTotalPages()).isGreaterThanOrEqualTo(2);
+        assertThat(dto.getTotalResults()).isGreaterThanOrEqualTo(29);
     }
 
     @Test @FlakyTest(tolerance = 3)
