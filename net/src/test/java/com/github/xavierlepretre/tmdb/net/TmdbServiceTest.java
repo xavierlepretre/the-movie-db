@@ -40,6 +40,15 @@ public class TmdbServiceTest
     @Test
     public void getMovieIsCalled() throws Exception
     {
+        tmdbService.getMovie(new MovieId(22));
+        verify(tmdbRetrofit).getMovie(
+                eq(22L),
+                eq("some_key"));
+    }
+
+    @Test
+    public void getMovieWithExtraIsCalled() throws Exception
+    {
         MovieRequest movieRequest = new MovieRequest.Builder(new MovieId(22))
                 .language("de")
                 .appendToResponse(new AppendableRequestFactory().create("a_call"))

@@ -8,8 +8,9 @@ import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
-import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
+import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
+import com.github.xavierlepretre.tmdb.model.movie.MovieWithExtraDTO;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
@@ -38,12 +39,17 @@ public interface TmdbRetrofit
     @GET(Movie.PATH_MOVIE + "/{movieId}")
     @NonNull Call<MovieDTO> getMovie(
             @Path("movieId") long movieId,
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
+    @GET(Movie.PATH_MOVIE + "/{movieId}")
+    @NonNull Call<MovieWithExtraDTO> getMovie(
+            @Path("movieId") long movieId,
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey,
             @Query(TmdbConstants.QUERY_LANGUAGE) @Nullable String language,
             @Query(TmdbConstants.QUERY_APPEND_TO_RESPONSE) @Nullable String appendToResponse);
 
     @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_ALTERNATIVE_TITLES)
-    @NonNull Call<AlternativeTitlesDTO> getMovieAlternativeTitles(
+    @NonNull Call<AlternativeTitlesWithIdDTO> getMovieAlternativeTitles(
             @Path("movieId") long movieId,
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
 

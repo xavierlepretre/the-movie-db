@@ -1,21 +1,20 @@
-package com.github.xavierlepretre.tmdb.model.tag;
+package com.github.xavierlepretre.tmdb.model.movie;
 
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 
 import java.util.List;
 
-public class KeywordsWithIdDTO extends KeywordsDTO
+public class AlternativeTitlesWithIdDTO extends AlternativeTitlesDTO
 {
     @NonNull private final MovieId id;
 
-    public KeywordsWithIdDTO(
+    public AlternativeTitlesWithIdDTO(
             @JsonProperty(value = "id", required = true) @NonNull MovieId id,
-            @JsonProperty(value = "keywords", required = true) @NonNull List<KeywordDTO> keywords)
+            @JsonProperty(value = "titles", required = true) @NonNull List<TitleDTO> titles)
     {
-        super(keywords);
+        super(titles);
         this.id = id;
     }
 

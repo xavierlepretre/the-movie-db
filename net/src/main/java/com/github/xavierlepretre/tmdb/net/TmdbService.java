@@ -6,10 +6,11 @@ import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
-import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesDTO;
+import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
+import com.github.xavierlepretre.tmdb.model.movie.MovieWithExtraDTO;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
@@ -44,10 +45,10 @@ public class TmdbService
 
     @NonNull public Call<MovieDTO> getMovie(@NonNull MovieId movieId)
     {
-        return getMovie(new MovieRequest(movieId));
+        return tmdbRetrofit.getMovie(movieId.getId(), apiKey);
     }
 
-    @NonNull public Call<MovieDTO> getMovie(@NonNull MovieRequest movieRequest)
+    @NonNull public Call<MovieWithExtraDTO> getMovie(@NonNull MovieRequest movieRequest)
     {
         Locale language = movieRequest.getLanguage();
         return tmdbRetrofit.getMovie(
@@ -57,7 +58,7 @@ public class TmdbService
                 movieRequest.getAppendToResponse().toString());
     }
 
-    @NonNull public Call<AlternativeTitlesDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
+    @NonNull public Call<AlternativeTitlesWithIdDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieAlternativeTitles(
                 movieId.getId(),
