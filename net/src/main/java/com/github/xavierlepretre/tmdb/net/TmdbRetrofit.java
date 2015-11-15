@@ -65,6 +65,11 @@ public interface TmdbRetrofit
             @Path("movieId") long movieId,
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
 
+    @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_SIMILAR)
+    @NonNull Call<DiscoverMoviesDTO> getMovieSimilar(
+            @Path("movieId") long movieId,
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
     @GET(Movie.PATH_MOVIE + "/{movieId}/" + TmdbDtoConstants.Movie.EXTRA_TRANSLATIONS)
     @NonNull Call<TranslationsWithIdDTO> getMovieTranslations(
             @Path("movieId") long movieId,

@@ -43,6 +43,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class TmdbRetrofitRequestTest
 {
     private TmdbRetrofit retrofit;
+    private DateFormat formatter;
 
     @Rule
     public IsConnectedTestRule isConnectedTestRule = new IsConnectedTestRule();
@@ -51,6 +52,8 @@ public class TmdbRetrofitRequestTest
     public void setUp()
     {
         this.retrofit = new TmdbRetrofitFactory().create();
+        this.formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     @Test @FlakyTest(tolerance = 3)
@@ -87,8 +90,6 @@ public class TmdbRetrofitRequestTest
         assertThat(dto.getOriginalLanguage()).isEqualTo(new Locale("en"));
         assertThat(dto.getOriginalTitle()).isEqualTo("Spectre");
         assertThat(dto.getOverview()).startsWith("A cryptic message from Bond’s");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertThat(dto.getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         assertThat(dto.getPosterPath()).isEqualTo("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg");
         assertThat(dto.getPopularity()).isGreaterThan(50f);
@@ -186,8 +187,6 @@ public class TmdbRetrofitRequestTest
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         ReleasesWithIdDTO dto = response.body();
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertThat(dto.getCountries().size()).isEqualTo(59);
         assertThat(dto.getCountries().get(0).getCertification()).isEmpty();
         assertThat(dto.getCountries().get(0).getIso3166Dash1()).isEqualTo(CountryCode.GB);
@@ -198,6 +197,37 @@ public class TmdbRetrofitRequestTest
         assertThat(dto.getCountries().get(1).isPrimary()).isTrue();
         assertThat(dto.getCountries().get(1).getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetSimilar() throws Exception
+    {
+        Response<DiscoverMoviesDTO> response = retrofit
+                .getMovieSimilar(206647, BuildConfig.TMDB_API_KEY)
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        DiscoverMoviesDTO dto = response.body();
+        assertThat(dto.getPage()).isEqualTo(1);
+        assertThat(dto.getResults().size()).isEqualTo(20);
+        assertThat(dto.getResults().get(0).getAdult()).isEqualTo(false);
+        assertThat(dto.getResults().get(0).getBackdropPath()).isEqualTo("/iyD72nJFBGbEIrpQjzdhE3wFxPL.jpg");
+        assertThat(dto.getResults().get(0).getGenreIds()).isEqualTo(Arrays.asList(
+                new GenreId(12),
+                new GenreId(28),
+                new GenreId(53)));
+        assertThat(dto.getResults().get(0).getId()).isEqualTo(new MovieId(658));
+        assertThat(dto.getResults().get(0).getOriginalLanguage()).isEqualTo(new Locale("en"));
+        assertThat(dto.getResults().get(0).getOriginalTitle()).isEqualTo("Goldfinger");
+        assertThat(dto.getResults().get(0).getOverview()).startsWith("Bond is in Miami on holiday when");
+        assertThat(dto.getResults().get(0).getPosterPath()).isEqualTo("/vBNbFU3OS6okJIQBOos1aZXpy2Z.jpg");
+        assertThat(dto.getResults().get(0).getPopularity()).isGreaterThanOrEqualTo(3);
+        assertThat(dto.getResults().get(0).getReleaseDate()).isEqualTo(formatter.parse("1964-09-17"));
+        assertThat(dto.getResults().get(0).getTitle()).isEqualTo("Goldfinger");
+        assertThat(dto.getResults().get(0).getVideo()).isFalse();
+        assertThat(dto.getResults().get(0).getVoteAverage()).isGreaterThanOrEqualTo(5);
+        assertThat(dto.getResults().get(0).getVoteCount()).isGreaterThanOrEqualTo(356);
+        assertThat(dto.getTotalPages()).isEqualTo(3);
+        assertThat(dto.getTotalResults()).isEqualTo(44);
     }
 
     @Test @FlakyTest(tolerance = 3)

@@ -90,6 +90,13 @@ public class TmdbService
                 apiKey);
     }
 
+    @NonNull public Call<DiscoverMoviesDTO> getMovieSimilar(@NonNull MovieId movieId)
+    {
+        return tmdbRetrofit.getMovieSimilar(
+                movieId.getId(),
+                apiKey);
+    }
+
     @NonNull public Call<TranslationsWithIdDTO> getMovieTranslations(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieTranslations(

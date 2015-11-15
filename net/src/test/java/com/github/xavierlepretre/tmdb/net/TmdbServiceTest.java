@@ -99,6 +99,15 @@ public class TmdbServiceTest
     }
 
     @Test
+    public void getMovieSimilarIsCalled() throws Exception
+    {
+        tmdbService.getMovieSimilar(new MovieId(98L));
+        verify(tmdbRetrofit).getMovieSimilar(
+                eq(98L),
+                eq("some_key"));
+    }
+
+    @Test
     public void getMovieTranslationsIsCalled() throws Exception
     {
         tmdbService.getMovieTranslations(new MovieId(98L));
