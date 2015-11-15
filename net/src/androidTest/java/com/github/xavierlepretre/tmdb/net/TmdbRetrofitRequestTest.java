@@ -5,6 +5,7 @@ import android.test.FlakyTest;
 
 import com.github.xavierlepretre.tmdb.TmdbDtoConstants.Movie;
 import com.github.xavierlepretre.tmdb.helper.IsConnectedTestRule;
+import com.github.xavierlepretre.tmdb.model.AppendableRequest;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
@@ -453,5 +454,28 @@ public class TmdbRetrofitRequestTest
         assertThat(dto.getVideos().getResults().get(0).getSite()).isEqualTo("YouTube");
         assertThat(dto.getVideos().getResults().get(0).getSize()).isEqualTo(1080);
         assertThat(dto.getVideos().getResults().get(0).getType()).isEqualTo("Trailer");
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetLatestMovie() throws Exception
+    {
+        Response<MovieDTO> response = retrofit
+                .getLatestMovie(apiKey)
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        MovieDTO dto = response.body();
+        assertThat(dto.getId().getId()).isGreaterThanOrEqualTo(368669);
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetLatestMovieWithExtras() throws Exception
+    {
+        Response<MovieWithExtraDTO> response = retrofit
+                .getLatestMovie(apiKey, null, AppendableRequest.Movie.IMAGES.toString())
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        MovieWithExtraDTO dto = response.body();
+        assertThat(dto.getId().getId()).isGreaterThanOrEqualTo(368669);
+        assertThat(dto.getImages()).isNotNull();
     }
 }

@@ -11,84 +11,80 @@ import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class MovieRequestBuilderTest
+public class MovieRequestParametersBuilderTest
 {
     @Test
     public void getValuesInBuildRequest() throws Exception
     {
-        MovieRequest request = new MovieRequest.Builder(new MovieId(22))
+        MovieRequestParameters request = new MovieRequestParameters.Builder()
                 .language(new Locale("th"))
                 .appendToResponse(new AppendableRequestSet(Arrays.asList(
                         Movie.ALTERNATIVE_TITLES,
                         Movie.CREDITS)))
                 .build();
 
-        assertThat(request.getMovieId()).isEqualTo(new MovieId(22));
-        assertThat(request.getAppendToResponse()).isEqualTo(new AppendableRequestSet(Arrays.asList(
+        assertThat(request.getAppendToResponse()).containsOnly(
                 Movie.ALTERNATIVE_TITLES,
-                Movie.CREDITS)));
+                Movie.CREDITS);
         assertThat(request.getLanguage()).isEqualTo(new Locale("th"));
     }
 
     @Test
     public void addLanguageStringWorksToo() throws Exception
     {
-        MovieRequest request = new MovieRequest.Builder(new MovieId(22))
+        MovieRequestParameters request = new MovieRequestParameters.Builder()
                 .language("th")
                 .build();
 
-        assertThat(request.getMovieId()).isEqualTo(new MovieId(22));
         assertThat(request.getLanguage()).isEqualTo(new Locale("th"));
+        assertThat(request.getAppendToResponse()).isEmpty();
     }
 
     @Test
     public void addAppendAddsToExisting() throws Exception
     {
-        MovieRequest request = new MovieRequest.Builder(new MovieId(22))
+        MovieRequestParameters request = new MovieRequestParameters.Builder()
                 .appendToResponse(new AppendableRequestSet(Arrays.asList(
                         Movie.ALTERNATIVE_TITLES,
                         Movie.CREDITS)))
                 .appendToResponse(Movie.IMAGES)
                 .build();
 
-        assertThat(request.getMovieId()).isEqualTo(new MovieId(22));
-        assertThat(request.getAppendToResponse()).isEqualTo(new AppendableRequestSet(Arrays.asList(
+        assertThat(request.getAppendToResponse()).containsOnly(
                 Movie.ALTERNATIVE_TITLES,
                 Movie.CREDITS,
-                Movie.IMAGES)));
+                Movie.IMAGES);
     }
 
     @Test
     public void addThenAppendsCollectionAddsAll() throws Exception
     {
-        MovieRequest request = new MovieRequest.Builder(new MovieId(22))
+        MovieRequestParameters request = new MovieRequestParameters.Builder()
                 .appendToResponse(Movie.IMAGES)
                 .appendToResponse(new AppendableRequestSet(Arrays.asList(
                         Movie.ALTERNATIVE_TITLES,
                         Movie.CREDITS)))
                 .build();
 
-        assertThat(request.getMovieId()).isEqualTo(new MovieId(22));
-        assertThat(request.getAppendToResponse()).isEqualTo(new AppendableRequestSet(Arrays.asList(
+        assertThat(request.getAppendToResponse()).containsOnly(
                 Movie.ALTERNATIVE_TITLES,
                 Movie.CREDITS,
-                Movie.IMAGES)));
+                Movie.IMAGES);
     }
 
     @Test
     public void addThenAppendsArrayAddsAll() throws Exception
     {
-        MovieRequest request = new MovieRequest.Builder(new MovieId(22))
+        MovieRequestParameters request = new MovieRequestParameters.Builder()
                 .appendToResponse(Movie.IMAGES)
                 .appendToResponse(new AppendableRequest[]{
                         Movie.ALTERNATIVE_TITLES,
                         Movie.CREDITS})
                 .build();
 
-        assertThat(request.getMovieId()).isEqualTo(new MovieId(22));
-        assertThat(request.getAppendToResponse()).isEqualTo(new AppendableRequestSet(Arrays.asList(
+        assertThat(request.getAppendToResponse()).containsOnly(
                 Movie.ALTERNATIVE_TITLES,
                 Movie.CREDITS,
-                Movie.IMAGES)));
+                Movie.IMAGES);
     }
 }

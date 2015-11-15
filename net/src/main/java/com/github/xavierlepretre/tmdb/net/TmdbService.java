@@ -10,6 +10,7 @@ import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
+import com.github.xavierlepretre.tmdb.model.movie.MovieRequestParameters;
 import com.github.xavierlepretre.tmdb.model.movie.MovieWithExtraDTO;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.rate.ReviewsWithIdDTO;
@@ -50,15 +51,16 @@ public class TmdbService
 
     @NonNull public Call<MovieWithExtraDTO> getMovie(@NonNull MovieRequest movieRequest)
     {
-        Locale language = movieRequest.getLanguage();
+        Locale language = movieRequest.getParameters().getLanguage();
         return tmdbRetrofit.getMovie(
                 movieRequest.getMovieId().getId(),
                 apiKey,
                 language == null ? null : language.getLanguage(),
-                movieRequest.getAppendToResponse().toString());
+                movieRequest.getParameters().getAppendToResponse().toString());
     }
 
-    @NonNull public Call<AlternativeTitlesWithIdDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
+    @NonNull
+    public Call<AlternativeTitlesWithIdDTO> getMovieAlternativeTitles(@NonNull MovieId movieId)
     {
         return tmdbRetrofit.getMovieAlternativeTitles(
                 movieId.getId(),
@@ -126,5 +128,20 @@ public class TmdbService
         return tmdbRetrofit.getMovieVideos(
                 movieId.getId(),
                 apiKey);
+    }
+
+    @NonNull public Call<MovieDTO> getLatestMovie()
+    {
+        return tmdbRetrofit.getLatestMovie(apiKey);
+    }
+
+    @NonNull public Call<MovieWithExtraDTO> getLatestMovie(
+            @NonNull MovieRequestParameters parameters)
+    {
+        Locale language = parameters.getLanguage();
+        return tmdbRetrofit.getLatestMovie(
+                apiKey,
+                language == null ? null : language.getLanguage(),
+                parameters.getAppendToResponse().toString());
     }
 }

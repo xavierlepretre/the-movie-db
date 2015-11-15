@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.net;
 import com.github.xavierlepretre.tmdb.model.AppendableRequestFactory;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
+import com.github.xavierlepretre.tmdb.model.movie.MovieRequestParameters;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,12 +50,12 @@ public class TmdbServiceTest
     @Test
     public void getMovieWithExtraIsCalled() throws Exception
     {
-        MovieRequest movieRequest = new MovieRequest.Builder(new MovieId(22))
+        MovieRequestParameters parameters = new MovieRequestParameters.Builder()
                 .language("de")
                 .appendToResponse(new AppendableRequestFactory().create("a_call"))
                 .appendToResponse(new AppendableRequestFactory().create("other_call"))
                 .build();
-        tmdbService.getMovie(movieRequest);
+        tmdbService.getMovie(new MovieRequest(new MovieId(22), parameters));
         verify(tmdbRetrofit).getMovie(
                 eq(22L),
                 eq("some_key"),
@@ -141,5 +142,28 @@ public class TmdbServiceTest
         verify(tmdbRetrofit).getMovieVideos(
                 eq(98L),
                 eq("some_key"));
+    }
+
+    @Test
+    public void getLatestMovieIsCalled() throws Exception
+    {
+        tmdbService.getLatestMovie();
+        verify(tmdbRetrofit).getLatestMovie(
+                eq("some_key"));
+    }
+
+    @Test
+    public void getLatestMovieWithExtraIsCalled() throws Exception
+    {
+        MovieRequestParameters parameters = new MovieRequestParameters.Builder()
+                .language("de")
+                .appendToResponse(new AppendableRequestFactory().create("a_call"))
+                .appendToResponse(new AppendableRequestFactory().create("other_call"))
+                .build();
+        tmdbService.getLatestMovie(parameters);
+        verify(tmdbRetrofit).getLatestMovie(
+                eq("some_key"),
+                eq("de"),
+                eq("a_call,other_call"));
     }
 }

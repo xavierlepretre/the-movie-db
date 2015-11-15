@@ -1,6 +1,6 @@
 package com.github.xavierlepretre.tmdb.model.movie
 
-import com.github.xavierlepretre.tmdb.model.AppendableRequest
+import com.github.xavierlepretre.tmdb.model.AppendableRequestFactory
 import com.github.xavierlepretre.tmdb.model.AppendableRequestSet
 import nl.jqno.equalsverifier.EqualsVerifier
 import spock.lang.Specification
@@ -11,15 +11,23 @@ class MovieRequestSpec extends Specification {
         EqualsVerifier.forClass(MovieRequest)
                 .allFieldsShouldBeUsed()
                 .withPrefabValues(
-                AppendableRequestSet.class,
-                new AppendableRequestSet(Arrays.asList(
-                        new AppendableRequest("a"),
-                        new AppendableRequest("b")
-                )),
-                new AppendableRequestSet(Arrays.asList(
-                        new AppendableRequest("b"),
-                        new AppendableRequest("c")
-                )))
+                MovieId.class,
+                new MovieId(1),
+                new MovieId(2))
+                .withPrefabValues(
+                MovieRequestParameters.class,
+                new MovieRequestParameters(
+                        new Locale("en"),
+                        new AppendableRequestSet(Arrays.asList(
+                                new AppendableRequestFactory().create("a"),
+                                new AppendableRequestFactory().create("b")
+                        ))),
+                new MovieRequestParameters(
+                        new Locale("fr"),
+                        new AppendableRequestSet(Arrays.asList(
+                                new AppendableRequestFactory().create("b"),
+                                new AppendableRequestFactory().create("c")
+                        ))))
                 .verify()
 
         then:

@@ -97,4 +97,14 @@ public interface TmdbRetrofit
     @NonNull Call<VideosWithIdDTO> getMovieVideos(
             @Path("movieId") long movieId,
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
+    @GET(Movie.PATH_MOVIE + "/latest")
+    @NonNull Call<MovieDTO> getLatestMovie(
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey);
+
+    @GET(Movie.PATH_MOVIE + "/latest")
+    @NonNull Call<MovieWithExtraDTO> getLatestMovie(
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey,
+            @Query(TmdbConstants.QUERY_LANGUAGE) @Nullable String language,
+            @Query(TmdbConstants.QUERY_APPEND_TO_RESPONSE) @Nullable String appendToResponse);
 }

@@ -14,6 +14,7 @@ import com.github.xavierlepretre.tmdb.model.movie.GenreId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
+import com.github.xavierlepretre.tmdb.model.movie.MovieRequestParameters;
 import com.github.xavierlepretre.tmdb.model.movie.MovieWithExtraDTO;
 import com.github.xavierlepretre.tmdb.model.people.CastId;
 import com.github.xavierlepretre.tmdb.model.people.CreditId;
@@ -313,21 +314,43 @@ public class TmdbServiceRequestTest
     }
 
     @Test @FlakyTest(tolerance = 3)
+    public void canGetMovieWithoutExtra() throws Exception
+    {
+        Response<MovieWithExtraDTO> response = service
+                .getMovie(new MovieRequest(new MovieId(206647)))
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        MovieWithExtraDTO dto = response.body();
+        assertThat(dto.getAlternativeTitles()).isNull();
+        assertThat(dto.getCredits()).isNull();
+        assertThat(dto.getImages()).isNull();
+        assertThat(dto.getKeywords()).isNull();
+        assertThat(dto.getLists()).isNull();
+        assertThat(dto.getReleases()).isNull();
+        assertThat(dto.getReviews()).isNull();
+        assertThat(dto.getSimilar()).isNull();
+        assertThat(dto.getTranslations()).isNull();
+        assertThat(dto.getVideos()).isNull();
+    }
+
+    @Test @FlakyTest(tolerance = 3)
     public void canGetMovieWithAllExtras() throws Exception
     {
         Response<MovieWithExtraDTO> response = service
-                .getMovie(new MovieRequest.Builder(new MovieId(206647))
-                        .appendToResponse(AppendableRequest.Movie.ALTERNATIVE_TITLES)
-                        .appendToResponse(AppendableRequest.Movie.CREDITS)
-                        .appendToResponse(AppendableRequest.Movie.IMAGES)
-                        .appendToResponse(AppendableRequest.Movie.KEYWORDS)
-                        .appendToResponse(AppendableRequest.Movie.LISTS)
-                        .appendToResponse(AppendableRequest.Movie.RELEASES)
-                        .appendToResponse(AppendableRequest.Movie.REVIEWS)
-                        .appendToResponse(AppendableRequest.Movie.SIMILAR)
-                        .appendToResponse(AppendableRequest.Movie.TRANSLATIONS)
-                        .appendToResponse(AppendableRequest.Movie.VIDEOS)
-                        .build())
+                .getMovie(new MovieRequest(
+                        new MovieId(206647),
+                        new MovieRequestParameters.Builder()
+                                .appendToResponse(AppendableRequest.Movie.ALTERNATIVE_TITLES)
+                                .appendToResponse(AppendableRequest.Movie.CREDITS)
+                                .appendToResponse(AppendableRequest.Movie.IMAGES)
+                                .appendToResponse(AppendableRequest.Movie.KEYWORDS)
+                                .appendToResponse(AppendableRequest.Movie.LISTS)
+                                .appendToResponse(AppendableRequest.Movie.RELEASES)
+                                .appendToResponse(AppendableRequest.Movie.REVIEWS)
+                                .appendToResponse(AppendableRequest.Movie.SIMILAR)
+                                .appendToResponse(AppendableRequest.Movie.TRANSLATIONS)
+                                .appendToResponse(AppendableRequest.Movie.VIDEOS)
+                                .build()))
                 .execute();
         assertThat(response.isSuccess()).isTrue();
         MovieWithExtraDTO dto = response.body();
@@ -452,5 +475,30 @@ public class TmdbServiceRequestTest
         assertThat(dto.getVideos().getResults().get(0).getSite()).isEqualTo("YouTube");
         assertThat(dto.getVideos().getResults().get(0).getSize()).isEqualTo(1080);
         assertThat(dto.getVideos().getResults().get(0).getType()).isEqualTo("Trailer");
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetLatestMovie() throws Exception
+    {
+        Response<MovieDTO> response = service
+                .getLatestMovie()
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        MovieDTO dto = response.body();
+        assertThat(dto.getId().getId()).isGreaterThanOrEqualTo(368669);
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetLatestMovieWithExtras() throws Exception
+    {
+        Response<MovieWithExtraDTO> response = service
+                .getLatestMovie(new MovieRequestParameters.Builder()
+                        .appendToResponse(AppendableRequest.Movie.IMAGES)
+                        .build())
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        MovieWithExtraDTO dto = response.body();
+        assertThat(dto.getId().getId()).isGreaterThanOrEqualTo(368669);
+        assertThat(dto.getImages()).isNotNull();
     }
 }
