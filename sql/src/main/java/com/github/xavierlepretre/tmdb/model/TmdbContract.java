@@ -2,8 +2,11 @@ package com.github.xavierlepretre.tmdb.model;
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.movie.GenreContract;
+import com.github.xavierlepretre.tmdb.model.movie.GenreId;
+import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
 
 public class TmdbContract
 {
@@ -19,5 +22,10 @@ public class TmdbContract
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+
+        @NonNull public static Uri buildUri(@NonNull GenreId genreId)
+        {
+            return GenreProviderDelegate.buildGenreLocation(CONTENT_URI, genreId.getId());
+        }
     }
 }

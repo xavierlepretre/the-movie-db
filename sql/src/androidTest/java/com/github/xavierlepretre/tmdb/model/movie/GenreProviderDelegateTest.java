@@ -111,6 +111,9 @@ public class GenreProviderDelegateTest
     @Test
     public void buildGenreLocation_isOk() throws Exception
     {
+        assertThat(GenreProviderDelegate.buildGenreLocation(
+                Uri.parse("content://something"), 60))
+                .isEqualTo(Uri.parse("content://something/60"));
         assertThat(providerDelegate.buildGenreLocation(870))
                 .isEqualTo(Uri.parse("content://content_authority/genre/870"));
     }
@@ -137,8 +140,8 @@ public class GenreProviderDelegateTest
                 .isEqualTo("Adventure");
     }
 
-    @Test(expected = SQLException.class)
-    public void insertTwiceTheSame_throws() throws Exception
+    @Test
+    public void insertTwiceTheSame_replaces() throws Exception
     {
         ContentValues values = new ContentValues();
         values.put(GenreContract._ID, 3);
@@ -147,13 +150,26 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
                 values);
+        //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/genre/3");
 
         values.put(GenreContract.COLUMN_NAME, "Comic");
-        providerDelegate.insert(
+        //noinspection ConstantConditions
+        Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
                 values);
+        //noinspection ConstantConditions
+        assertThat(replaced.toString()).isEqualTo("content://content_authority/genre/3");
+
+        Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                inserted, null, null, null, null, null, null, null);
+
+        assertThat(myGenre).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myGenre.moveToFirst()).isTrue();
+        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
+                .isEqualTo("Comic");
     }
 
     @Test

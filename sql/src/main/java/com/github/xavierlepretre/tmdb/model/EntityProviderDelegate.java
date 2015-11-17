@@ -29,7 +29,7 @@ public interface EntityProviderDelegate
             @Nullable String sortOrder,
             @Nullable String limit);
 
-    @NonNull Uri insert(
+    @Nullable Uri insert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values);

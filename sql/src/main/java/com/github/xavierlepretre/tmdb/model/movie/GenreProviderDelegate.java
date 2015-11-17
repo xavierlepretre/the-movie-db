@@ -3,7 +3,6 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -16,6 +15,7 @@ public class GenreProviderDelegate implements EntityProviderDelegate
 {
     private static final int GENRES = 100;
     private static final int GENRE_BY_ID = 101;
+    private static final int INDEX_INSERT_RESOLVE_CONFLICT_REPLACE = 5;
 
     @NonNull private final String contentAuthority;
     @NonNull private final Uri entityContentUri;
@@ -169,7 +169,7 @@ public class GenreProviderDelegate implements EntityProviderDelegate
         return uri.getPathSegments().get(1);
     }
 
-    @Override @NonNull public Uri insert(
+    @Override @Nullable public Uri insert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values)
@@ -177,10 +177,14 @@ public class GenreProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case GENRES:
-                long id = writableDb.insert(GenreContract.TABLE_NAME, null, values);
+                long id = writableDb.insertWithOnConflict(
+                        GenreContract.TABLE_NAME,
+                        null,
+                        values,
+                        INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                 if (id <= 0)
                 {
-                    throw new SQLException("Failed to insert row into " + GenreContract.TABLE_NAME);
+                    return null;
                 }
                 return buildGenreLocation(id);
             default:
@@ -220,6 +224,11 @@ public class GenreProviderDelegate implements EntityProviderDelegate
     }
 
     @NonNull public Uri buildGenreLocation(long id)
+    {
+        return buildGenreLocation(entityContentUri, id);
+    }
+
+    @NonNull public static Uri buildGenreLocation(@NonNull Uri entityContentUri, long id)
     {
         return entityContentUri.buildUpon()
                 .appendPath(Long.toString(id))
