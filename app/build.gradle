@@ -17,12 +17,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':net')
+    compile project(':sql')
     compile "com.android.support:appcompat-v7:$SUPPORT"
     compile "com.android.support:design:$SUPPORT"
 
     testCompile "junit:junit:$JUNIT"
+    testCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
+    testCompile "org.mockito:mockito-core:$MOCKITO"
+
+    androidTestCompile "junit:junit:$JUNIT"
+    androidTestCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO"
+    androidTestCompile "com.android.support.test:rules:$RUNNER"
+    androidTestCompile "com.android.support.test:runner:$RUNNER"
+    androidTestCompile "org.mockito:mockito-core:$MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker:$DEX_MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-dx:$DEX_MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:$DEX_MOCKITO"
+}
+
+configurations.all {
+    // As long as there is a conflict between app and test app
+    resolutionStrategy.force "com.android.support:support-annotations:$SUPPORT"
 }

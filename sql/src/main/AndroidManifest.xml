@@ -8,10 +8,6 @@
         android:supportsRtl="true"
         >
 
-        <provider
-            android:name="com.github.xavierlepretre.tmdb.model.TmdbContentProvider"
-            android:authorities="com.github.xavierlepretre.tmdb"/>
-
     </application>
 
 </manifest>
