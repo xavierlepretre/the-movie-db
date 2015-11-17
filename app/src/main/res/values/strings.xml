@@ -1,4 +1,13 @@
 <resources>
+
     <string name="app_name">The Movie DB Library</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_genre">GenreActivity</string>
+
+    <string name="genre">Genre</string>
+    <string name="pick_entity_genre">Pick a Genre</string>
+
+    <string name="genre_layout_manager">android.support.v7.widget.LinearLayoutManager</string>
+    <string name="entity_genre_path" translatable="false">/genre</string>
+
 </resources>
