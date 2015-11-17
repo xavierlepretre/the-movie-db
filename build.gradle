@@ -28,7 +28,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 project.ext {
     SDK_PATH = properties.getProperty('sdk.dir')
 
-    SUPPORT = "23.1.0"
+    SUPPORT = "23.1.1"
     JACKSON = "2.6.3"
     OKHTTP = "2.5.0"
     RETROFIT = "2.0.0-beta2"

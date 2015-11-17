@@ -9,17 +9,40 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':dto')
+    compile "com.android.support:appcompat-v7:$SUPPORT"
+
+    testCompile "junit:junit:$JUNIT"
+    testCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
+    testCompile "org.mockito:mockito-core:$MOCKITO"
+
+    androidTestCompile "junit:junit:$JUNIT"
+    androidTestCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO"
+    androidTestCompile "com.android.support.test:rules:$RUNNER"
+    androidTestCompile "com.android.support.test:runner:$RUNNER"
+    androidTestCompile "org.mockito:mockito-core:$MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker:$DEX_MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-dx:$DEX_MOCKITO"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:$DEX_MOCKITO"
 }
