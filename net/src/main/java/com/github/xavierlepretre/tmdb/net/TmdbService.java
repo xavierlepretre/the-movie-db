@@ -1,12 +1,14 @@
 package com.github.xavierlepretre.tmdb.net;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
@@ -143,5 +145,12 @@ public class TmdbService
                 apiKey,
                 language == null ? null : language.getLanguage(),
                 parameters.getAppendToResponse().toString());
+    }
+
+    @NonNull public Call<GenreListDTO> getMovieGenreList(@Nullable Locale language)
+    {
+        return tmdbRetrofit.getMovieGenreList(
+                apiKey,
+                language == null ? null : language.getLanguage());
     }
 }

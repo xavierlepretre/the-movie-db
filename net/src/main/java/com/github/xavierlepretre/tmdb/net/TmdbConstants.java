@@ -48,4 +48,9 @@ public class TmdbConstants
             return CONTENT_URL + PATH_MOVIE;
         }
     }
+
+    public static class Genre
+    {
+        public static final String PATH_GENRE = "genre";
+    }
 }

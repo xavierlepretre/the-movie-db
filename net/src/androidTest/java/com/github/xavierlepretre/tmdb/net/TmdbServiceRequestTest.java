@@ -11,6 +11,7 @@ import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
+import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
@@ -500,5 +501,18 @@ public class TmdbServiceRequestTest
         MovieWithExtraDTO dto = response.body();
         assertThat(dto.getId().getId()).isGreaterThanOrEqualTo(368669);
         assertThat(dto.getImages()).isNotNull();
+    }
+
+    @Test @FlakyTest(tolerance = 3)
+    public void canGetMovieGenreList() throws Exception
+    {
+        Response<GenreListDTO> response = service
+                .getMovieGenreList(null)
+                .execute();
+        assertThat(response.isSuccess()).isTrue();
+        GenreListDTO dto = response.body();
+        assertThat(dto.getGenres().size()).isGreaterThanOrEqualTo(10);
+        assertThat(dto.getGenres().get(1).getId()).isEqualTo(new GenreId(12));
+        assertThat(dto.getGenres().get(1).getName()).isEqualTo("Adventure");
     }
 }

@@ -9,6 +9,7 @@ import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.TranslationsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.movie.AlternativeTitlesWithIdDTO;
+import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieDTO;
 import com.github.xavierlepretre.tmdb.model.movie.MovieWithExtraDTO;
 import com.github.xavierlepretre.tmdb.model.people.CreditsWithIdDTO;
@@ -19,6 +20,7 @@ import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.ListsWithIdDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Configuration;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Discover;
+import com.github.xavierlepretre.tmdb.net.TmdbConstants.Genre;
 import com.github.xavierlepretre.tmdb.net.TmdbConstants.Movie;
 
 import retrofit.Call;
@@ -107,4 +109,9 @@ public interface TmdbRetrofit
             @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey,
             @Query(TmdbConstants.QUERY_LANGUAGE) @Nullable String language,
             @Query(TmdbConstants.QUERY_APPEND_TO_RESPONSE) @Nullable String appendToResponse);
+
+    @GET(Genre.PATH_GENRE + "/" + Movie.PATH_MOVIE + "/list")
+    @NonNull Call<GenreListDTO> getMovieGenreList(
+            @Query(TmdbConstants.QUERY_API_KEY) @NonNull String apiKey,
+            @Query(TmdbConstants.QUERY_LANGUAGE) @Nullable String language);
 }

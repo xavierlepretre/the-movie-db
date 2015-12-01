@@ -8,6 +8,8 @@ import com.github.xavierlepretre.tmdb.model.movie.MovieRequestParameters;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Locale;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -165,5 +167,14 @@ public class TmdbServiceTest
                 eq("some_key"),
                 eq("de"),
                 eq("a_call,other_call"));
+    }
+
+    @Test
+    public void getMovieGenreListIsCalled() throws Exception
+    {
+        tmdbService.getMovieGenreList(new Locale("hr"));
+        verify(tmdbRetrofit).getMovieGenreList(
+                eq("some_key"),
+                eq("hr"));
     }
 }
