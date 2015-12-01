@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/dto/dto.iml" filepath="$PROJECT_DIR$/dto/dto.iml" />
       <module fileurl="file://$PROJECT_DIR$/net/net.iml" filepath="$PROJECT_DIR$/net/net.iml" />
       <module fileurl="file://$PROJECT_DIR$/sql/sql.iml" filepath="$PROJECT_DIR$/sql/sql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sync/sync.iml" filepath="$PROJECT_DIR$/sync/sync.iml" />
     </modules>
   </component>
 </project>

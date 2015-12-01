@@ -1,1 +1,1 @@
-include ':app', ':dto', ':net', ':sql'
+include ':app', ':dto', ':net', ':sql', ':sync'

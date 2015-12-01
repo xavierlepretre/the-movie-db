@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/dto" />
             <option value="$PROJECT_DIR$/net" />
             <option value="$PROJECT_DIR$/sql" />
+            <option value="$PROJECT_DIR$/sync" />
           </set>
         </option>
       </GradleProjectSettings>
