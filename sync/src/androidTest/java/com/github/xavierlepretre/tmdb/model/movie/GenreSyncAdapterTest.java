@@ -17,7 +17,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Vector;
 
 import retrofit.Call;
 import retrofit.Response;
@@ -72,11 +71,19 @@ public class GenreSyncAdapterTest
                 contentProviderClient,
                 syncResult);
 
+        ContentValues values1 = new ContentValues(2);
+        values1.put(GenreContract._ID, 12);
+        values1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues values2 = new ContentValues(2);
+        values2.put(GenreContract._ID, 28);
+        values2.put(GenreContract.COLUMN_NAME, "Action");
+        final ContentValues[] wanted = new ContentValues[]{values1, values2};
+
         verify(service).getMovieGenreList(eq(new Locale("sl")));
         verify(factory).createFrom(eq(dto));
         verify(contentProviderClient).bulkInsert(
                 eq(GenreEntity.CONTENT_URI),
-                any(ContentValues[].class));
+                eq(wanted));
     }
 
     @Test(expected = IOException.class)

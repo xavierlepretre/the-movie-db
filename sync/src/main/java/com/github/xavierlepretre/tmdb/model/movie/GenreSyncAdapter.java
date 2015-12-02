@@ -48,6 +48,7 @@ public class GenreSyncAdapter
         }
         Vector<ContentValues> contentValuesVector = factory.createFrom(dtos);
         ContentValues[] contentValuesArray = new ContentValues[contentValuesVector.size()];
+        contentValuesVector.toArray(contentValuesArray);
         try
         {
             provider.bulkInsert(GenreEntity.CONTENT_URI, contentValuesArray);
