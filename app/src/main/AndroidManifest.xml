@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.github.xavierlepretre.tmdb.themoviedblibrary"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <permission
         android:name="com.github.xavierlepretre.tmdb.model"
@@ -42,6 +42,30 @@
             android:authorities="com.github.xavierlepretre.tmdb"
             android:permission="com.github.xavierlepretre.tmdb.model"
             />
+
+        <!-- SyncAdapter's dummy authentication service -->
+        <service
+            android:name="com.github.xavierlepretre.tmdb.sync.TmdbAuthenticatorService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"/>
+        </service>
+
+        <service
+            android:name="com.github.xavierlepretre.tmdb.sync.TmdbSyncService"
+            android:exported="true"
+            android:permission="com.github.xavierlepretre.tmdb.model">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter"/>
+        </service>
 
     </application>
 

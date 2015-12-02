@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 
 import com.github.xavierlepretre.tmdb.controller.genre.GenreActivityFragment;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
+import com.github.xavierlepretre.tmdb.sync.TmdbSyncAdapter;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -45,6 +46,10 @@ public class MainActivity extends AppCompatActivity
                 requestGenre();
             }
         });
+
+        TmdbSyncAdapter.initializeSyncAdapter(this);
+        Bundle extras = new Bundle();
+        TmdbSyncAdapter.syncImmediately(this, extras);
     }
 
     @Override
