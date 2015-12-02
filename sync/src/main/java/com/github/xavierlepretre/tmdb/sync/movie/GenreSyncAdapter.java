@@ -1,4 +1,4 @@
-package com.github.xavierlepretre.tmdb.model.movie;
+package com.github.xavierlepretre.tmdb.sync.movie;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -10,7 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
-import com.github.xavierlepretre.tmdb.model.TmdbSyncConstants;
+import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
+import com.github.xavierlepretre.tmdb.model.movie.ContentValuesGenreFactory;
+import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 
 import java.io.IOException;

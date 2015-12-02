@@ -1,4 +1,4 @@
-package com.github.xavierlepretre.tmdb.model;
+package com.github.xavierlepretre.tmdb.sync;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

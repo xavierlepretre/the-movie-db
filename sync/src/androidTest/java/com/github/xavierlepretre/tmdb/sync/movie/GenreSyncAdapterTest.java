@@ -1,4 +1,4 @@
-package com.github.xavierlepretre.tmdb.model.movie;
+package com.github.xavierlepretre.tmdb.sync.movie;
 
 import android.content.ContentProviderClient;
 import android.content.ContentValues;
@@ -8,8 +8,13 @@ import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
-import com.github.xavierlepretre.tmdb.model.TmdbSyncConstants;
+import com.github.xavierlepretre.tmdb.model.movie.ContentValuesGenreFactory;
+import com.github.xavierlepretre.tmdb.model.movie.GenreContract;
+import com.github.xavierlepretre.tmdb.model.movie.GenreDTO;
+import com.github.xavierlepretre.tmdb.model.movie.GenreId;
+import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
+import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
 
 import org.junit.Before;
 import org.junit.Test;
