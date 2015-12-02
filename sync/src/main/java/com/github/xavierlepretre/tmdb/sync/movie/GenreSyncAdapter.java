@@ -10,10 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
-import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
 import com.github.xavierlepretre.tmdb.model.movie.ContentValuesGenreFactory;
 import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
+import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -38,7 +38,7 @@ public class GenreSyncAdapter
                               @NonNull SyncResult syncResult)
             throws IOException, RemoteException
     {
-        GenreListDTO dtos = null;
+        GenreListDTO dtos;
         try
         {
             dtos = tmdbService.getMovieGenreList(TmdbSyncConstants.getLanguage(extras)).execute().body();
