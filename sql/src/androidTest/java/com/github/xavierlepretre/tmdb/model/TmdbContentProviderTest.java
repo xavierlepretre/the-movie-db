@@ -56,7 +56,7 @@ public class TmdbContentProviderTest
     public Parameter parameter;
 
     @Parameters
-    public static Parameter[] getParamters()
+    public static Parameter[] getParameters()
     {
         return new Parameter[]{
                 new Parameter("first", 10, new int[]{20, 30}),

@@ -1,7 +1,6 @@
 package com.github.xavierlepretre.tmdb.model;
 
 import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
