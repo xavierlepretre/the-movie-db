@@ -29,15 +29,15 @@ public class ImagesConfDTOTest
         assertThat(dto.getBaseUrl()).isEqualTo("http://image.tmdb.org/t/p/");
         assertThat(dto.getSecureBaseUrl()).isEqualTo("https://image.tmdb.org/t/p/");
         assertThat(dto.getBackdropSizes().size()).isEqualTo(4);
-        assertThat(dto.getBackdropSizes().get(1)).isEqualTo(new ImageSizeDTO("w780"));
+        assertThat(dto.getBackdropSizes().get(1)).isEqualTo(new ImageSize("w780"));
         assertThat(dto.getLogoSizes().size()).isEqualTo(7);
-        assertThat(dto.getLogoSizes().get(3)).isEqualTo(new ImageSizeDTO("w185"));
+        assertThat(dto.getLogoSizes().get(3)).isEqualTo(new ImageSize("w185"));
         assertThat(dto.getPosterSizes().size()).isEqualTo(7);
-        assertThat(dto.getPosterSizes().get(4)).isEqualTo(new ImageSizeDTO("w500"));
+        assertThat(dto.getPosterSizes().get(4)).isEqualTo(new ImageSize("w500"));
         assertThat(dto.getProfileSizes().size()).isEqualTo(4);
-        assertThat(dto.getProfileSizes().get(0)).isEqualTo(new ImageSizeDTO("w45"));
+        assertThat(dto.getProfileSizes().get(0)).isEqualTo(new ImageSize("w45"));
         assertThat(dto.getStillSizes().size()).isEqualTo(4);
-        assertThat(dto.getStillSizes().get(3)).isEqualTo(new ImageSizeDTO("original"));
+        assertThat(dto.getStillSizes().get(3)).isEqualTo(new ImageSize("original"));
     }
 
     @Test

@@ -8,12 +8,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Image size as can be passed as part of the path of images.
  */
-public class ImageSizeDTO
+public class ImageSize
 {
     @NonNull private final String size;
 
     @JsonCreator
-    public ImageSizeDTO(@NonNull String size)
+    public ImageSize(@NonNull String size)
     {
         this.size = size;
     }
@@ -31,7 +31,12 @@ public class ImageSizeDTO
 
     @Override public boolean equals(Object obj)
     {
-        return obj instanceof ImageSizeDTO
-                && ((ImageSizeDTO) obj).getSize().equals(size);
+        return obj instanceof ImageSize
+                && ((ImageSize) obj).getSize().equals(size);
+    }
+
+    @NonNull public Integer getWidth()
+    {
+        return  Integer.parseInt(size.replaceFirst("w(\\d+)", "$1"));
     }
 }

@@ -11,11 +11,11 @@ public class ImagesConfDTO
 {
     @NonNull private final String baseUrl;
     @NonNull private final String secureBaseUrl;
-    @NonNull private final List<ImageSizeDTO> backdropSizes;
-    @NonNull private final List<ImageSizeDTO> logoSizes;
-    @NonNull private final List<ImageSizeDTO> posterSizes;
-    @NonNull private final List<ImageSizeDTO> profileSizes;
-    @NonNull private final List<ImageSizeDTO> stillSizes;
+    @NonNull private final List<ImageSize> backdropSizes;
+    @NonNull private final List<ImageSize> logoSizes;
+    @NonNull private final List<ImageSize> posterSizes;
+    @NonNull private final List<ImageSize> profileSizes;
+    @NonNull private final List<ImageSize> stillSizes;
 
     public ImagesConfDTO(
             @JsonProperty(value = "base_url", required = true) @NonNull
@@ -23,15 +23,15 @@ public class ImagesConfDTO
             @JsonProperty(value = "secure_base_url", required = true) @NonNull
             String secureBaseUrl,
             @JsonProperty(value = "backdrop_sizes", required = true) @NonNull
-            List<ImageSizeDTO> backdropSizes,
+            List<ImageSize> backdropSizes,
             @JsonProperty(value = "logo_sizes", required = true) @NonNull
-            List<ImageSizeDTO> logoSizes,
+            List<ImageSize> logoSizes,
             @JsonProperty(value = "poster_sizes", required = true) @NonNull
-            List<ImageSizeDTO> posterSizes,
+            List<ImageSize> posterSizes,
             @JsonProperty(value = "profile_sizes", required = true) @NonNull
-            List<ImageSizeDTO> profileSizes,
+            List<ImageSize> profileSizes,
             @JsonProperty(value = "still_sizes", required = true) @NonNull
-            List<ImageSizeDTO> stillSizes)
+            List<ImageSize> stillSizes)
     {
         this.baseUrl = baseUrl;
         this.secureBaseUrl = secureBaseUrl;
@@ -52,27 +52,27 @@ public class ImagesConfDTO
         return secureBaseUrl;
     }
 
-    @NonNull public List<ImageSizeDTO> getBackdropSizes()
+    @NonNull public List<ImageSize> getBackdropSizes()
     {
         return backdropSizes;
     }
 
-    @NonNull public List<ImageSizeDTO> getLogoSizes()
+    @NonNull public List<ImageSize> getLogoSizes()
     {
         return logoSizes;
     }
 
-    @NonNull public List<ImageSizeDTO> getPosterSizes()
+    @NonNull public List<ImageSize> getPosterSizes()
     {
         return posterSizes;
     }
 
-    @NonNull public List<ImageSizeDTO> getProfileSizes()
+    @NonNull public List<ImageSize> getProfileSizes()
     {
         return profileSizes;
     }
 
-    @NonNull public List<ImageSizeDTO> getStillSizes()
+    @NonNull public List<ImageSize> getStillSizes()
     {
         return stillSizes;
     }
