@@ -28,7 +28,7 @@ public class ConfigurationDTOTest
         ConfigurationDTO dto = mapper.readValue(getClass().getResourceAsStream("configuration_dto_1.json"), ConfigurationDTO.class);
         assertThat(dto.getImagesConf()).isNotNull();
         assertThat(dto.getChangeKeys().size()).isEqualTo(53);
-        assertThat(dto.getChangeKeys().get(10)).isEqualTo(new ChangeKeyDTO("created_by"));
+        assertThat(dto.getChangeKeys().get(10)).isEqualTo(new ChangeKey("created_by"));
     }
 
     @Test

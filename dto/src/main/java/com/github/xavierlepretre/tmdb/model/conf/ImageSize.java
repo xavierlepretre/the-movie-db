@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Image size as can be passed as part of the path of images.
  */
-public class ImageSize
+public final class ImageSize
 {
     @NonNull private final String size;
 

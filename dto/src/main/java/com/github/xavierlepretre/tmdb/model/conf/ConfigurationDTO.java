@@ -10,13 +10,13 @@ import java.util.List;
 public class ConfigurationDTO
 {
     @NonNull private final ImagesConfDTO imagesConf;
-    @NonNull private final List<ChangeKeyDTO> changeKeys;
+    @NonNull private final List<ChangeKey> changeKeys;
 
     public ConfigurationDTO(
             @JsonProperty(value = "images", required = true) @NonNull
             ImagesConfDTO imagesConf,
             @JsonProperty(value = "change_keys", required = true) @NonNull
-            List<ChangeKeyDTO> changeKeys)
+            List<ChangeKey> changeKeys)
     {
         this.imagesConf = imagesConf;
         this.changeKeys = Collections.unmodifiableList(changeKeys);
@@ -27,7 +27,7 @@ public class ConfigurationDTO
         return imagesConf;
     }
 
-    @NonNull public List<ChangeKeyDTO> getChangeKeys()
+    @NonNull public List<ChangeKey> getChangeKeys()
     {
         return changeKeys;
     }

@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class ChangeKeyDTO
+public final class ChangeKey
 {
     @NonNull private final String key;
 
     @JsonCreator
-    public ChangeKeyDTO(@NonNull String key)
+    public ChangeKey(@NonNull String key)
     {
         this.key = key;
     }
@@ -28,7 +28,7 @@ public class ChangeKeyDTO
 
     @Override public boolean equals(Object obj)
     {
-        return obj instanceof ChangeKeyDTO
-                && ((ChangeKeyDTO) obj).getKey().equals(key);
+        return obj instanceof ChangeKey
+                && ((ChangeKey) obj).getKey().equals(key);
     }
 }
