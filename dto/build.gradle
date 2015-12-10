@@ -18,14 +18,14 @@ dependencies {
     testCompile "junit:junit:$JUNIT"
     testCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
     testCompile "com.fasterxml.jackson.core:jackson-databind:$JACKSON"
-    testCompile "org.spockframework:spock-core:$SPOCK"
     testCompile "nl.jqno.equalsverifier:equalsverifier:$EQUALS_VERIFIER"
 }
 
 //Copy test resources to classpath folder. See https://code.google.com/p/android/issues/detail?id=74443
 // TODO Apparently there is some leakage between modules.
 // TODO avoid having one modules resources files then accessed from another module's tests
-tasks.findByName("assemble").dependsOn("copyTestResources")
+//tasks.findByName("assemble").dependsOn("copyTestResources")
+processTestResources.dependsOn("copyTestResources")
 task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/classes/test"
