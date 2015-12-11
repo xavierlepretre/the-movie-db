@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.github.xavierlepretre.tmdb.model.conf.ContentValuesConfigurationFactory;
 import com.github.xavierlepretre.tmdb.model.movie.ContentValuesGenreFactory;
+import com.github.xavierlepretre.tmdb.sync.conf.ConfigurationSyncAdapter;
 import com.github.xavierlepretre.tmdb.sync.movie.GenreSyncAdapter;
 import com.github.xavierlepretre.tmdb.net.BuildConfig;
 import com.github.xavierlepretre.tmdb.net.TmdbRetrofitFactory;
@@ -33,6 +35,9 @@ public class TmdbSyncService extends Service
                 tmdbSyncAdapter = new TmdbSyncAdapter(
                         this,
                         true,
+                        new ConfigurationSyncAdapter(
+                                tmdbService,
+                                new ContentValuesConfigurationFactory()),
                         new GenreSyncAdapter(
                                 tmdbService,
                                 new ContentValuesGenreFactory()),

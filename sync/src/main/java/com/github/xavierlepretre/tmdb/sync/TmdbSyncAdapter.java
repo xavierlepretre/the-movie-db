@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.xavierlepretre.sync.R;
+import com.github.xavierlepretre.tmdb.sync.conf.ConfigurationSyncAdapter;
 import com.github.xavierlepretre.tmdb.sync.movie.GenreSyncAdapter;
 
 import java.io.IOException;
@@ -23,15 +24,18 @@ public class TmdbSyncAdapter extends AbstractThreadedSyncAdapter
 {
     private static final String TAG = TmdbSyncAdapter.class.getSimpleName();
 
+    @NonNull private final ConfigurationSyncAdapter configurationSyncAdapter;
     @NonNull private final GenreSyncAdapter genreSyncAdapter;
     @NonNull private final Logger logger;
 
     public TmdbSyncAdapter(@NonNull Context context,
                            boolean autoInitialize,
+                           @NonNull ConfigurationSyncAdapter configurationSyncAdapter,
                            @NonNull GenreSyncAdapter genreSyncAdapter,
                            @NonNull Logger logger)
     {
         super(context, autoInitialize);
+        this.configurationSyncAdapter = configurationSyncAdapter;
         this.genreSyncAdapter = genreSyncAdapter;
         this.logger = logger;
     }
@@ -43,6 +47,14 @@ public class TmdbSyncAdapter extends AbstractThreadedSyncAdapter
             @NonNull ContentProviderClient provider,
             @NonNull SyncResult syncResult)
     {
+        try
+        {
+            configurationSyncAdapter.onPerformSync(account, extras, authority, provider, syncResult);
+        }
+        catch (IOException | RemoteException e)
+        {
+            logger.log(Level.SEVERE, TAG + ", failed to sync Configuration", e);
+        }
         try
         {
             genreSyncAdapter.onPerformSync(account, extras, authority, provider, syncResult);
