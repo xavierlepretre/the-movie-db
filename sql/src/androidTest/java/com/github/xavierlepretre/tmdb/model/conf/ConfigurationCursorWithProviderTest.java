@@ -2,9 +2,9 @@ package com.github.xavierlepretre.tmdb.model.conf;
 
 import android.content.ContentValues;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
 import org.junit.After;
@@ -13,9 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -38,44 +36,13 @@ public class ConfigurationCursorWithProviderTest
     private ConfigurationProviderDelegate providerDelegate;
     private ConfigurationSQLiteOpenHelper sqlHelper;
 
-    private static class Parameter
-    {
-        @NonNull private final List<String> columns;
-        @NonNull private final List<String> values;
-
-        public Parameter(@NonNull List<String> columns,
-                         @NonNull List<String> values)
-        {
-            this.columns = columns;
-            this.values = values;
-        }
-    }
-
     @Parameterized.Parameter
-    public Parameter parameter;
+    public ParameterColumnValue parameter;
 
     @Parameterized.Parameters()
-    public static Parameter[] getParameters()
+    public static ParameterColumnValue[] getParameters()
     {
-        int maxVal = 1 << POTENTIAL_COLUMNS.length;
-        Parameter[] parameters = new Parameter[maxVal];
-
-        // Picking which columns in a binary way
-        for (int i = 0; i < maxVal; i++)
-        {
-            List<String> columns = new ArrayList<>();
-            List<String> values = new ArrayList<>();
-            for (int j = 0; j < POTENTIAL_COLUMNS.length; j++)
-            {
-                if ((i & (1 << j)) >= 1)
-                {
-                    columns.add(POTENTIAL_COLUMNS[j][0]);
-                    values.add(POTENTIAL_COLUMNS[j][1]);
-                }
-            }
-            parameters[i] = new Parameter(columns, values);
-        }
-        return parameters;
+        return ParameterColumnValue.getPossibleParameters(POTENTIAL_COLUMNS);
     }
 
     @Before
@@ -92,15 +59,15 @@ public class ConfigurationCursorWithProviderTest
                 null,
                 1);
 
-        ContentValues values1 = new ContentValues();
+        ContentValues values = new ContentValues();
         for (String[] pair : POTENTIAL_COLUMNS)
         {
-            values1.put(pair[0], pair[1]);
+            values.put(pair[0], pair[1]);
         }
         providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                values1);
+                values);
     }
 
     @After
@@ -112,6 +79,7 @@ public class ConfigurationCursorWithProviderTest
     @Test
     public void queryListFromDb_isOk() throws Exception
     {
+        //noinspection ConstantConditions
         ConfigurationCursor found = new ConfigurationCursor(providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
