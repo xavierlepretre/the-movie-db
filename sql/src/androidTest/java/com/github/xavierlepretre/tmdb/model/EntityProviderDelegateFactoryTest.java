@@ -17,7 +17,8 @@ public class EntityProviderDelegateFactoryTest
 
         SparseArray<EntityProviderDelegate> created = factory.createProviders();
 
-        assertThat(created.size()).isEqualTo(1);
+        assertThat(created.size()).isEqualTo(2);
+        verify(factory).createConfigurationProvider();
         verify(factory).createGenreProvider();
     }
 }
