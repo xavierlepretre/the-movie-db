@@ -69,7 +69,6 @@ public class ConfigurationCursorTest
         return parameters;
     }
 
-
     @Test
     public void testSometimesNull() throws Exception
     {
