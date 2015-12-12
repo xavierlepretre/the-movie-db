@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.production;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -41,7 +42,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
     @Override @NonNull public String getCreateQuery()
     {
         return "CREATE TABLE " + ProductionCompanyContract.TABLE_NAME + "("
-                + ProductionCompanyContract._ID + " INTEGER PRIMARY KEY,"
+                + ProductionCompanyContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
                 + ProductionCompanyContract.COLUMN_NAME + " TEXT NULL"
                 + ");";
     }
@@ -177,6 +178,10 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COMPANIES:
+                if (values != null && values.getAsLong(ProductionCompanyContract._ID) == null)
+                {
+                    throw new SQLiteConstraintException(ProductionCompanyContract._ID + " cannot be null");
+                }
                 long id = writableDb.insertWithOnConflict(
                         ProductionCompanyContract.TABLE_NAME,
                         null,
@@ -205,6 +210,10 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
+                        if (value != null && value.getAsLong(ProductionCompanyContract._ID) == null)
+                        {
+                            continue;
+                        }
                         insertedId = writableDb.insert(ProductionCompanyContract.TABLE_NAME, null, value);
                         if (insertedId > 0)
                         {

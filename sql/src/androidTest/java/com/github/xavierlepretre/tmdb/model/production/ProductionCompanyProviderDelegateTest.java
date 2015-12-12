@@ -3,6 +3,8 @@ package com.github.xavierlepretre.tmdb.model.production;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
@@ -45,8 +47,7 @@ public class ProductionCompanyProviderDelegateTest
     public void createRequestIsCorrect() throws Exception
     {
         assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE productionCompany(_id INTEGER PRIMARY KEY,name TEXT NULL);"
-        );
+                "CREATE TABLE productionCompany(_id INTEGER PRIMARY KEY NOT NULL,name TEXT NULL);");
     }
 
     @Test
@@ -115,6 +116,38 @@ public class ProductionCompanyProviderDelegateTest
                 .isEqualTo(Uri.parse("content://something/60"));
         assertThat(providerDelegate.buildProductionCompanyLocation(870))
                 .isEqualTo(Uri.parse("content://content_authority/productionCompany/870"));
+    }
+
+    @Test(expected = SQLiteException.class)
+    public void insertNull_fails() throws Exception
+    {
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                null);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void insert_withMissingId_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void insert_withNullId_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, (Long) null);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values);
     }
 
     @Test
@@ -201,6 +234,56 @@ public class ProductionCompanyProviderDelegateTest
                 .isNull();
     }
 
+    @Test
+    public void bulkInsert_with1Null_skips() throws Exception
+    {
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{null, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void bulkInsert_withMissingId_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void bulkInsert_withNullId_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCompanyContract._ID, (Long) null);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values))
+                .isEqualTo(1);
+    }
+    
     @Test
     public void bulkInsertInDb_andCanQuery() throws Exception
     {

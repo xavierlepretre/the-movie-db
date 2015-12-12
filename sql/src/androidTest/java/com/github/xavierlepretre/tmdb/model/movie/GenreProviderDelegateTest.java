@@ -3,6 +3,8 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
@@ -45,7 +47,7 @@ public class GenreProviderDelegateTest
     public void createRequestIsCorrect() throws Exception
     {
         assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE genre(_id INTEGER PRIMARY KEY,name TEXT NULL);"
+                "CREATE TABLE genre(_id INTEGER PRIMARY KEY NOT NULL,name TEXT NULL);"
         );
     }
 
@@ -115,6 +117,38 @@ public class GenreProviderDelegateTest
                 .isEqualTo(Uri.parse("content://something/60"));
         assertThat(providerDelegate.buildGenreLocation(870))
                 .isEqualTo(Uri.parse("content://content_authority/genre/870"));
+    }
+
+    @Test(expected = SQLiteException.class)
+    public void insertNull_fails() throws Exception
+    {
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                null);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void insert_withMissingId_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void insert_withNullId_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, (Integer) null);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values);
     }
 
     @Test
@@ -193,6 +227,56 @@ public class GenreProviderDelegateTest
         assertThat(myGenre.moveToFirst()).isTrue();
         assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
                 .isNull();
+    }
+
+    @Test
+    public void bulkInsert_with1Null_skips() throws Exception
+    {
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{null, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void bulkInsert_withMissingId_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void bulkInsert_withNullId_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract._ID, (Integer) null);
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values))
+                .isEqualTo(1);
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -41,7 +42,7 @@ public class GenreProviderDelegate implements EntityProviderDelegate
     @Override @NonNull public String getCreateQuery()
     {
         return "CREATE TABLE " + GenreContract.TABLE_NAME + "("
-                + GenreContract._ID + " INTEGER PRIMARY KEY,"
+                + GenreContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
                 + GenreContract.COLUMN_NAME + " TEXT NULL"
                 + ");";
     }
@@ -177,6 +178,10 @@ public class GenreProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case GENRES:
+                if (values != null && values.getAsLong(GenreContract._ID) == null)
+                {
+                    throw new SQLiteConstraintException(GenreContract._ID + " cannot be null");
+                }
                 long id = writableDb.insertWithOnConflict(
                         GenreContract.TABLE_NAME,
                         null,
@@ -205,6 +210,10 @@ public class GenreProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
+                        if (value != null && value.getAsLong(GenreContract._ID) == null)
+                        {
+                            continue;
+                        }
                         insertedId = writableDb.insert(GenreContract.TABLE_NAME, null, value);
                         if (insertedId > 0)
                         {

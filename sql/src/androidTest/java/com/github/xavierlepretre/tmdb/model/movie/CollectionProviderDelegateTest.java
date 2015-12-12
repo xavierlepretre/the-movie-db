@@ -3,6 +3,8 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
@@ -45,7 +47,7 @@ public class CollectionProviderDelegateTest
     public void createRequestIsCorrect() throws Exception
     {
         assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE collection(backdropPath TEXT NULL,_id INTEGER PRIMARY KEY,name TEXT NULL,posterPath TEXT NULL);"
+                "CREATE TABLE collection(backdropPath TEXT NULL,_id INTEGER PRIMARY KEY NOT NULL,name TEXT NULL,posterPath TEXT NULL);"
         );
     }
 
@@ -115,6 +117,42 @@ public class CollectionProviderDelegateTest
                 .isEqualTo(Uri.parse("content://something/60"));
         assertThat(providerDelegate.buildCollectionLocation(870))
                 .isEqualTo(Uri.parse("content://content_authority/collection/870"));
+    }
+
+    @Test(expected = SQLiteException.class)
+    public void insertNull_fails() throws Exception
+    {
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                null);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void insert_withMissingId_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void insert_withNullId_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, (Long) null);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values);
     }
 
     @Test
@@ -215,6 +253,66 @@ public class CollectionProviderDelegateTest
                 .isNull();
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_POSTER_PATH)))
                 .isNull();
+    }
+
+    @Test
+    public void bulkInsert_with1Null_skips() throws Exception
+    {
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 12L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        ContentValues[] values = new ContentValues[]{null, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void bulkInsert_withMissingId_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 12L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
+    public void bulkInsert_withNullId_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, (Long) null);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 12L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values))
+                .isEqualTo(1);
     }
 
     @Test

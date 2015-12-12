@@ -46,7 +46,7 @@ public class ConfigurationProviderDelegateTest
     public void createRequestIsCorrect() throws Exception
     {
         assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE configuration(_id INTEGER PRIMARY KEY," +
+                "CREATE TABLE configuration(_id INTEGER PRIMARY KEY NOT NULL," +
                         "imagesBaseUrl TEXT NULL," +
                         "imagesSecureBaseUrl TEXT NULL," +
                         "imagesBackdropSizes TEXT NULL," +
@@ -101,10 +101,93 @@ public class ConfigurationProviderDelegateTest
         providerDelegate.getType(Uri.parse("content://content_authority/configuration/a"));
     }
 
+    @Test()
+    public void insertNull_putsInDb() throws Exception
+    {
+        Uri inserted = providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/configuration"),
+                null);
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
+
+        Cursor myConfiguration = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                inserted, null, null, null, null, null, null, null);
+
+        assertThat(myConfiguration).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myConfiguration.moveToFirst()).isTrue();
+        assertThat(myConfiguration.getInt(myConfiguration.getColumnIndex(ConfigurationContract._ID)))
+                .isEqualTo(ConfigurationContract.UNIQUE_ROW_ID);
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_BASE_URL)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_SECURE_BASE_URL)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_BACKDROP_SIZES)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_LOGO_SIZES)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_POSTER_SIZES)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_PROFILE_SIZES)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_STILL_SIZES)))
+                .isNull();
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ConfigurationContract.COLUMN_CHANGE_KEYS)))
+                .isNull();
+    }
+
     @Test
-    public void insertWithoutIdPutsInDb_andCanQuery() throws Exception
+    public void insert_withMissingId_putsInDbAndCanQuery() throws Exception
     {
         ContentValues values = new ContentValues();
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url1");
+        values.put(ImagesConfSegment.COLUMN_SECURE_BASE_URL, "url2");
+        values.put(ImagesConfSegment.COLUMN_BACKDROP_SIZES, "w1,w2");
+        values.put(ImagesConfSegment.COLUMN_LOGO_SIZES, "w3,w4");
+        values.put(ImagesConfSegment.COLUMN_POSTER_SIZES, "w5,w6");
+        values.put(ImagesConfSegment.COLUMN_PROFILE_SIZES, "w7,w8");
+        values.put(ImagesConfSegment.COLUMN_STILL_SIZES, "w9,w10");
+        values.put(ConfigurationContract.COLUMN_CHANGE_KEYS, "key1,key2");
+        Uri inserted = providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/configuration"),
+                values);
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
+
+        Cursor myConfiguration = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                inserted, null, null, null, null, null, null, null);
+
+        assertThat(myConfiguration).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myConfiguration.moveToFirst()).isTrue();
+        assertThat(myConfiguration.getInt(myConfiguration.getColumnIndex(ConfigurationContract._ID)))
+                .isEqualTo(ConfigurationContract.UNIQUE_ROW_ID);
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_BASE_URL)))
+                .isEqualTo("url1");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_SECURE_BASE_URL)))
+                .isEqualTo("url2");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_BACKDROP_SIZES)))
+                .isEqualTo("w1,w2");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_LOGO_SIZES)))
+                .isEqualTo("w3,w4");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_POSTER_SIZES)))
+                .isEqualTo("w5,w6");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_PROFILE_SIZES)))
+                .isEqualTo("w7,w8");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ImagesConfSegment.COLUMN_STILL_SIZES)))
+                .isEqualTo("w9,w10");
+        assertThat(myConfiguration.getString(myConfiguration.getColumnIndex(ConfigurationContract.COLUMN_CHANGE_KEYS)))
+                .isEqualTo("key1,key2");
+    }
+
+
+    @Test
+    public void insert_withNullId_putsInDbAndCanQuery() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ConfigurationContract._ID, (Integer) null);
         values.put(ImagesConfSegment.COLUMN_BASE_URL, "url1");
         values.put(ImagesConfSegment.COLUMN_SECURE_BASE_URL, "url2");
         values.put(ImagesConfSegment.COLUMN_BACKDROP_SIZES, "w1,w2");

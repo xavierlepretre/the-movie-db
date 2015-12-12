@@ -37,7 +37,7 @@ public class ConfigurationProviderDelegate implements EntityProviderDelegate
     @Override @NonNull public String getCreateQuery()
     {
         return "CREATE TABLE " + ConfigurationContract.TABLE_NAME + "("
-                + ConfigurationContract._ID + " INTEGER PRIMARY KEY,"
+                + ConfigurationContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
                 + ImagesConfSegment.COLUMN_BASE_URL + " TEXT NULL,"
                 + ImagesConfSegment.COLUMN_SECURE_BASE_URL + " TEXT NULL,"
                 + ImagesConfSegment.COLUMN_BACKDROP_SIZES + " TEXT NULL,"

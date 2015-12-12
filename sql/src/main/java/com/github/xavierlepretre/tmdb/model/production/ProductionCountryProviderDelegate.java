@@ -212,6 +212,10 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
+                        if (value != null && value.getAsString(ProductionCountryContract._ID) == null)
+                        {
+                            continue;
+                        }
                         insertedId = writableDb.insert(ProductionCountryContract.TABLE_NAME, null, value);
                         if (insertedId > 0)
                         {

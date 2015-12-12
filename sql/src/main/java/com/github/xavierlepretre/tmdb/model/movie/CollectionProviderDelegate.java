@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -42,7 +43,7 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
     {
         return "CREATE TABLE " + CollectionContract.TABLE_NAME + "("
                 + CollectionContract.COLUMN_BACKDROP_PATH + " TEXT NULL,"
-                + CollectionContract._ID + " INTEGER PRIMARY KEY,"
+                + CollectionContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
                 + CollectionContract.COLUMN_NAME + " TEXT NULL,"
                 + CollectionContract.COLUMN_POSTER_PATH + " TEXT NULL"
                 + ");";
@@ -179,6 +180,10 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case COLLECTIONS:
+                if (values != null && values.getAsLong(CollectionContract._ID) == null)
+                {
+                    throw new SQLiteConstraintException(CollectionContract._ID + " cannot be null");
+                }
                 long id = writableDb.insertWithOnConflict(
                         CollectionContract.TABLE_NAME,
                         null,
@@ -207,6 +212,10 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
+                        if (value != null && value.getAsLong(CollectionContract._ID) == null)
+                        {
+                            continue;
+                        }
                         insertedId = writableDb.insert(CollectionContract.TABLE_NAME, null, value);
                         if (insertedId > 0)
                         {

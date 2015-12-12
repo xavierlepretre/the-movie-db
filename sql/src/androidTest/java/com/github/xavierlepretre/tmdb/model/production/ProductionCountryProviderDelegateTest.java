@@ -235,6 +235,21 @@ public class ProductionCountryProviderDelegateTest
     }
 
     @Test
+    public void bulkInsert_with1Null_skips() throws Exception
+    {
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCountryContract._ID, "US");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        ContentValues[] values = new ContentValues[]{null, value2};
+
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry"),
+                values))
+                .isEqualTo(1);
+    }
+
+    @Test
     public void bulkInsert_withMissingId_skips() throws Exception
     {
         ContentValues value1 = new ContentValues();
