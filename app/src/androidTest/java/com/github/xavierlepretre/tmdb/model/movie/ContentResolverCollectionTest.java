@@ -9,7 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
-import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class ContentResolverGenreTest
+public class ContentResolverCollectionTest
 {
     private Cursor cursor;
     private List<ContentObserver> observers;
@@ -59,59 +60,65 @@ public class ContentResolverGenreTest
     private void deleteFromTable()
     {
         InstrumentationRegistry.getTargetContext().getContentResolver()
-                .delete(GenreEntity.CONTENT_URI, null, null);
+                .delete(CollectionEntity.CONTENT_URI, null, null);
     }
 
     @Test
     public void canGetTypes() throws Exception
     {
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().getType(
-                GenreEntity.CONTENT_URI))
-                .isEqualTo(GenreEntity.CONTENT_DIR_TYPE);
+                CollectionEntity.CONTENT_URI))
+                .isEqualTo(CollectionEntity.CONTENT_DIR_TYPE);
     }
 
     @Test
     public void canInsertQuery() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                CollectionEntity.buildUri(new CollectionId(645)).toString());
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 inserted, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        CollectionCursor collectionCursor = new CollectionCursor(cursor);
+        assertThat(collectionCursor.moveToFirst()).isTrue();
+        Collection collection = collectionCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(645L));
+        assertThat(collection.getName()).isEqualTo("James Bond Collection");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
+        assertThat(collectionCursor.moveToNext()).isFalse();
     }
 
     @Test
     public void insert_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 true,
                 observer);
 
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
         deliverSignal.await(5, TimeUnit.SECONDS);
@@ -123,31 +130,40 @@ public class ContentResolverGenreTest
     public void canInsertBulk() throws Exception
     {
         ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 646L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
         ContentValues[] values = new ContentValues[]{value1, value2};
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values))
                 .isEqualTo(2);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
-                GenreEntity.CONTENT_URI, null, null, null, null);
+                CollectionEntity.CONTENT_URI, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
-        assertThat(genreCursor.moveToNext()).isTrue();
-        genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(4));
-        assertThat(genre.getName()).isEqualTo("Comic");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        CollectionCursor collectionCursor = new CollectionCursor(cursor);
+        assertThat(collectionCursor.moveToFirst()).isTrue();
+        Collection collection = collectionCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(645L));
+        assertThat(collection.getName()).isEqualTo("James Bond Collection");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
+
+        assertThat(collectionCursor.moveToNext()).isTrue();
+        collection = collectionCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/other_backdrop.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(646L));
+        assertThat(collection.getName()).isEqualTo("Other Collection");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/other_poster.jpg"));
+        assertThat(collectionCursor.moveToNext()).isFalse();
     }
 
     @Test
@@ -156,12 +172,12 @@ public class ContentResolverGenreTest
         ContentValues[] values = new ContentValues[0];
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values))
                 .isEqualTo(0);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
-                GenreEntity.CONTENT_URI, null, null, null, null);
+                CollectionEntity.CONTENT_URI, null, null, null, null);
         assertThat(cursor).isNotNull();
         assertThat(cursor.moveToFirst()).isFalse();
     }
@@ -170,78 +186,95 @@ public class ContentResolverGenreTest
     public void insertBulkTheSame_skips1() throws Exception
     {
         ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 646L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
         ContentValues[] values = new ContentValues[]{value1, value2};
         ContentValues value3 = new ContentValues();
-        value3.put(GenreContract._ID, 3);
-        value3.put(GenreContract.COLUMN_NAME, "Action");
+        value3.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value3.put(CollectionContract._ID, 645L);
+        value3.put(CollectionContract.COLUMN_NAME, "James Bond Other Collection");
+        value3.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values))
                 .isEqualTo(2);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
-                GenreEntity.CONTENT_URI, null, null, null, null);
+                CollectionEntity.CONTENT_URI, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
-        assertThat(genreCursor.moveToNext()).isTrue();
-        genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(4));
-        assertThat(genre.getName()).isEqualTo("Comic");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        CollectionCursor collectionCursor = new CollectionCursor(cursor);
+        assertThat(collectionCursor.moveToFirst()).isTrue();
+        Collection collection = collectionCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(645L));
+        assertThat(collection.getName()).isEqualTo("James Bond Collection");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
+
+        assertThat(collectionCursor.moveToNext()).isTrue();
+        collection = collectionCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/other_backdrop.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(646L));
+        assertThat(collection.getName()).isEqualTo("Other Collection");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/other_poster.jpg"));
+        assertThat(collectionCursor.moveToNext()).isFalse();
     }
 
     @Test
     public void insertBulk_getsNotified() throws Exception
     {
         ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 646L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
         ContentValues[] values = new ContentValues[]{value1, value2};
 
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 true,
                 observer);
 
         InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
-        assertThat(observer.latestChanged).isEqualTo(GenreEntity.CONTENT_URI);
+        assertThat(observer.latestChanged).isEqualTo(CollectionEntity.CONTENT_URI);
     }
 
     @Test
     public void canDelete() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                CollectionEntity.buildUri(new CollectionId(645)).toString());
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
                 .delete(inserted, null, null))
@@ -257,22 +290,24 @@ public class ContentResolverGenreTest
     public void delete_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                CollectionEntity.buildUri(new CollectionId(645)).toString());
 
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 true,
                 observer);
 
@@ -288,18 +323,20 @@ public class ContentResolverGenreTest
     public void canUpdate() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                CollectionEntity.buildUri(new CollectionId(645)).toString());
 
-        values.put(GenreContract.COLUMN_NAME, "Comic");
+        values.put(CollectionContract.COLUMN_NAME, "Other Collection");
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
                 .update(inserted,
@@ -310,31 +347,35 @@ public class ContentResolverGenreTest
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 inserted, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Comic");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        CollectionCursor collectionCursor = new CollectionCursor(cursor);
+        assertThat(collectionCursor.moveToFirst()).isTrue();
+        Collection collection = collectionCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(645L));
+        assertThat(collection.getName()).isEqualTo("Other Collection");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
+        assertThat(collectionCursor.moveToNext()).isFalse();
     }
 
     @Test
     public void update_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 values);
 
-        values.put(GenreContract.COLUMN_NAME, "Comic");
+        values.put(CollectionContract.COLUMN_NAME, "Other Collection");
 
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 true,
                 observer);
 

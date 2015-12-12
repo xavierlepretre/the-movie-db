@@ -117,6 +117,7 @@ public class ConfigurationProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
                 values);
+        //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
         Cursor myConfiguration = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -208,6 +209,7 @@ public class ConfigurationProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
                 values);
+        //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
         Cursor myConfiguration = providerDelegate.query(sqlHelper.getReadableDatabase(),
