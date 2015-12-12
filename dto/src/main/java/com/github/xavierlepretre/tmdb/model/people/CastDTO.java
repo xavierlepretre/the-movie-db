@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.people;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 public class CastDTO extends PersonDTO
 {
@@ -17,7 +18,7 @@ public class CastDTO extends PersonDTO
             @JsonProperty(value = "id", required = true) @NonNull PersonId id,
             @JsonProperty(value = "name", required = true) @NonNull String name,
             @JsonProperty(value = "order", required = true) int order,
-            @JsonProperty(value = "profile_path", required = true) @NonNull String profilePath)
+            @JsonProperty(value = "profile_path", required = true) @NonNull ImagePath profilePath)
     {
         super(creditId,
                 id,

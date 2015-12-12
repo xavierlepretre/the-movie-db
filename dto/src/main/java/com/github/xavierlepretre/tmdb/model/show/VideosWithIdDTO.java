@@ -12,7 +12,7 @@ public class VideosWithIdDTO extends VideosDTO
     @NonNull private final MovieId id;
 
     public VideosWithIdDTO(
-            @JsonProperty(value = "id", required = true)
+            @JsonProperty(value = "id", required = true) @NonNull
             MovieId id,
             @JsonProperty(value = "results", required = true) @NonNull
             List<VideoDTO> results)

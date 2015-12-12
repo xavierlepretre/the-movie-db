@@ -8,6 +8,7 @@ import com.github.xavierlepretre.tmdb.TmdbDtoConstants.Movie;
 import com.github.xavierlepretre.tmdb.model.discover.DiscoverMoviesDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageDTO;
 import com.github.xavierlepretre.tmdb.model.i18n.TranslationsDTO;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.github.xavierlepretre.tmdb.model.image.ImagesDTO;
 import com.github.xavierlepretre.tmdb.model.people.CreditsDTO;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyDTO;
@@ -41,7 +42,7 @@ public class MovieWithExtraDTO extends MovieDTO
             @JsonProperty(Movie.EXTRA_ALTERNATIVE_TITLES) @Nullable
             AlternativeTitlesDTO alternativeTitles,
             @JsonProperty(value = "backdrop_path", required = true) @NonNull
-            String backdropPath,
+            ImagePath backdropPath,
             @JsonProperty(value = "belongs_to_collection", required = true) @NonNull
             CollectionDTO belongsToCollection,
             @JsonProperty(value = "budget", required = true)
@@ -71,7 +72,7 @@ public class MovieWithExtraDTO extends MovieDTO
             @JsonProperty(value = "popularity", required = true)
             float popularity,
             @JsonProperty(value = "poster_path", required = true) @NonNull
-            String posterPath,
+            ImagePath posterPath,
             @JsonProperty(value = "production_companies", required = true) @NonNull
             List<ProductionCompanyDTO> productionCompanies,
             @JsonProperty(value = "production_countries", required = true) @NonNull

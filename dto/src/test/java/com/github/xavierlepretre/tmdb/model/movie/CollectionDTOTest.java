@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.fest.assertions.data.Offset;
 import org.junit.Before;
@@ -32,10 +33,10 @@ public class CollectionDTOTest
     public void canDeserialise() throws Exception
     {
         CollectionDTO dto = mapper.readValue(getClass().getResourceAsStream("collection_dto_1.json"), CollectionDTO.class);
-        assertThat(dto.getBackdropPath()).isEqualTo("/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        assertThat(dto.getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
         assertThat(dto.getId()).isEqualTo(new CollectionId(645));
         assertThat(dto.getName()).isEqualTo("James Bond Collection");
-        assertThat(dto.getPosterPath()).isEqualTo("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        assertThat(dto.getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.people;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +30,7 @@ public class PersonDTOTest
         assertThat(dto.getCreditId()).isEqualTo(new CreditId("52fe4d22c3a368484e1d8d6b"));
         assertThat(dto.getId()).isEqualTo(new PersonId(8784));
         assertThat(dto.getName()).isEqualTo("Daniel Craig");
-        assertThat(dto.getProfilePath()).isEqualTo("/cO5OUQAMM6a4Rndw5Hc81KgpF5p.jpg");
+        assertThat(dto.getProfilePath()).isEqualTo(new ImagePath("/cO5OUQAMM6a4Rndw5Hc81KgpF5p.jpg"));
     }
 
     @Test

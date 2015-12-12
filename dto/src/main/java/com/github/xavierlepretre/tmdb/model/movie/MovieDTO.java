@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageDTO;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyDTO;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCountryDTO;
 
@@ -31,7 +32,7 @@ public class MovieDTO extends MovieShortDTO
             @JsonProperty(value = "adult", required = true)
             boolean adult,
             @JsonProperty(value = "backdrop_path", required = true) @NonNull
-            String backdropPath,
+            ImagePath backdropPath,
             @JsonProperty(value = "belongs_to_collection", required = true) @NonNull
             CollectionDTO belongsToCollection,
             @JsonProperty(value = "budget", required = true)
@@ -53,7 +54,7 @@ public class MovieDTO extends MovieShortDTO
             @JsonProperty(value = "popularity", required = true)
             float popularity,
             @JsonProperty(value = "poster_path", required = true) @NonNull
-            String posterPath,
+            ImagePath posterPath,
             @JsonProperty(value = "production_companies", required = true) @NonNull
             List<ProductionCompanyDTO> productionCompanies,
             @JsonProperty(value = "production_countries", required = true) @NonNull

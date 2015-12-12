@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.tag;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import java.util.Locale;
 
@@ -14,7 +15,7 @@ public class ListDTO
     @NonNull private final Locale iso639Dash1;
     private final int itemCount;
     @NonNull private final String name;
-    @NonNull private final String posterPath;
+    @NonNull private final ImagePath posterPath;
 
     public ListDTO(
             @JsonProperty(value = "description", required = true) @NonNull String description,
@@ -23,7 +24,7 @@ public class ListDTO
             @JsonProperty(value = "iso_639_1", required = true) @NonNull Locale iso639Dash1,
             @JsonProperty(value = "item_count", required = true) int itemCount,
             @JsonProperty(value = "name", required = true) @NonNull String name,
-            @JsonProperty(value = "poster_path", required = true) @NonNull String posterPath)
+            @JsonProperty(value = "poster_path", required = true) @NonNull ImagePath posterPath)
     {
         this.description = description;
         this.favoriteCount = favoriteCount;
@@ -64,7 +65,7 @@ public class ListDTO
         return name;
     }
 
-    @NonNull public String getPosterPath()
+    @NonNull public ImagePath getPosterPath()
     {
         return posterPath;
     }

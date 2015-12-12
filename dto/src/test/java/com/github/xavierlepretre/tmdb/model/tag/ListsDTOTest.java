@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.tag;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +37,7 @@ public class ListsDTOTest
         assertThat(dto.getResults().get(0).getItemCount()).isEqualTo(26);
         assertThat(dto.getResults().get(0).getId()).isEqualTo(new ListId("5308b87fc3a36842010027be"));
         assertThat(dto.getResults().get(0).getName()).isEqualTo("James Bond - Movie Collection");
-        assertThat(dto.getResults().get(0).getPosterPath()).isEqualTo("/jHt3L6rxboCMHULYGdmv6TqjvZr.jpg");
+        assertThat(dto.getResults().get(0).getPosterPath()).isEqualTo(new ImagePath("/jHt3L6rxboCMHULYGdmv6TqjvZr.jpg"));
         assertThat(dto.getTotalPages()).isEqualTo(2);
         assertThat(dto.getTotalResults()).isEqualTo(29);
     }

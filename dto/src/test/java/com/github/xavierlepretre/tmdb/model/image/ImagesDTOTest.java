@@ -31,7 +31,7 @@ public class ImagesDTOTest
         ImagesDTO dto = mapper.readValue(getClass().getResourceAsStream("images_dto_1.json"), ImagesDTO.class);
         assertThat(dto.getBackdrops().size()).isEqualTo(11);
         assertThat(dto.getBackdrops().get(8).getAspectRatio()).isEqualTo(1.77777777777778f, Offset.offset(0.001f));
-        assertThat(dto.getBackdrops().get(8).getFilePath()).isEqualTo("/cNiO22mtARcyeNivzeON9sOvr65.jpg");
+        assertThat(dto.getBackdrops().get(8).getFilePath()).isEqualTo(new ImagePath("/cNiO22mtARcyeNivzeON9sOvr65.jpg"));
         assertThat(dto.getBackdrops().get(8).getHeight()).isEqualTo(720);
         assertThat(dto.getBackdrops().get(8).getIso639Dash1()).isEqualTo(new Locale("en"));
         assertThat(dto.getBackdrops().get(8).getVoteAverage()).isEqualTo(5.18601190476191f, Offset.offset(0.001f));
@@ -39,7 +39,7 @@ public class ImagesDTOTest
         assertThat(dto.getBackdrops().get(8).getWidth()).isEqualTo(1280);
         assertThat(dto.getPosters().size()).isEqualTo(26);
         assertThat(dto.getPosters().get(4).getAspectRatio()).isEqualTo(0.666666666666667f, Offset.offset(0.001f));
-        assertThat(dto.getPosters().get(4).getFilePath()).isEqualTo("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg");
+        assertThat(dto.getPosters().get(4).getFilePath()).isEqualTo(new ImagePath("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg"));
         assertThat(dto.getPosters().get(4).getHeight()).isEqualTo(3000);
         assertThat(dto.getPosters().get(4).getIso639Dash1()).isEqualTo(new Locale("en"));
         assertThat(dto.getPosters().get(4).getVoteAverage()).isEqualTo(5.31292517006803f, Offset.offset(0.001f));

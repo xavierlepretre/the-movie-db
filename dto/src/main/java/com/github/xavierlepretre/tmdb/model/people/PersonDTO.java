@@ -3,19 +3,20 @@ package com.github.xavierlepretre.tmdb.model.people;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 public class PersonDTO
 {
     @NonNull private final CreditId creditId;
     @NonNull private final PersonId id;
     @NonNull private final String name;
-    @NonNull private final String profilePath;
+    @NonNull private final ImagePath profilePath;
 
     public PersonDTO(
             @JsonProperty(value = "credit_id", required = true) @NonNull CreditId creditId,
             @JsonProperty(value = "id", required = true) @NonNull PersonId id,
             @JsonProperty(value = "name", required = true) @NonNull String name,
-            @JsonProperty(value = "profile_path", required = true) @NonNull String profilePath)
+            @JsonProperty(value = "profile_path", required = true) @NonNull ImagePath profilePath)
     {
         this.creditId = creditId;
         this.id = id;
@@ -38,7 +39,7 @@ public class PersonDTO
         return name;
     }
 
-    @NonNull public String getProfilePath()
+    @NonNull public ImagePath getProfilePath()
     {
         return profilePath;
     }

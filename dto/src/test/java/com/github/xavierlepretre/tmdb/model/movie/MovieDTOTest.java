@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyId;
 import com.neovisionaries.i18n.CountryCode;
 
@@ -36,11 +37,11 @@ public class MovieDTOTest
     {
         MovieDTO dto = mapper.readValue(getClass().getResourceAsStream("movie_dto_1.json"), MovieDTO.class);
         assertThat(dto.getAdult()).isFalse();
-        assertThat(dto.getBackdropPath()).isEqualTo("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg");
-        assertThat(dto.getBelongsToCollection().getBackdropPath()).isEqualTo("/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        assertThat(dto.getBackdropPath()).isEqualTo(new ImagePath("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg"));
+        assertThat(dto.getBelongsToCollection().getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
         assertThat(dto.getBelongsToCollection().getId()).isEqualTo(new CollectionId(645));
         assertThat(dto.getBelongsToCollection().getName()).isEqualTo("James Bond Collection");
-        assertThat(dto.getBelongsToCollection().getPosterPath()).isEqualTo("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        assertThat(dto.getBelongsToCollection().getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
         assertThat(dto.getBudget()).isEqualTo(300000000);
         assertThat(dto.getGenreIds()).isEqualTo(Arrays.asList(new GenreId(28), new GenreId(12), new GenreId(80)));
         assertThat(dto.getGenres().size()).isEqualTo(3);
@@ -57,7 +58,7 @@ public class MovieDTOTest
         assertThat(dto.getOriginalTitle()).isEqualTo("Spectre");
         assertThat(dto.getOverview()).startsWith("A cryptic message from Bond’s");
         assertThat(dto.getPopularity()).isEqualTo(56.231904f, Offset.offset(0.01f));
-        assertThat(dto.getPosterPath()).isEqualTo("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg");
+        assertThat(dto.getPosterPath()).isEqualTo(new ImagePath("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg"));
         assertThat(dto.getProductionCompanies().size()).isEqualTo(1);
         assertThat(dto.getProductionCompanies().get(0).getId()).isEqualTo(new ProductionCompanyId(7576));
         assertThat(dto.getProductionCompanies().get(0).getName()).isEqualTo("Eon Productions");

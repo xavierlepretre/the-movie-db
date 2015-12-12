@@ -4,13 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.conf.Configuration;
 import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 public class ImagePathBuilder
 {
     @NonNull public String getUrl(
             @NonNull Configuration configuration,
             @NonNull ImageSize imageSize,
-            @NonNull String imagePath)
+            @NonNull ImagePath imagePath)
     {
         if (configuration.getImagesConf().getBaseUrl() == null)
         {
@@ -19,14 +20,14 @@ public class ImagePathBuilder
         //noinspection StringBufferReplaceableByString
         return new StringBuilder(configuration.getImagesConf().getBaseUrl())
                 .append(imageSize.getSize())
-                .append(imagePath)
+                .append(imagePath.getPath())
                 .toString();
     }
 
     @NonNull public String getSecureUrl(
             @NonNull Configuration configuration,
             @NonNull ImageSize imageSize,
-            @NonNull String imagePath)
+            @NonNull ImagePath imagePath)
     {
         if (configuration.getImagesConf().getSecureBaseUrl() == null)
         {
@@ -35,7 +36,7 @@ public class ImagePathBuilder
         //noinspection StringBufferReplaceableByString
         return new StringBuilder(configuration.getImagesConf().getSecureBaseUrl())
                 .append(imageSize.getSize())
-                .append(imagePath)
+                .append(imagePath.getPath())
                 .toString();
     }
 }

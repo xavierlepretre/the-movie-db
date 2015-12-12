@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import com.github.xavierlepretre.tmdb.model.conf.Configuration;
 import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
 import com.github.xavierlepretre.tmdb.model.conf.ImagesConf;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class ImagePathBuilderTest
                 new Configuration(new ImagesConf(null, "fake", null, null, null, null, null),
                         null),
                 new ImageSize("w200"),
-                "/path.jpg");
+                new ImagePath("/path.jpg"));
     }
 
     @Test(expected = NullPointerException.class)
@@ -27,7 +28,7 @@ public class ImagePathBuilderTest
                 new Configuration(new ImagesConf("fake", null, null, null, null, null, null),
                         null),
                 new ImageSize("w200"),
-                "/path.jpg");
+                new ImagePath("/path.jpg"));
     }
 
     @Test
@@ -37,16 +38,16 @@ public class ImagePathBuilderTest
                 new Configuration(new ImagesConf("http://fake.com/", null, null, null, null, null, null),
                         null),
                 new ImageSize("w200"),
-                "/path.jpg")).isEqualTo("http://fake.com/w200/path.jpg");
+                new ImagePath("/path.jpg"))).isEqualTo("http://fake.com/w200/path.jpg");
     }
 
     @Test
     public void getSecureUrl_isByConcatenation() throws Exception
     {
         assertThat(new ImagePathBuilder().getSecureUrl(
-                new Configuration(new ImagesConf(null ,"https://fake.com/", null, null, null, null, null),
+                new Configuration(new ImagesConf(null, "https://fake.com/", null, null, null, null, null),
                         null),
                 new ImageSize("w200"),
-                "/path.jpg")).isEqualTo("https://fake.com/w200/path.jpg");
+                new ImagePath("/path.jpg"))).isEqualTo("https://fake.com/w200/path.jpg");
     }
 }

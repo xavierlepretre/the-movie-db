@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.fest.assertions.data.Offset;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class MovieShortDTOTest
     {
         MovieShortDTO dto = mapper.readValue(getClass().getResourceAsStream("movie_short_dto_1.json"), MovieShortDTO.class);
         assertThat(dto.getAdult()).isFalse();
-        assertThat(dto.getBackdropPath()).isEqualTo("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg");
+        assertThat(dto.getBackdropPath()).isEqualTo(new ImagePath("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg"));
         assertThat(dto.getGenreIds()).isEqualTo(Arrays.asList(new GenreId(28), new GenreId(12), new GenreId(80)));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
         assertThat(dto.getOriginalLanguage()).isEqualTo(new Locale("en"));
@@ -43,7 +44,7 @@ public class MovieShortDTOTest
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertThat(dto.getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
-        assertThat(dto.getPosterPath()).isEqualTo("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg");
+        assertThat(dto.getPosterPath()).isEqualTo(new ImagePath("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg"));
         assertThat(dto.getPopularity()).isEqualTo(57.231904f, Offset.offset(0.01f));
         assertThat(dto.getTitle()).isEqualTo("Spectre");
         assertThat(dto.getVideo()).isFalse();

@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.people;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 public class CrewDTO extends PersonDTO
 {
@@ -21,7 +22,7 @@ public class CrewDTO extends PersonDTO
             @JsonProperty(value = "name", required = true) @NonNull
             String name,
             @JsonProperty(value = "profile_path", required = true) @NonNull
-            String profilePath)
+            ImagePath profilePath)
     {
         super(creditId, id, name, profilePath);
         this.department = department;

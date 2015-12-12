@@ -10,7 +10,7 @@ import java.util.Locale;
 public class ImageDTO
 {
     private final float aspectRatio;
-    @NonNull private final String filePath;
+    @NonNull private final ImagePath filePath;
     private final int height;
     @Nullable private final Locale iso639Dash1;
     private final float voteAverage;
@@ -18,7 +18,7 @@ public class ImageDTO
     private final int width;
 
     public ImageDTO(@JsonProperty(value = "aspect_ratio", required = true) float aspectRatio,
-                    @JsonProperty(value = "file_path", required = true) @NonNull String filePath,
+                    @JsonProperty(value = "file_path", required = true) @NonNull ImagePath filePath,
                     @JsonProperty(value = "height", required = true) int height,
                     @JsonProperty(value = "iso_639_1", required = true) @Nullable Locale iso639Dash1,
                     @JsonProperty(value = "vote_average", required = true) float voteAverage,
@@ -39,7 +39,7 @@ public class ImageDTO
         return aspectRatio;
     }
 
-    @NonNull public String getFilePath()
+    @NonNull public ImagePath getFilePath()
     {
         return filePath;
     }

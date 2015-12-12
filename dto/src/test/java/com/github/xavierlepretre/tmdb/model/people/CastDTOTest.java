@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.people;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
 
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class CastDTOTest
         assertThat(dto.getId()).isEqualTo(new PersonId(8784));
         assertThat(dto.getName()).isEqualTo("Daniel Craig");
         assertThat(dto.getOrder()).isEqualTo(0);
-        assertThat(dto.getProfilePath()).isEqualTo("/cO5OUQAMM6a4Rndw5Hc81KgpF5p.jpg");
+        assertThat(dto.getProfilePath()).isEqualTo(new ImagePath("/cO5OUQAMM6a4Rndw5Hc81KgpF5p.jpg"));
     }
 
     @Test

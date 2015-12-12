@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.people;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,7 +32,7 @@ public class CrewDTOTest
         assertThat(dto.getId()).isEqualTo(new PersonId(9856));
         assertThat(dto.getJob()).isEqualTo("Characters");
         assertThat(dto.getName()).isEqualTo("Ian Fleming");
-        assertThat(dto.getProfilePath()).isEqualTo("/91U37Em6Ru87DiAPMdsocGKyQ0W.jpg");
+        assertThat(dto.getProfilePath()).isEqualTo(new ImagePath("/91U37Em6Ru87DiAPMdsocGKyQ0W.jpg"));
     }
 
     @Test

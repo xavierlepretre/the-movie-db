@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import java.util.Collections;
 import java.util.Date;
@@ -12,14 +13,14 @@ import java.util.Locale;
 public class MovieShortDTO
 {
     @NonNull private final Boolean adult;
-    @NonNull private final String backdropPath;
+    @NonNull private final ImagePath backdropPath;
     @NonNull private final List<GenreId> genreIds;
     @NonNull private final MovieId id;
     @NonNull private final Locale originalLanguage;
     @NonNull private final String originalTitle;
     @NonNull private final String overview;
     @NonNull private final Float popularity;
-    @NonNull private final String posterPath;
+    @NonNull private final ImagePath posterPath;
     @NonNull private final Date releaseDate;
     @NonNull private final String title;
     @NonNull private final Boolean video;
@@ -30,7 +31,7 @@ public class MovieShortDTO
             @JsonProperty(value = "adult", required = true)
             boolean adult,
             @JsonProperty(value = "backdrop_path", required = true) @NonNull
-            String backdropPath,
+            ImagePath backdropPath,
             @JsonProperty(value = "genre_ids", required = true) @NonNull
             List<GenreId> genreIds,
             @JsonProperty(value = "id", required = true) @NonNull
@@ -44,7 +45,7 @@ public class MovieShortDTO
             @JsonProperty(value = "popularity", required = true)
             float popularity,
             @JsonProperty(value = "poster_path", required = true) @NonNull
-            String posterPath,
+            ImagePath posterPath,
             @JsonProperty(value = "release_date", required = true) @NonNull
             Date releaseDate,
             @JsonProperty(value = "title", required = true) @NonNull
@@ -77,7 +78,7 @@ public class MovieShortDTO
         return adult;
     }
 
-    @NonNull public String getBackdropPath()
+    @NonNull public ImagePath getBackdropPath()
     {
         return backdropPath;
     }
@@ -117,7 +118,7 @@ public class MovieShortDTO
         return popularity;
     }
 
-    @NonNull public String getPosterPath()
+    @NonNull public ImagePath getPosterPath()
     {
         return posterPath;
     }
