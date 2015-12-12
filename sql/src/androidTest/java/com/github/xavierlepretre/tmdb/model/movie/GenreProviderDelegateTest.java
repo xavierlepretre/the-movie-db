@@ -3,7 +3,6 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
@@ -128,6 +127,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
                 values);
+        //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/genre/3");
 
         Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -182,6 +182,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
                 values);
+        //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/genre/3");
 
         Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -681,6 +682,7 @@ public class GenreProviderDelegateTest
                 null,
                 null,
                 null, null, null, null);
+        //noinspection ConstantConditions
         assertThat(found.getCount()).isEqualTo(1);
         assertThat(found.moveToFirst()).isTrue();
         assertThat(found.getLong(found.getColumnIndex(GenreContract._ID))).isEqualTo(4);
