@@ -20,6 +20,7 @@ public class CollectionHelperTest
     public void getCollectionsOn1() throws Exception
     {
         List<List<String>> all = new CollectionHelper().getAllSubCollections(new String[]{"a"});
+        //noinspection unchecked
         assertThat(all).containsOnly(
                 Collections.<String>emptyList(),
                 Collections.singletonList("a"));
@@ -29,6 +30,7 @@ public class CollectionHelperTest
     public void getCollectionsOn2() throws Exception
     {
         List<List<String>> all = new CollectionHelper().getAllSubCollections(new String[]{"a", "b"});
+        //noinspection unchecked
         assertThat(all).containsOnly(
                 Collections.<String>emptyList(),
                 Collections.singletonList("a"),
@@ -40,6 +42,7 @@ public class CollectionHelperTest
     public void getCollectionsOn3() throws Exception
     {
         List<List<String>> all = new CollectionHelper().getAllSubCollections(new String[]{"a", "b", "c"});
+        //noinspection unchecked
         assertThat(all).containsOnly(
                 Collections.<String>emptyList(),
                 Collections.singletonList("c"),
