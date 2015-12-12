@@ -8,6 +8,8 @@ public class CollectionContract implements BaseColumns
 
     public static final String TABLE_NAME = "collection";
 
+    // The id is a Long.
+
     // The backdrop path is a string.
     public static final String COLUMN_BACKDROP_PATH = "backdropPath";
 

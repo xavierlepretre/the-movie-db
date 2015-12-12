@@ -8,6 +8,8 @@ public class GenreContract implements BaseColumns
 
     public static final String TABLE_NAME = "genre";
 
+    // The id is an Integer.
+
     // The name is a string.
     public static final String COLUMN_NAME = "name";
 }

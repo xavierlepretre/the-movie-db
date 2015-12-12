@@ -8,6 +8,8 @@ public class ProductionCompanyContract implements BaseColumns
 
     public static final String TABLE_NAME = "productionCompany";
 
+    // The id is a long.
+
     // The name is a string.
     public static final String COLUMN_NAME = "name";
 }
