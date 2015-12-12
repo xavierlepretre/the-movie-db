@@ -1,4 +1,4 @@
-package com.github.xavierlepretre.tmdb.model.movie;
+package com.github.xavierlepretre.tmdb.model.production;
 
 import android.content.ContentValues;
 import android.database.ContentObserver;
@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
-import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class ContentResolverGenreTest
+public class ContentResolverProductionCompanyTest
 {
     private Cursor cursor;
     private List<ContentObserver> observers;
@@ -59,62 +59,62 @@ public class ContentResolverGenreTest
     private void deleteFromTable()
     {
         InstrumentationRegistry.getTargetContext().getContentResolver()
-                .delete(GenreEntity.CONTENT_URI, null, null);
+                .delete(ProductionCompanyEntity.CONTENT_URI, null, null);
     }
 
     @Test
     public void canGetTypes() throws Exception
     {
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().getType(
-                GenreEntity.CONTENT_URI))
-                .isEqualTo(GenreEntity.CONTENT_DIR_TYPE);
+                ProductionCompanyEntity.CONTENT_URI))
+                .isEqualTo(ProductionCompanyEntity.CONTENT_DIR_TYPE);
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().getType(
-                GenreEntity.buildUri(new GenreId(12))))
-                .isEqualTo(GenreEntity.CONTENT_ITEM_TYPE);
+                ProductionCompanyEntity.buildUri(new ProductionCompanyId(5))))
+                .isEqualTo(ProductionCompanyEntity.CONTENT_ITEM_TYPE);
     }
 
     @Test
     public void canInsertQuery() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                ProductionCompanyEntity.buildUri(new ProductionCompanyId(5)).toString());
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 inserted, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        ProductionCompanyCursor productionCompanyCursor = new ProductionCompanyCursor(cursor);
+        assertThat(productionCompanyCursor.moveToFirst()).isTrue();
+        ProductionCompany productionCompany = productionCompanyCursor.getProductionCompany();
+        assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(5));
+        assertThat(productionCompany.getName()).isEqualTo("Columbia Pictures");
+        assertThat(productionCompanyCursor.moveToNext()).isFalse();
     }
 
     @Test
     public void insert_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 true,
                 observer);
 
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
         deliverSignal.await(5, TimeUnit.SECONDS);
@@ -126,31 +126,31 @@ public class ContentResolverGenreTest
     public void canInsertBulk() throws Exception
     {
         ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
         ContentValues[] values = new ContentValues[]{value1, value2};
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values))
                 .isEqualTo(2);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
-                GenreEntity.CONTENT_URI, null, null, null, null);
+                ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
-        assertThat(genreCursor.moveToNext()).isTrue();
-        genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(4));
-        assertThat(genre.getName()).isEqualTo("Comic");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        ProductionCompanyCursor productionCompanyCursor = new ProductionCompanyCursor(cursor);
+        assertThat(productionCompanyCursor.moveToFirst()).isTrue();
+        ProductionCompany productionCompany = productionCompanyCursor.getProductionCompany();
+        assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(5));
+        assertThat(productionCompany.getName()).isEqualTo("Columbia Pictures");
+        assertThat(productionCompanyCursor.moveToNext()).isTrue();
+        productionCompany = productionCompanyCursor.getProductionCompany();
+        assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(6));
+        assertThat(productionCompany.getName()).isEqualTo("Danjaq");
+        assertThat(productionCompanyCursor.moveToNext()).isFalse();
     }
 
     @Test
@@ -159,12 +159,12 @@ public class ContentResolverGenreTest
         ContentValues[] values = new ContentValues[0];
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values))
                 .isEqualTo(0);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
-                GenreEntity.CONTENT_URI, null, null, null, null);
+                ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
         assertThat(cursor).isNotNull();
         assertThat(cursor.moveToFirst()).isFalse();
     }
@@ -173,78 +173,78 @@ public class ContentResolverGenreTest
     public void insertBulkTheSame_skips1() throws Exception
     {
         ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
         ContentValues[] values = new ContentValues[]{value1, value2};
         ContentValues value3 = new ContentValues();
-        value3.put(GenreContract._ID, 3);
-        value3.put(GenreContract.COLUMN_NAME, "Action");
+        value3.put(ProductionCompanyContract._ID, 5);
+        value3.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values))
                 .isEqualTo(2);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
-                GenreEntity.CONTENT_URI, null, null, null, null);
+                ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
-        assertThat(genreCursor.moveToNext()).isTrue();
-        genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(4));
-        assertThat(genre.getName()).isEqualTo("Comic");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        ProductionCompanyCursor productionCompanyCursor = new ProductionCompanyCursor(cursor);
+        assertThat(productionCompanyCursor.moveToFirst()).isTrue();
+        ProductionCompany productionCompany = productionCompanyCursor.getProductionCompany();
+        assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(5));
+        assertThat(productionCompany.getName()).isEqualTo("Columbia Pictures");
+        assertThat(productionCompanyCursor.moveToNext()).isTrue();
+        productionCompany = productionCompanyCursor.getProductionCompany();
+        assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(6));
+        assertThat(productionCompany.getName()).isEqualTo("Danjaq");
+        assertThat(productionCompanyCursor.moveToNext()).isFalse();
     }
 
     @Test
     public void insertBulk_getsNotified() throws Exception
     {
         ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
         ContentValues[] values = new ContentValues[]{value1, value2};
 
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 true,
                 observer);
 
         InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
-        assertThat(observer.latestChanged).isEqualTo(GenreEntity.CONTENT_URI);
+        assertThat(observer.latestChanged).isEqualTo(ProductionCompanyEntity.CONTENT_URI);
     }
 
     @Test
     public void canDelete() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                ProductionCompanyEntity.buildUri(new ProductionCompanyId(5)).toString());
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
                 .delete(inserted, null, null))
@@ -260,22 +260,22 @@ public class ContentResolverGenreTest
     public void delete_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                ProductionCompanyEntity.buildUri(new ProductionCompanyId(5)).toString());
 
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 true,
                 observer);
 
@@ -291,18 +291,18 @@ public class ContentResolverGenreTest
     public void canUpdate() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
         assertThat(inserted).isNotNull();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo(
-                GenreEntity.buildUri(new GenreId(3)).toString());
+                ProductionCompanyEntity.buildUri(new ProductionCompanyId(5)).toString());
 
-        values.put(GenreContract.COLUMN_NAME, "Comic");
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
                 .update(inserted,
@@ -313,31 +313,31 @@ public class ContentResolverGenreTest
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 inserted, null, null, null, null);
         assertThat(cursor).isNotNull();
-        GenreCursor genreCursor = new GenreCursor(cursor);
-        assertThat(genreCursor.moveToFirst()).isTrue();
-        Genre genre = genreCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Comic");
-        assertThat(genreCursor.moveToNext()).isFalse();
+        ProductionCompanyCursor productionCompanyCursor = new ProductionCompanyCursor(cursor);
+        assertThat(productionCompanyCursor.moveToFirst()).isTrue();
+        ProductionCompany productionCompany = productionCompanyCursor.getProductionCompany();
+        assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(5));
+        assertThat(productionCompany.getName()).isEqualTo("Fox");
+        assertThat(productionCompanyCursor.moveToNext()).isFalse();
     }
 
     @Test
     public void update_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(GenreContract._ID, 3);
-        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 values);
 
-        values.put(GenreContract.COLUMN_NAME, "Comic");
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
 
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
         InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
-                GenreEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_URI,
                 true,
                 observer);
 

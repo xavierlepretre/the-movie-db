@@ -6,15 +6,18 @@ import android.util.SparseArray;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProviderDelegate;
 
 public class EntityProviderDelegateFactory
 {
     static final int COLLECTION_PROVIDER = 100;
     static final int CONFIGURATION_PROVIDER = 101;
     static final int GENRE_PROVIDER = 102;
+    static final int PRODUCTION_COMPANY = 103;
 
     @NonNull public SparseArray<EntityProviderDelegate> createProviders()
     {
@@ -22,6 +25,7 @@ public class EntityProviderDelegateFactory
         created.put(COLLECTION_PROVIDER, createCollectionProvider());
         created.put(CONFIGURATION_PROVIDER, createConfigurationProvider());
         created.put(GENRE_PROVIDER, createGenreProvider());
+        created.put(PRODUCTION_COMPANY, createProductionCompanyProvider());
         return created;
     }
 
@@ -49,5 +53,14 @@ public class EntityProviderDelegateFactory
                 GenreEntity.CONTENT_URI,
                 GenreEntity.CONTENT_DIR_TYPE,
                 GenreEntity.CONTENT_ITEM_TYPE);
+    }
+
+    @NonNull protected ProductionCompanyProviderDelegate createProductionCompanyProvider()
+    {
+        return new ProductionCompanyProviderDelegate(
+                TmdbContract.CONTENT_AUTHORITY,
+                ProductionCompanyEntity.CONTENT_URI,
+                ProductionCompanyEntity.CONTENT_DIR_TYPE,
+                ProductionCompanyEntity.CONTENT_ITEM_TYPE);
     }
 }

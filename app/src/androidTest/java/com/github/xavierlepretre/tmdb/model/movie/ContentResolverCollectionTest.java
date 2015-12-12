@@ -69,6 +69,9 @@ public class ContentResolverCollectionTest
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().getType(
                 CollectionEntity.CONTENT_URI))
                 .isEqualTo(CollectionEntity.CONTENT_DIR_TYPE);
+        assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().getType(
+                CollectionEntity.buildUri(new CollectionId(645))))
+                .isEqualTo(CollectionEntity.CONTENT_ITEM_TYPE);
     }
 
     @Test
