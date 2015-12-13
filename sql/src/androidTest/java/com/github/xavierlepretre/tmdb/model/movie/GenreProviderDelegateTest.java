@@ -113,9 +113,9 @@ public class GenreProviderDelegateTest
     public void buildGenreLocation_isOk() throws Exception
     {
         assertThat(GenreProviderDelegate.buildGenreLocation(
-                Uri.parse("content://something"), 60))
+                Uri.parse("content://something"), new GenreId(60)))
                 .isEqualTo(Uri.parse("content://something/60"));
-        assertThat(providerDelegate.buildGenreLocation(870))
+        assertThat(providerDelegate.buildGenreLocation(new GenreId(870)))
                 .isEqualTo(Uri.parse("content://content_authority/genre/870"));
     }
 

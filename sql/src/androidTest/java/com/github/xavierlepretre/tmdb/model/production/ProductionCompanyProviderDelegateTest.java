@@ -112,9 +112,9 @@ public class ProductionCompanyProviderDelegateTest
     public void buildProductionCompanyLocation_isOk() throws Exception
     {
         assertThat(ProductionCompanyProviderDelegate.buildProductionCompanyLocation(
-                Uri.parse("content://something"), 60))
+                Uri.parse("content://something"), new ProductionCompanyId(60)))
                 .isEqualTo(Uri.parse("content://something/60"));
-        assertThat(providerDelegate.buildProductionCompanyLocation(870))
+        assertThat(providerDelegate.buildProductionCompanyLocation(new ProductionCompanyId(870)))
                 .isEqualTo(Uri.parse("content://content_authority/productionCompany/870"));
     }
 

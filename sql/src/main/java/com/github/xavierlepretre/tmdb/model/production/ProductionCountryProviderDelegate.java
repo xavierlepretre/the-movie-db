@@ -234,13 +234,26 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    @NonNull public Uri buildProductionCountryLocation(@NonNull String id)
+    @NonNull public Uri buildProductionCountryLocation(@NonNull CountryCode id)
+    {
+        return buildProductionCountryLocation(entityContentUri, id.getAlpha2());
+    }
+
+    @NonNull private Uri buildProductionCountryLocation(@NonNull String id)
     {
         return buildProductionCountryLocation(entityContentUri, id);
     }
 
-    @NonNull
-    public static Uri buildProductionCountryLocation(@NonNull Uri entityContentUri, @NonNull String id)
+    @NonNull public static Uri buildProductionCountryLocation(
+            @NonNull Uri entityContentUri,
+            @NonNull CountryCode id)
+    {
+        return buildProductionCountryLocation(entityContentUri, id.getAlpha2());
+    }
+
+    @NonNull private static Uri buildProductionCountryLocation(
+            @NonNull Uri entityContentUri,
+            @NonNull String id)
     {
         return entityContentUri.buildUpon().appendPath(id).build();
     }

@@ -232,12 +232,22 @@ public class GenreProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    @NonNull public Uri buildGenreLocation(long id)
+    @NonNull public Uri buildGenreLocation(@NonNull GenreId id)
+    {
+        return buildGenreLocation(entityContentUri, id.getId());
+    }
+
+    @NonNull private Uri buildGenreLocation(long id)
     {
         return buildGenreLocation(entityContentUri, id);
     }
 
-    @NonNull public static Uri buildGenreLocation(@NonNull Uri entityContentUri, long id)
+    @NonNull public static Uri buildGenreLocation(@NonNull Uri entityContentUri, @NonNull GenreId id)
+    {
+        return buildGenreLocation(entityContentUri, id.getId());
+    }
+
+    @NonNull private static Uri buildGenreLocation(@NonNull Uri entityContentUri, long id)
     {
         return entityContentUri.buildUpon()
                 .appendPath(Long.toString(id))

@@ -113,9 +113,9 @@ public class CollectionProviderDelegateTest
     public void buildCollectionLocation_isOk() throws Exception
     {
         assertThat(CollectionProviderDelegate.buildCollectionLocation(
-                Uri.parse("content://something"), 60))
+                Uri.parse("content://something"), new CollectionId(60)))
                 .isEqualTo(Uri.parse("content://something/60"));
-        assertThat(providerDelegate.buildCollectionLocation(870))
+        assertThat(providerDelegate.buildCollectionLocation(new CollectionId(870)))
                 .isEqualTo(Uri.parse("content://content_authority/collection/870"));
     }
 
@@ -902,6 +902,7 @@ public class CollectionProviderDelegateTest
                 null,
                 null,
                 null, null, null, null);
+        //noinspection ConstantConditions
         assertThat(found.getCount()).isEqualTo(1);
         assertThat(found.moveToFirst()).isTrue();
         assertThat(found.getString(found.getColumnIndex(CollectionContract.COLUMN_BACKDROP_PATH)))

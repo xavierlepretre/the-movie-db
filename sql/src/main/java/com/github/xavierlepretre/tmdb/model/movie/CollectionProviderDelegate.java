@@ -234,12 +234,26 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    @NonNull public Uri buildCollectionLocation(long id)
+    @NonNull public Uri buildCollectionLocation(@NonNull CollectionId id)
+    {
+        return buildCollectionLocation(id.getId());
+    }
+
+    @NonNull private Uri buildCollectionLocation(long id)
     {
         return buildCollectionLocation(entityContentUri, id);
     }
 
-    @NonNull public static Uri buildCollectionLocation(@NonNull Uri entityContentUri, long id)
+    @NonNull public static Uri buildCollectionLocation(
+            @NonNull Uri entityContentUri,
+            @NonNull CollectionId id)
+    {
+        return buildCollectionLocation(entityContentUri, id.getId());
+    }
+
+    @NonNull private static Uri buildCollectionLocation(
+            @NonNull Uri entityContentUri,
+            long id)
     {
         return entityContentUri.buildUpon()
                 .appendPath(Long.toString(id))

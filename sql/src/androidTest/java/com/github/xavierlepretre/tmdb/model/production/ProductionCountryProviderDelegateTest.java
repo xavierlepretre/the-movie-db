@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.neovisionaries.i18n.CountryCode;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,9 +114,9 @@ public class ProductionCountryProviderDelegateTest
     public void buildProductionCountryLocation_isOk() throws Exception
     {
         assertThat(ProductionCountryProviderDelegate.buildProductionCountryLocation(
-                Uri.parse("content://something"), "GB"))
+                Uri.parse("content://something"), CountryCode.GB))
                 .isEqualTo(Uri.parse("content://something/GB"));
-        assertThat(providerDelegate.buildProductionCountryLocation("US"))
+        assertThat(providerDelegate.buildProductionCountryLocation(CountryCode.US))
                 .isEqualTo(Uri.parse("content://content_authority/productionCountry/US"));
     }
 

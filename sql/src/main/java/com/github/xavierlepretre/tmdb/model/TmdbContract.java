@@ -35,7 +35,7 @@ public class TmdbContract
 
         @NonNull public static Uri buildUri(@NonNull CollectionId collectionId)
         {
-            return CollectionProviderDelegate.buildCollectionLocation(CONTENT_URI, collectionId.getId());
+            return CollectionProviderDelegate.buildCollectionLocation(CONTENT_URI, collectionId);
         }
     }
 
@@ -60,7 +60,7 @@ public class TmdbContract
 
         @NonNull public static Uri buildUri(@NonNull GenreId genreId)
         {
-            return GenreProviderDelegate.buildGenreLocation(CONTENT_URI, genreId.getId());
+            return GenreProviderDelegate.buildGenreLocation(CONTENT_URI, genreId);
         }
     }
 
@@ -76,7 +76,7 @@ public class TmdbContract
 
         @NonNull public static Uri buildUri(@NonNull ProductionCompanyId productionCompanyId)
         {
-            return ProductionCompanyProviderDelegate.buildProductionCompanyLocation(CONTENT_URI, productionCompanyId.getId());
+            return ProductionCompanyProviderDelegate.buildProductionCompanyLocation(CONTENT_URI, productionCompanyId);
         }
     }
 
@@ -92,7 +92,7 @@ public class TmdbContract
 
         @NonNull public static Uri buildUri(@NonNull CountryCode countryCode)
         {
-            return ProductionCountryProviderDelegate.buildProductionCountryLocation(CONTENT_URI, countryCode.getAlpha2());
+            return ProductionCountryProviderDelegate.buildProductionCountryLocation(CONTENT_URI, countryCode);
         }
     }
 }

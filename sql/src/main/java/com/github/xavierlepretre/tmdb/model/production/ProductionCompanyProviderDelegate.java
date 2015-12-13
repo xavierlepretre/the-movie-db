@@ -232,16 +232,28 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    @NonNull public Uri buildProductionCompanyLocation(long id)
+    @NonNull public Uri buildProductionCompanyLocation(@NonNull ProductionCompanyId id)
+    {
+        return buildProductionCompanyLocation(id.getId());
+    }
+
+    @NonNull private Uri buildProductionCompanyLocation(long id)
     {
         return buildProductionCompanyLocation(entityContentUri, id);
     }
 
-    @NonNull public static Uri buildProductionCompanyLocation(@NonNull Uri entityContentUri, long id)
+    @NonNull public static Uri buildProductionCompanyLocation(
+            @NonNull Uri entityContentUri,
+            @NonNull ProductionCompanyId id)
     {
-        return entityContentUri.buildUpon()
-                .appendPath(Long.toString(id))
-                .build();
+        return buildProductionCompanyLocation(entityContentUri, id.getId());
+    }
+
+    @NonNull private static Uri buildProductionCompanyLocation(
+            @NonNull Uri entityContentUri,
+            long id)
+    {
+        return entityContentUri.buildUpon().appendPath(Long.toString(id)).build();
     }
 
     @Override public int delete(
