@@ -383,6 +383,66 @@ public class CollectionProviderDelegateTest
     }
 
     @Test
+    public void bulkInsertExisting_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        assertThat(providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                value1))
+                .isEqualTo(Uri.parse("content://content_authority/collection/645"));
+
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 12L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        ContentValues value3 = new ContentValues();
+        value3.put(CollectionContract.COLUMN_BACKDROP_PATH, "/yet_another_backdrop.jpg");
+        value3.put(CollectionContract._ID, 645L);
+        value3.put(CollectionContract.COLUMN_NAME, "Yet Another Collection");
+        value3.put(CollectionContract.COLUMN_POSTER_PATH, "/yet_another_poster.jpg");
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values))
+                .isEqualTo(1);
+
+        Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                null, null, null, null, null, null, null);
+
+        assertThat(myCollection).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myCollection.moveToFirst()).isTrue();
+        assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_BACKDROP_PATH)))
+                .isEqualTo("/other_backdrop.jpg");
+        assertThat(myCollection.getLong(myCollection.getColumnIndex(CollectionContract._ID)))
+                .isEqualTo(12L);
+        assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_NAME)))
+                .isEqualTo("Other Collection");
+        assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_POSTER_PATH)))
+                .isEqualTo("/other_poster.jpg");
+
+        assertThat(myCollection.moveToNext()).isTrue();
+        assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_BACKDROP_PATH)))
+                .isEqualTo("/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        assertThat(myCollection.getLong(myCollection.getColumnIndex(CollectionContract._ID)))
+                .isEqualTo(645L);
+        assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_NAME)))
+                .isEqualTo("James Bond Collection");
+        assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_POSTER_PATH)))
+                .isEqualTo("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+
+        assertThat(myCollection.moveToNext()).isFalse();
+    }
+
+    @Test
     public void bulkInsertDuplicate_skips() throws Exception
     {
         ContentValues value1 = new ContentValues();

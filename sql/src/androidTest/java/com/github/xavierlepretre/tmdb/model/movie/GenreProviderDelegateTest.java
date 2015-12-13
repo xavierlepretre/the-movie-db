@@ -330,6 +330,43 @@ public class GenreProviderDelegateTest
     }
 
     @Test
+    public void bulkInsertExisting_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract._ID, 3);
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        assertThat(providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                value1))
+                .isEqualTo(Uri.parse("content://content_authority/genre/3"));
+
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values))
+                .isEqualTo(1);
+
+        Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                null, null, null, null, null, null, null);
+
+        assertThat(myGenre).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myGenre.moveToFirst()).isTrue();
+        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
+                .isEqualTo("Adventure");
+        assertThat(myGenre.moveToNext()).isTrue();
+        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
+                .isEqualTo("Comic");
+        assertThat(myGenre.moveToNext()).isFalse();
+    }
+
+    @Test
     public void bulkInsertDuplicate_skips() throws Exception
     {
         ContentValues value1 = new ContentValues();

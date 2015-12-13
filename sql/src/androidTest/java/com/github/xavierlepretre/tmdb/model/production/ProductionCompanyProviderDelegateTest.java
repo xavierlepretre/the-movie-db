@@ -339,18 +339,62 @@ public class ProductionCompanyProviderDelegateTest
     }
 
     @Test
+    public void bulkInsertExisting_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        assertThat(providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                value1))
+                .isEqualTo(Uri.parse("content://content_authority/productionCompany/5"));
+
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 5);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
+        ContentValues value3 = new ContentValues();
+        value3.put(ProductionCompanyContract._ID, 6);
+        value3.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{value1, value3, value2};
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values))
+                .isEqualTo(1);
+
+        Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                null, null, null, null, null, null, null);
+
+        assertThat(myProductionCompany).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myProductionCompany.moveToFirst()).isTrue();
+        assertThat(myProductionCompany.getLong(myProductionCompany.getColumnIndex(ProductionCompanyContract._ID)))
+                .isEqualTo(5L);
+        assertThat(myProductionCompany.getString(myProductionCompany.getColumnIndex(ProductionCompanyContract.COLUMN_NAME)))
+                .isEqualTo("Columbia Pictures");
+        assertThat(myProductionCompany.moveToNext()).isTrue();
+        assertThat(myProductionCompany.getLong(myProductionCompany.getColumnIndex(ProductionCompanyContract._ID)))
+                .isEqualTo(6L);
+        assertThat(myProductionCompany.getString(myProductionCompany.getColumnIndex(ProductionCompanyContract.COLUMN_NAME)))
+                .isEqualTo("Danjaq");
+        assertThat(myProductionCompany.moveToNext()).isFalse();
+    }
+
+    @Test
     public void bulkInsertDuplicate_skips() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCompanyContract._ID, 5);
         value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         ContentValues value2 = new ContentValues();
-        value2.put(ProductionCompanyContract._ID, 6);
-        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        value2.put(ProductionCompanyContract._ID, 5);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
         ContentValues value3 = new ContentValues();
-        value3.put(ProductionCompanyContract._ID, 5);
-        value3.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
-        ContentValues[] values = new ContentValues[]{value1, value2, value3};
+        value3.put(ProductionCompanyContract._ID, 6);
+        value3.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{value1, value3, value2};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),

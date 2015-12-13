@@ -341,6 +341,50 @@ public class ProductionCountryProviderDelegateTest
     }
 
     @Test
+    public void bulkInsertExisting_skips() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCountryContract._ID, "GB");
+        value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        assertThat(providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry"),
+                value1))
+                .isEqualTo(Uri.parse("content://content_authority/productionCountry/GB"));
+
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCountryContract._ID, "GB");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume Uni");
+        ContentValues value3 = new ContentValues();
+        value3.put(ProductionCountryContract._ID, "US");
+        value3.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        ContentValues[] values = new ContentValues[]{value1, value3, value2};
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry"),
+                values))
+                .isEqualTo(1);
+
+        Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/productionCountry"),
+                null, null, null, null, null, null, null);
+
+        assertThat(myProductionCountry).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myProductionCountry.moveToFirst()).isTrue();
+        assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract._ID)))
+                .isEqualTo("GB");
+        assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract.COLUMN_NAME)))
+                .isEqualTo("United Kingdom");
+        assertThat(myProductionCountry.moveToNext()).isTrue();
+        assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract._ID)))
+                .isEqualTo("US");
+        assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract.COLUMN_NAME)))
+                .isEqualTo("United States of America");
+        assertThat(myProductionCountry.moveToNext()).isFalse();
+    }
+
+    @Test
     public void bulkInsertDuplicate_skips() throws Exception
     {
         ContentValues value1 = new ContentValues();
