@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import com.github.xavierlepretre.tmdb.TmdbRetrofitException;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ChangeKey;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
@@ -17,6 +18,8 @@ import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
 import com.github.xavierlepretre.tmdb.model.conf.ImagesConfDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.internal.http.RealResponseBody;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +34,7 @@ import retrofit.Response;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -121,6 +125,22 @@ public class ConfigurationSyncAdapterTest
             verify(factory, never()).createFrom(any(ConfigurationDTO.class));
             verify(contentProviderClient, never()).insert(any(Uri.class), any(ContentValues.class));
         }
+    }
+
+    @Test(expected = TmdbRetrofitException.class)
+    public void errorCall_throwsTmdbRetrofitException() throws Exception
+    {
+        Response<ConfigurationDTO> response = Response.error(
+                401,
+                RealResponseBody.create(
+                        MediaType.parse("text/json"),
+                        "{\"error\":\"Need api key\"}"));
+        doReturn(response).when(call).execute();
+        syncAdapter.onPerformSync(null,
+                extras,
+                null,
+                contentProviderClient,
+                syncResult);
     }
 
     @Test(expected = RemoteException.class)

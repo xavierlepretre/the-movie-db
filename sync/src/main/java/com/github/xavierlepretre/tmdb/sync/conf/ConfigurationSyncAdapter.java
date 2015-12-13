@@ -9,12 +9,15 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
+import com.github.xavierlepretre.tmdb.TmdbRetrofitException;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
 import com.github.xavierlepretre.tmdb.model.conf.ContentValuesConfigurationFactory;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 
 import java.io.IOException;
+
+import retrofit.Response;
 
 public class ConfigurationSyncAdapter
 {
@@ -39,7 +42,12 @@ public class ConfigurationSyncAdapter
         ConfigurationDTO dto;
         try
         {
-            dto = tmdbService.getConfiguration().execute().body();
+            Response<ConfigurationDTO> response = tmdbService.getConfiguration().execute();
+            if (!response.isSuccess())
+            {
+                throw new TmdbRetrofitException(response);
+            }
+            dto = response.body();
         }
         catch (IOException e)
         {
