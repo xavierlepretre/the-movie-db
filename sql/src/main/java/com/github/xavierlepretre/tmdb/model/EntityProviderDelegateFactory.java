@@ -7,10 +7,12 @@ import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCountryEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.production.ProductionCountryProviderDelegate;
 
 public class EntityProviderDelegateFactory
 {
@@ -18,6 +20,7 @@ public class EntityProviderDelegateFactory
     static final int CONFIGURATION_PROVIDER = 101;
     static final int GENRE_PROVIDER = 102;
     static final int PRODUCTION_COMPANY = 103;
+    static final int PRODUCTION_COUNTRY = 104;
 
     @NonNull public SparseArray<EntityProviderDelegate> createProviders()
     {
@@ -26,6 +29,7 @@ public class EntityProviderDelegateFactory
         created.put(CONFIGURATION_PROVIDER, createConfigurationProvider());
         created.put(GENRE_PROVIDER, createGenreProvider());
         created.put(PRODUCTION_COMPANY, createProductionCompanyProvider());
+        created.put(PRODUCTION_COUNTRY, createProductionCountryProvider());
         return created;
     }
 
@@ -62,5 +66,14 @@ public class EntityProviderDelegateFactory
                 ProductionCompanyEntity.CONTENT_URI,
                 ProductionCompanyEntity.CONTENT_DIR_TYPE,
                 ProductionCompanyEntity.CONTENT_ITEM_TYPE);
+    }
+
+    @NonNull protected ProductionCountryProviderDelegate createProductionCountryProvider()
+    {
+        return new ProductionCountryProviderDelegate(
+                TmdbContract.CONTENT_AUTHORITY,
+                ProductionCountryEntity.CONTENT_URI,
+                ProductionCountryEntity.CONTENT_DIR_TYPE,
+                ProductionCountryEntity.CONTENT_ITEM_TYPE);
     }
 }

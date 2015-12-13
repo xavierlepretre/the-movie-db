@@ -13,6 +13,10 @@ import com.github.xavierlepretre.tmdb.model.movie.GenreId;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyContract;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyId;
+import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.production.ProductionCountryContract;
+import com.github.xavierlepretre.tmdb.model.production.ProductionCountryProviderDelegate;
+import com.neovisionaries.i18n.CountryCode;
 
 public class TmdbContract
 {
@@ -72,7 +76,23 @@ public class TmdbContract
 
         @NonNull public static Uri buildUri(@NonNull ProductionCompanyId productionCompanyId)
         {
-            return GenreProviderDelegate.buildGenreLocation(CONTENT_URI, productionCompanyId.getId());
+            return ProductionCompanyProviderDelegate.buildProductionCompanyLocation(CONTENT_URI, productionCompanyId.getId());
+        }
+    }
+
+    public static final class ProductionCountryEntity extends ProductionCountryContract
+    {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
+
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+
+        @NonNull public static Uri buildUri(@NonNull CountryCode countryCode)
+        {
+            return ProductionCountryProviderDelegate.buildProductionCountryLocation(CONTENT_URI, countryCode.getAlpha2());
         }
     }
 }
