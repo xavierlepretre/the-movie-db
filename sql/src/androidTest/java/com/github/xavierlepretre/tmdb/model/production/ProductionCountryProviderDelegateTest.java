@@ -855,6 +855,40 @@ public class ProductionCountryProviderDelegateTest
     }
 
     @Test
+    public void updateItemWithMissingElement_doesNotLoseSavedInfo() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCountryContract._ID, "GB");
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry"),
+                values);
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(ProductionCountryContract._ID, "GB");
+        assertThat(providerDelegate.update(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry/GB"),
+                newValues,
+                null, null)).isEqualTo(1);
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/productionCountry/GB"),
+                null,
+                null,
+                null,
+                null, null, null, null);
+
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(1);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThat(found.getString(found.getColumnIndex(ProductionCountryContract._ID))).isEqualTo("GB");
+        assertThat(found.getString(found.getColumnIndex(ProductionCountryContract.COLUMN_NAME))).isEqualTo("United Kingdom");
+    }
+    
+    @Test
     public void updateList_isOk() throws Exception
     {
         ContentValues values = new ContentValues();

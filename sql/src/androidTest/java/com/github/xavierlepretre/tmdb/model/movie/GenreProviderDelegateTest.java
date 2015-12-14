@@ -838,6 +838,40 @@ public class GenreProviderDelegateTest
     }
 
     @Test
+    public void updateItemWithMissingElement_doesNotLoseSavedInfo() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, 3);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values);
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(GenreContract._ID, 3);
+        assertThat(providerDelegate.update(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre/3"),
+                newValues,
+                null, null)).isEqualTo(1);
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/genre/3"),
+                null,
+                null,
+                null,
+                null, null, null, null);
+
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(1);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThat(found.getLong(found.getColumnIndex(GenreContract._ID))).isEqualTo(3);
+        assertThat(found.getString(found.getColumnIndex(GenreContract.COLUMN_NAME))).isEqualTo("Adventure");
+    }
+
+    @Test
     public void updateList_isOk() throws Exception
     {
         ContentValues values = new ContentValues();

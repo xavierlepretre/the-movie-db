@@ -855,6 +855,40 @@ public class SpokenLanguageProviderDelegateTest
     }
 
     @Test
+    public void updateItemWithMissingElement_doesNotLoseSavedInfo() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(SpokenLanguageContract._ID, "en");
+        values.put(SpokenLanguageContract.COLUMN_NAME, "English");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/spokenLanguage"),
+                values);
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(SpokenLanguageContract._ID, "en");
+        assertThat(providerDelegate.update(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/spokenLanguage/en"),
+                newValues,
+                null, null)).isEqualTo(1);
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/spokenLanguage/en"),
+                null,
+                null,
+                null,
+                null, null, null, null);
+
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(1);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThat(found.getString(found.getColumnIndex(SpokenLanguageContract._ID))).isEqualTo("en");
+        assertThat(found.getString(found.getColumnIndex(SpokenLanguageContract.COLUMN_NAME))).isEqualTo("English");
+    }
+
+    @Test
     public void updateList_isOk() throws Exception
     {
         ContentValues values = new ContentValues();

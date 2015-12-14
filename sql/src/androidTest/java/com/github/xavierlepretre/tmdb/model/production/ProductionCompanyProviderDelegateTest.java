@@ -854,6 +854,40 @@ public class ProductionCompanyProviderDelegateTest
     }
 
     @Test
+    public void updateItemWithMissingElement_doesNotLoseSavedInfo() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany"),
+                values);
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(ProductionCompanyContract._ID, 5);
+        assertThat(providerDelegate.update(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany/5"),
+                newValues,
+                null, null)).isEqualTo(1);
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/productionCompany/5"),
+                null,
+                null,
+                null,
+                null, null, null, null);
+
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(1);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThat(found.getLong(found.getColumnIndex(ProductionCompanyContract._ID))).isEqualTo(5L);
+        assertThat(found.getString(found.getColumnIndex(ProductionCompanyContract.COLUMN_NAME))).isEqualTo("Columbia Pictures");
+    }
+
+    @Test
     public void updateList_isOk() throws Exception
     {
         ContentValues values = new ContentValues();

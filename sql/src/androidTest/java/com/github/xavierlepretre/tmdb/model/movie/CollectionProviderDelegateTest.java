@@ -1006,6 +1006,48 @@ public class CollectionProviderDelegateTest
     }
 
     @Test
+    public void updateItemWithMissingElement_doesNotLoseSavedInfo() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection"),
+                values);
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(CollectionContract._ID, 645L);
+        assertThat(providerDelegate.update(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection/645"),
+                newValues,
+                null, null)).isEqualTo(1);
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/collection/645"),
+                null,
+                null,
+                null,
+                null, null, null, null);
+
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(1);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThat(found.getString(found.getColumnIndex(CollectionContract.COLUMN_BACKDROP_PATH)))
+                .isEqualTo("/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        assertThat(found.getLong(found.getColumnIndex(CollectionContract._ID)))
+                .isEqualTo(645L);
+        assertThat(found.getString(found.getColumnIndex(CollectionContract.COLUMN_NAME)))
+                .isEqualTo("James Bond Collection");
+        assertThat(found.getString(found.getColumnIndex(CollectionContract.COLUMN_POSTER_PATH)))
+                .isEqualTo("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+    }
+
+    @Test
     public void updateList_isOk() throws Exception
     {
         ContentValues values = new ContentValues();
