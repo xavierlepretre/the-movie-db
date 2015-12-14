@@ -8,7 +8,9 @@ import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCountryEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.SpokenLanguageEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProviderDelegate;
@@ -19,8 +21,9 @@ public class EntityProviderDelegateFactory
     static final int COLLECTION_PROVIDER = 100;
     static final int CONFIGURATION_PROVIDER = 101;
     static final int GENRE_PROVIDER = 102;
-    static final int PRODUCTION_COMPANY = 103;
-    static final int PRODUCTION_COUNTRY = 104;
+    static final int PRODUCTION_COMPANY_PROVIDER = 103;
+    static final int PRODUCTION_COUNTRY_PROVIDER = 104;
+    static final int SPOKEN_LANGUAGE_PROVIDER = 105;
 
     @NonNull public SparseArray<EntityProviderDelegate> createProviders()
     {
@@ -28,8 +31,9 @@ public class EntityProviderDelegateFactory
         created.put(COLLECTION_PROVIDER, createCollectionProvider());
         created.put(CONFIGURATION_PROVIDER, createConfigurationProvider());
         created.put(GENRE_PROVIDER, createGenreProvider());
-        created.put(PRODUCTION_COMPANY, createProductionCompanyProvider());
-        created.put(PRODUCTION_COUNTRY, createProductionCountryProvider());
+        created.put(PRODUCTION_COMPANY_PROVIDER, createProductionCompanyProvider());
+        created.put(PRODUCTION_COUNTRY_PROVIDER, createProductionCountryProvider());
+        created.put(SPOKEN_LANGUAGE_PROVIDER, createSpokenLanguageProvider());
         return created;
     }
 
@@ -75,5 +79,14 @@ public class EntityProviderDelegateFactory
                 ProductionCountryEntity.CONTENT_URI,
                 ProductionCountryEntity.CONTENT_DIR_TYPE,
                 ProductionCountryEntity.CONTENT_ITEM_TYPE);
+    }
+
+    @NonNull protected SpokenLanguageProviderDelegate createSpokenLanguageProvider()
+    {
+        return new SpokenLanguageProviderDelegate(
+                TmdbContract.CONTENT_AUTHORITY,
+                SpokenLanguageEntity.CONTENT_URI,
+                SpokenLanguageEntity.CONTENT_DIR_TYPE,
+                SpokenLanguageEntity.CONTENT_ITEM_TYPE);
     }
 }

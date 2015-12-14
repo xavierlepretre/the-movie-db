@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
+import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageContract;
+import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionContract;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionId;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionProviderDelegate;
@@ -17,6 +19,7 @@ import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProvider
 import com.github.xavierlepretre.tmdb.model.production.ProductionCountryContract;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCountryProviderDelegate;
 import com.neovisionaries.i18n.CountryCode;
+import com.neovisionaries.i18n.LanguageCode;
 
 public class TmdbContract
 {
@@ -93,6 +96,22 @@ public class TmdbContract
         @NonNull public static Uri buildUri(@NonNull CountryCode countryCode)
         {
             return ProductionCountryProviderDelegate.buildProductionCountryLocation(CONTENT_URI, countryCode);
+        }
+    }
+
+    public static final class SpokenLanguageEntity extends SpokenLanguageContract
+    {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
+
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+
+        @NonNull public static Uri buildUri(@NonNull LanguageCode languageCode)
+        {
+            return SpokenLanguageProviderDelegate.buildSpokenLanguageLocation(CONTENT_URI, languageCode);
         }
     }
 }
