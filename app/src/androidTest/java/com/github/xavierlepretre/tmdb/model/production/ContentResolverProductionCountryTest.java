@@ -208,7 +208,7 @@ public class ContentResolverProductionCountryTest
     }
 
     @Test
-    public void insertBulkTheSame_skips1() throws Exception
+    public void insertBulkTheSame_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCountryContract._ID, "GB");
@@ -224,7 +224,7 @@ public class ContentResolverProductionCountryTest
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 ProductionCountryEntity.CONTENT_URI,
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 ProductionCountryEntity.CONTENT_URI, null, null, null, null);
@@ -233,7 +233,7 @@ public class ContentResolverProductionCountryTest
         assertThat(productionCountryCursor.moveToFirst()).isTrue();
         ProductionCountry productionCountry = productionCountryCursor.getProductionCountry();
         assertThat(productionCountry.getIso3166Dash1()).isEqualTo(CountryCode.GB);
-        assertThat(productionCountry.getName()).isEqualTo("United Kingdom");
+        assertThat(productionCountry.getName()).isEqualTo("Royaume-Uni");
         assertThat(productionCountryCursor.moveToNext()).isTrue();
         productionCountry = productionCountryCursor.getProductionCountry();
         assertThat(productionCountry.getIso3166Dash1()).isEqualTo(CountryCode.US);

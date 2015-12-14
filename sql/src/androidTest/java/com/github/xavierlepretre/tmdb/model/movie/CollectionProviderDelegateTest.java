@@ -370,7 +370,7 @@ public class CollectionProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertExisting_skips() throws Exception
+    public void bulkInsertExisting_overwrites() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
@@ -398,7 +398,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
                 values))
-                .isEqualTo(1);
+                .isEqualTo(3);
 
         Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/collection"),
@@ -418,19 +418,19 @@ public class CollectionProviderDelegateTest
 
         assertThat(myCollection.moveToNext()).isTrue();
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_BACKDROP_PATH)))
-                .isEqualTo("/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+                .isEqualTo("/yet_another_backdrop.jpg");
         assertThat(myCollection.getLong(myCollection.getColumnIndex(CollectionContract._ID)))
                 .isEqualTo(645L);
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_NAME)))
-                .isEqualTo("James Bond Collection");
+                .isEqualTo("Yet Another Collection");
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_POSTER_PATH)))
-                .isEqualTo("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+                .isEqualTo("/yet_another_poster.jpg");
 
         assertThat(myCollection.moveToNext()).isFalse();
     }
 
     @Test
-    public void bulkInsertDuplicate_skips() throws Exception
+    public void bulkInsertDuplicate_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
@@ -452,7 +452,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/collection"),
@@ -472,13 +472,13 @@ public class CollectionProviderDelegateTest
 
         assertThat(myCollection.moveToNext()).isTrue();
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_BACKDROP_PATH)))
-                .isEqualTo("/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+                .isEqualTo("/yet_another_backdrop.jpg");
         assertThat(myCollection.getLong(myCollection.getColumnIndex(CollectionContract._ID)))
                 .isEqualTo(645L);
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_NAME)))
-                .isEqualTo("James Bond Collection");
+                .isEqualTo("Yet Another Collection");
         assertThat(myCollection.getString(myCollection.getColumnIndex(CollectionContract.COLUMN_POSTER_PATH)))
-                .isEqualTo("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+                .isEqualTo("/yet_another_poster.jpg");
 
         assertThat(myCollection.moveToNext()).isFalse();
     }

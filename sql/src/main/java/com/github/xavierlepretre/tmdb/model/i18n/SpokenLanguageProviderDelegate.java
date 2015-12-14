@@ -199,11 +199,15 @@ public class SpokenLanguageProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
-                        if (value != null && value.getAsString(SpokenLanguageContract._ID) == null)
+                        if (value == null || value.getAsString(SpokenLanguageContract._ID) == null)
                         {
                             continue;
                         }
-                        insertedId = writableDb.insert(SpokenLanguageContract.TABLE_NAME, null, value);
+                        insertedId = writableDb.insertWithOnConflict(
+                                SpokenLanguageContract.TABLE_NAME,
+                                null,
+                                value,
+                                INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                         if (insertedId > 0)
                         {
                             returnCount++;

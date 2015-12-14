@@ -327,7 +327,7 @@ public class ProductionCompanyProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertExisting_skips() throws Exception
+    public void bulkInsertExisting_overwrites() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCompanyContract._ID, 5);
@@ -349,7 +349,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
                 values))
-                .isEqualTo(1);
+                .isEqualTo(3);
 
         Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
@@ -361,7 +361,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(myProductionCompany.getLong(myProductionCompany.getColumnIndex(ProductionCompanyContract._ID)))
                 .isEqualTo(5L);
         assertThat(myProductionCompany.getString(myProductionCompany.getColumnIndex(ProductionCompanyContract.COLUMN_NAME)))
-                .isEqualTo("Columbia Pictures");
+                .isEqualTo("Fox");
         assertThat(myProductionCompany.moveToNext()).isTrue();
         assertThat(myProductionCompany.getLong(myProductionCompany.getColumnIndex(ProductionCompanyContract._ID)))
                 .isEqualTo(6L);
@@ -371,7 +371,7 @@ public class ProductionCompanyProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertDuplicate_skips() throws Exception
+    public void bulkInsertDuplicate_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCompanyContract._ID, 5);
@@ -387,7 +387,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
@@ -399,7 +399,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(myProductionCompany.getLong(myProductionCompany.getColumnIndex(ProductionCompanyContract._ID)))
                 .isEqualTo(5L);
         assertThat(myProductionCompany.getString(myProductionCompany.getColumnIndex(ProductionCompanyContract.COLUMN_NAME)))
-                .isEqualTo("Columbia Pictures");
+                .isEqualTo("Fox");
         assertThat(myProductionCompany.moveToNext()).isTrue();
         assertThat(myProductionCompany.getLong(myProductionCompany.getColumnIndex(ProductionCompanyContract._ID)))
                 .isEqualTo(6L);

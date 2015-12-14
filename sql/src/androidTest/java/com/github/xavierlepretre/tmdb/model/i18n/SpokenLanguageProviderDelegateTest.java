@@ -328,7 +328,7 @@ public class SpokenLanguageProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertExisting_skips() throws Exception
+    public void bulkInsertExisting_overwrites() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(SpokenLanguageContract._ID, "en");
@@ -350,11 +350,11 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
                 values))
-                .isEqualTo(1);
+                .isEqualTo(3);
 
         Cursor mySpokenLanguage = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                null, null, null, null, null, null, null);
+                null, null, null, null, null, SpokenLanguageContract._ID, null);
 
         assertThat(mySpokenLanguage).isNotNull();
         //noinspection ConstantConditions
@@ -362,7 +362,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract._ID)))
                 .isEqualTo("en");
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract.COLUMN_NAME)))
-                .isEqualTo("English");
+                .isEqualTo("Anglais");
         assertThat(mySpokenLanguage.moveToNext()).isTrue();
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract._ID)))
                 .isEqualTo("fr");
@@ -372,7 +372,7 @@ public class SpokenLanguageProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertDuplicate_skips() throws Exception
+    public void bulkInsertDuplicate_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(SpokenLanguageContract._ID, "en");
@@ -388,7 +388,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         Cursor mySpokenLanguage = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
@@ -400,7 +400,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract._ID)))
                 .isEqualTo("en");
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract.COLUMN_NAME)))
-                .isEqualTo("English");
+                .isEqualTo("Anglais");
         assertThat(mySpokenLanguage.moveToNext()).isTrue();
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract._ID)))
                 .isEqualTo("fr");

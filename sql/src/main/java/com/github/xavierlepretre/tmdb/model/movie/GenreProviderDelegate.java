@@ -197,11 +197,15 @@ public class GenreProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
-                        if (value != null && value.getAsLong(GenreContract._ID) == null)
+                        if (value == null || value.getAsLong(GenreContract._ID) == null)
                         {
                             continue;
                         }
-                        insertedId = writableDb.insert(GenreContract.TABLE_NAME, null, value);
+                        insertedId = writableDb.insertWithOnConflict(
+                                GenreContract.TABLE_NAME,
+                                null,
+                                value,
+                                INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                         if (insertedId > 0)
                         {
                             returnCount++;

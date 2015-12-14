@@ -328,7 +328,7 @@ public class ProductionCountryProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertExisting_skips() throws Exception
+    public void bulkInsertExisting_overwrites() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCountryContract._ID, "GB");
@@ -341,7 +341,7 @@ public class ProductionCountryProviderDelegateTest
 
         ContentValues value2 = new ContentValues();
         value2.put(ProductionCountryContract._ID, "GB");
-        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume Uni");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume-Uni");
         ContentValues value3 = new ContentValues();
         value3.put(ProductionCountryContract._ID, "US");
         value3.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
@@ -350,7 +350,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
                 values))
-                .isEqualTo(1);
+                .isEqualTo(3);
 
         Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
@@ -362,7 +362,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract._ID)))
                 .isEqualTo("GB");
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract.COLUMN_NAME)))
-                .isEqualTo("United Kingdom");
+                .isEqualTo("Royaume-Uni");
         assertThat(myProductionCountry.moveToNext()).isTrue();
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract._ID)))
                 .isEqualTo("US");
@@ -372,14 +372,14 @@ public class ProductionCountryProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertDuplicate_skips() throws Exception
+    public void bulkInsertDuplicate_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCountryContract._ID, "GB");
         value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
         ContentValues value2 = new ContentValues();
         value2.put(ProductionCountryContract._ID, "GB");
-        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume Uni");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume-Uni");
         ContentValues value3 = new ContentValues();
         value3.put(ProductionCountryContract._ID, "US");
         value3.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
@@ -388,7 +388,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
@@ -400,7 +400,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract._ID)))
                 .isEqualTo("GB");
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract.COLUMN_NAME)))
-                .isEqualTo("United Kingdom");
+                .isEqualTo("Royaume-Uni");
         assertThat(myProductionCountry.moveToNext()).isTrue();
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract._ID)))
                 .isEqualTo("US");
@@ -716,7 +716,7 @@ public class ProductionCountryProviderDelegateTest
                 values);
 
         ContentValues newValues = new ContentValues();
-        newValues.put(ProductionCountryContract.COLUMN_NAME, "Royaume Uni");
+        newValues.put(ProductionCountryContract.COLUMN_NAME, "Royaume-Uni");
         assertThat(providerDelegate.update(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
@@ -735,7 +735,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(found.getCount()).isEqualTo(1);
         assertThat(found.moveToFirst()).isTrue();
         assertThat(found.getString(found.getColumnIndex(ProductionCountryContract._ID))).isEqualTo("GB");
-        assertThat(found.getString(found.getColumnIndex(ProductionCountryContract.COLUMN_NAME))).isEqualTo("Royaume Uni");
+        assertThat(found.getString(found.getColumnIndex(ProductionCountryContract.COLUMN_NAME))).isEqualTo("Royaume-Uni");
     }
 
     @Test

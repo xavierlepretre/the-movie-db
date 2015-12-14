@@ -206,7 +206,7 @@ public class ContentResolverGenreTest
     }
 
     @Test
-    public void insertBulkTheSame_skips1() throws Exception
+    public void insertBulkTheSame_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(GenreContract._ID, 3);
@@ -222,7 +222,7 @@ public class ContentResolverGenreTest
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 GenreEntity.CONTENT_URI,
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 GenreEntity.CONTENT_URI, null, null, null, null);
@@ -231,7 +231,7 @@ public class ContentResolverGenreTest
         assertThat(genreCursor.moveToFirst()).isTrue();
         Genre genre = genreCursor.getGenre();
         assertThat(genre.getId()).isEqualTo(new GenreId(3));
-        assertThat(genre.getName()).isEqualTo("Adventure");
+        assertThat(genre.getName()).isEqualTo("Action");
         assertThat(genreCursor.moveToNext()).isTrue();
         genre = genreCursor.getGenre();
         assertThat(genre.getId()).isEqualTo(new GenreId(4));

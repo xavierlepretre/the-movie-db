@@ -197,11 +197,15 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
-                        if (value != null && value.getAsLong(CollectionContract._ID) == null)
+                        if (value == null || value.getAsLong(CollectionContract._ID) == null)
                         {
                             continue;
                         }
-                        insertedId = writableDb.insert(CollectionContract.TABLE_NAME, null, value);
+                        insertedId = writableDb.insertWithOnConflict(
+                                CollectionContract.TABLE_NAME,
+                                null,
+                                value,
+                                INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                         if (insertedId > 0)
                         {
                             returnCount++;

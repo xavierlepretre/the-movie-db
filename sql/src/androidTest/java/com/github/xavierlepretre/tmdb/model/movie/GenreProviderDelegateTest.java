@@ -317,7 +317,7 @@ public class GenreProviderDelegateTest
     }
 
     @Test
-    public void bulkInsertExisting_skips() throws Exception
+    public void bulkInsertExisting_overwrites() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(GenreContract._ID, 3);
@@ -329,43 +329,10 @@ public class GenreProviderDelegateTest
                 .isEqualTo(Uri.parse("content://content_authority/genre/3"));
 
         ContentValues value2 = new ContentValues();
+        value1.put(GenreContract.COLUMN_NAME, "Action");
         value2.put(GenreContract._ID, 4);
         value2.put(GenreContract.COLUMN_NAME, "Comic");
         ContentValues[] values = new ContentValues[]{value1, value2};
-        assertThat(providerDelegate.bulkInsert(
-                sqlHelper.getWritableDatabase(),
-                Uri.parse("content://content_authority/genre"),
-                values))
-                .isEqualTo(1);
-
-        Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
-                Uri.parse("content://content_authority/genre"),
-                null, null, null, null, null, null, null);
-
-        assertThat(myGenre).isNotNull();
-        //noinspection ConstantConditions
-        assertThat(myGenre.moveToFirst()).isTrue();
-        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
-                .isEqualTo("Adventure");
-        assertThat(myGenre.moveToNext()).isTrue();
-        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
-                .isEqualTo("Comic");
-        assertThat(myGenre.moveToNext()).isFalse();
-    }
-
-    @Test
-    public void bulkInsertDuplicate_skips() throws Exception
-    {
-        ContentValues value1 = new ContentValues();
-        value1.put(GenreContract._ID, 3);
-        value1.put(GenreContract.COLUMN_NAME, "Adventure");
-        ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 3);
-        value2.put(GenreContract.COLUMN_NAME, "Adventure");
-        ContentValues value3 = new ContentValues();
-        value3.put(GenreContract._ID, 4);
-        value3.put(GenreContract.COLUMN_NAME, "Comic");
-        ContentValues[] values = new ContentValues[]{value1, value2, value3};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
@@ -380,8 +347,46 @@ public class GenreProviderDelegateTest
         //noinspection ConstantConditions
         assertThat(myGenre.moveToFirst()).isTrue();
         assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
-                .isEqualTo("Adventure");
+                .isEqualTo("Action");
         assertThat(myGenre.moveToNext()).isTrue();
+        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
+                .isEqualTo("Comic");
+        assertThat(myGenre.moveToNext()).isFalse();
+    }
+
+    @Test
+    public void bulkInsertDuplicate_lastWins() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract._ID, 3);
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 3);
+        value2.put(GenreContract.COLUMN_NAME, "Action");
+        ContentValues value3 = new ContentValues();
+        value3.put(GenreContract._ID, 4);
+        value3.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
+        assertThat(providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                values))
+                .isEqualTo(3);
+
+        Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/genre"),
+                null, null, null, null, null, null, null);
+
+        assertThat(myGenre).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(myGenre.moveToFirst()).isTrue();
+        assertThat(myGenre.getInt(myGenre.getColumnIndex(GenreContract._ID)))
+                .isEqualTo(3);
+        assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
+                .isEqualTo("Action");
+        assertThat(myGenre.moveToNext()).isTrue();
+        assertThat(myGenre.getInt(myGenre.getColumnIndex(GenreContract._ID)))
+                .isEqualTo(4);
         assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
                 .isEqualTo("Comic");
         assertThat(myGenre.moveToNext()).isFalse();

@@ -227,7 +227,7 @@ public class ContentResolverCollectionTest
     }
 
     @Test
-    public void insertBulkTheSame_skips1() throws Exception
+    public void insertBulkTheSame_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
@@ -249,7 +249,7 @@ public class ContentResolverCollectionTest
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 CollectionEntity.CONTENT_URI,
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 CollectionEntity.CONTENT_URI, null, null, null, null);
@@ -259,7 +259,7 @@ public class ContentResolverCollectionTest
         Collection collection = collectionCursor.getCollection();
         assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/dOSECZImeyZldoq0ObieBE0lwie.jpg"));
         assertThat(collection.getId()).isEqualTo(new CollectionId(645L));
-        assertThat(collection.getName()).isEqualTo("James Bond Collection");
+        assertThat(collection.getName()).isEqualTo("James Bond Other Collection");
         assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/HORpg5CSkmeQlAolx3bKMrKgfi.jpg"));
 
         assertThat(collectionCursor.moveToNext()).isTrue();

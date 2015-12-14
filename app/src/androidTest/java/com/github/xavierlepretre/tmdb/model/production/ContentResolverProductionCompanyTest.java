@@ -207,7 +207,7 @@ public class ContentResolverProductionCompanyTest
     }
 
     @Test
-    public void insertBulkTheSame_skips1() throws Exception
+    public void insertBulkTheSame_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(ProductionCompanyContract._ID, 5);
@@ -223,7 +223,7 @@ public class ContentResolverProductionCompanyTest
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 ProductionCompanyEntity.CONTENT_URI,
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
@@ -232,7 +232,7 @@ public class ContentResolverProductionCompanyTest
         assertThat(productionCompanyCursor.moveToFirst()).isTrue();
         ProductionCompany productionCompany = productionCompanyCursor.getProductionCompany();
         assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(5));
-        assertThat(productionCompany.getName()).isEqualTo("Columbia Pictures");
+        assertThat(productionCompany.getName()).isEqualTo("Fox");
         assertThat(productionCompanyCursor.moveToNext()).isTrue();
         productionCompany = productionCompanyCursor.getProductionCompany();
         assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(6));

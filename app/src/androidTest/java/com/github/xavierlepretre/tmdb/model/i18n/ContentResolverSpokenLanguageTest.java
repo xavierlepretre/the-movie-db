@@ -207,7 +207,7 @@ public class ContentResolverSpokenLanguageTest
     }
 
     @Test
-    public void insertBulkTheSame_skips1() throws Exception
+    public void insertBulkTheSame_lastWins() throws Exception
     {
         ContentValues value1 = new ContentValues();
         value1.put(SpokenLanguageContract._ID, "en");
@@ -223,7 +223,7 @@ public class ContentResolverSpokenLanguageTest
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 SpokenLanguageEntity.CONTENT_URI,
                 values))
-                .isEqualTo(2);
+                .isEqualTo(3);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 SpokenLanguageEntity.CONTENT_URI, null, null, null, null);
@@ -232,7 +232,7 @@ public class ContentResolverSpokenLanguageTest
         assertThat(spokenLanguageCursor.moveToFirst()).isTrue();
         SpokenLanguage spokenLanguage = spokenLanguageCursor.getSpokenLanguage();
         assertThat(spokenLanguage.getIso639Dash1()).isEqualTo(LanguageCode.en);
-        assertThat(spokenLanguage.getName()).isEqualTo("English");
+        assertThat(spokenLanguage.getName()).isEqualTo("Anglais");
         assertThat(spokenLanguageCursor.moveToNext()).isTrue();
         spokenLanguage = spokenLanguageCursor.getSpokenLanguage();
         assertThat(spokenLanguage.getIso639Dash1()).isEqualTo(LanguageCode.fr);

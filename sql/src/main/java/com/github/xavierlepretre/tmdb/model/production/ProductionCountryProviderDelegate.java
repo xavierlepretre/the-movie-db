@@ -199,11 +199,15 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
                 {
                     for (ContentValues value : values)
                     {
-                        if (value != null && value.getAsString(ProductionCountryContract._ID) == null)
+                        if (value == null || value.getAsString(ProductionCountryContract._ID) == null)
                         {
                             continue;
                         }
-                        insertedId = writableDb.insert(ProductionCountryContract.TABLE_NAME, null, value);
+                        insertedId = writableDb.insertWithOnConflict(
+                                ProductionCountryContract.TABLE_NAME,
+                                null,
+                                value,
+                                INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                         if (insertedId > 0)
                         {
                             returnCount++;
