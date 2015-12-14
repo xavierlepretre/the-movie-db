@@ -10,10 +10,6 @@ import android.support.annotation.Nullable;
 
 public interface EntityProviderDelegate
 {
-    @NonNull String getCreateQuery();
-
-    @NonNull String getUpgradeQuery(int oldVersion, int newVersion);
-
     void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch);
 
     @Nullable String getType(@NonNull Uri uri);

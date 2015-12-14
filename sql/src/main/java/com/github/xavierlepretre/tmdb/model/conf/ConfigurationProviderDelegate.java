@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.xavierlepretre.tmdb.model.EntityProviderDelegate;
-import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
 public class ConfigurationProviderDelegate implements EntityProviderDelegate
 {
@@ -32,26 +31,6 @@ public class ConfigurationProviderDelegate implements EntityProviderDelegate
         this.contentItemType = contentItemType;
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(contentAuthority, ConfigurationContract.PATH, CONFIGURATION);
-    }
-
-    @Override @NonNull public String getCreateQuery()
-    {
-        return "CREATE TABLE " + ConfigurationContract.TABLE_NAME + "("
-                + ConfigurationContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
-                + ImagesConfSegment.COLUMN_BASE_URL + " TEXT NULL,"
-                + ImagesConfSegment.COLUMN_SECURE_BASE_URL + " TEXT NULL,"
-                + ImagesConfSegment.COLUMN_BACKDROP_SIZES + " TEXT NULL,"
-                + ImagesConfSegment.COLUMN_LOGO_SIZES + " TEXT NULL,"
-                + ImagesConfSegment.COLUMN_POSTER_SIZES + " TEXT NULL,"
-                + ImagesConfSegment.COLUMN_PROFILE_SIZES + " TEXT NULL,"
-                + ImagesConfSegment.COLUMN_STILL_SIZES + " TEXT NULL,"
-                + ConfigurationContract.COLUMN_CHANGE_KEYS + " TEXT NULL"
-                + ");";
-    }
-
-    @NonNull @Override public String getUpgradeQuery(int oldVersion, int newVersion)
-    {
-        return "DROP TABLE IF EXISTS " + ConfigurationContract.TABLE_NAME + ";";
     }
 
     @Override public void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch)

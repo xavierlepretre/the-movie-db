@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
 import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
@@ -28,7 +29,7 @@ public class CollectionCursorWithProviderTest
     };
 
     private CollectionProviderDelegate providerDelegate;
-    private CollectionSQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Parameterized.Parameter
     public ParameterColumnValue parameter;
@@ -48,11 +49,12 @@ public class CollectionCursorWithProviderTest
                 Uri.parse("content://content_authority/collection"),
                 "dir_type",
                 "item_type"));
-        sqlHelper = new CollectionSQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new CollectionSQLHelperDelegate());
 
         ContentValues values1 = new ContentValues();
         ContentValues values2 = new ContentValues();

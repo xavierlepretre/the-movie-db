@@ -18,36 +18,43 @@ public class TmdbContentProvider extends ContentProvider
     // The URI Matcher used by this content provider to find which helper to delegate to.
     @NonNull private final UriMatcher uriMatcher;
     @NonNull private final SparseArray<EntityProviderDelegate> providerDelegates;
+    @NonNull private final SparseArray<EntitySQLHelperDelegate> helperDelegates;
     private TmdbDbHelper openHelper;
 
     public TmdbContentProvider()
     {
         this(new TmdbUriMatcherFactory(),
-                new EntityProviderDelegateFactory());
+                new EntityProviderDelegateFactory(),
+                new EntitySQLHelperDelegateFactory());
     }
 
     public TmdbContentProvider(
             @NonNull TmdbUriMatcherFactory uriMatcherFactory,
-            @NonNull EntityProviderDelegateFactory delegateFactory)
+            @NonNull EntityProviderDelegateFactory delegateFactory,
+            @NonNull EntitySQLHelperDelegateFactory helperDelegateFactory)
     {
-        this(uriMatcherFactory, delegateFactory.createProviders());
+        this(uriMatcherFactory, delegateFactory.createProviders(), helperDelegateFactory.createHelpers());
     }
 
     public TmdbContentProvider(
             @NonNull TmdbUriMatcherFactory uriMatcherFactory,
-            @NonNull SparseArray<EntityProviderDelegate> providerDelegates)
+            @NonNull SparseArray<EntityProviderDelegate> providerDelegates,
+            @NonNull SparseArray<EntitySQLHelperDelegate> helperDelegates)
     {
         this(uriMatcherFactory.create(providerDelegates),
-                providerDelegates);
+                providerDelegates,
+                helperDelegates);
     }
 
     public TmdbContentProvider(
             @NonNull UriMatcher uriMatcher,
-            @NonNull SparseArray<EntityProviderDelegate> providerDelegates)
+            @NonNull SparseArray<EntityProviderDelegate> providerDelegates,
+            @NonNull SparseArray<EntitySQLHelperDelegate> helperDelegates)
     {
         super();
         this.uriMatcher = uriMatcher;
         this.providerDelegates = providerDelegates;
+        this.helperDelegates = helperDelegates;
     }
 
     @Override public boolean onCreate()
@@ -62,7 +69,7 @@ public class TmdbContentProvider extends ContentProvider
                 DATABASE_NAME,
                 null,
                 DATABASE_VERSION,
-                providerDelegates);
+                helperDelegates);
     }
 
     private void notifyResolver(@Nullable Uri uri)

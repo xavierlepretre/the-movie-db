@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +21,7 @@ public class GenreProviderDelegateTest
 {
     private static final String TEMP_DB_NAME = "temp.genre.db";
     private GenreProviderDelegate providerDelegate;
-    private GenreSQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Before
     public void setUp() throws Exception
@@ -30,33 +32,18 @@ public class GenreProviderDelegateTest
                 Uri.parse("content://content_authority/genre"),
                 "dir_type",
                 "item_type"));
-        sqlHelper = new GenreSQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new GenreSQLHelperDelegate());
     }
 
     @After
     public void tearDown() throws Exception
     {
         InstrumentationRegistry.getContext().deleteDatabase(TEMP_DB_NAME);
-    }
-
-    @Test
-    public void createRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE genre(_id INTEGER PRIMARY KEY NOT NULL,name TEXT NULL);"
-        );
-    }
-
-    @Test
-    public void upgradeRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getUpgradeQuery(1, 2)).isEqualTo(
-                "DROP TABLE IF EXISTS genre;"
-        );
     }
 
     @Test

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
 import org.junit.After;
@@ -19,7 +20,7 @@ public class ConfigurationProviderDelegateTest
 {
     private static final String TEMP_DB_NAME = "temp.configuration.db";
     private ConfigurationProviderDelegate providerDelegate;
-    private ConfigurationSQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Before
     public void setUp() throws Exception
@@ -29,41 +30,18 @@ public class ConfigurationProviderDelegateTest
                 "content_authority",
                 Uri.parse("content://content_authority/configuration"),
                 "item_type"));
-        sqlHelper = new ConfigurationSQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new ConfigurationSQLHelperDelegate());
     }
 
     @After
     public void tearDown() throws Exception
     {
         InstrumentationRegistry.getContext().deleteDatabase(TEMP_DB_NAME);
-    }
-
-    @Test
-    public void createRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE configuration(_id INTEGER PRIMARY KEY NOT NULL," +
-                        "imagesBaseUrl TEXT NULL," +
-                        "imagesSecureBaseUrl TEXT NULL," +
-                        "imagesBackdropSizes TEXT NULL," +
-                        "imagesLogoSizes TEXT NULL," +
-                        "imagesPosterSizes TEXT NULL," +
-                        "imagesProfileSizes TEXT NULL," +
-                        "imagesStillSizes TEXT NULL," +
-                        "changeKeys TEXT NULL);"
-        );
-    }
-
-    @Test
-    public void upgradeRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getUpgradeQuery(1, 2)).isEqualTo(
-                "DROP TABLE IF EXISTS configuration;"
-        );
     }
 
     @Test

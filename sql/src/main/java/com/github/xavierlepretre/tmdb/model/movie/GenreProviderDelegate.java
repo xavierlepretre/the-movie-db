@@ -39,19 +39,6 @@ public class GenreProviderDelegate implements EntityProviderDelegate
         uriMatcher.addURI(contentAuthority, GenreContract.PATH + "/#", GENRE_BY_ID);
     }
 
-    @Override @NonNull public String getCreateQuery()
-    {
-        return "CREATE TABLE " + GenreContract.TABLE_NAME + "("
-                + GenreContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
-                + GenreContract.COLUMN_NAME + " TEXT NULL"
-                + ");";
-    }
-
-    @NonNull @Override public String getUpgradeQuery(int oldVersion, int newVersion)
-    {
-        return "DROP TABLE IF EXISTS " + GenreContract.TABLE_NAME + ";";
-    }
-
     @Override public void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch)
     {
         uriMatcher.addURI(contentAuthority, GenreContract.PATH, outsideMatch);

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
 import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
@@ -34,7 +35,7 @@ public class ConfigurationCursorWithProviderTest
     };
 
     private ConfigurationProviderDelegate providerDelegate;
-    private ConfigurationSQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Parameterized.Parameter
     public ParameterColumnValue parameter;
@@ -53,11 +54,12 @@ public class ConfigurationCursorWithProviderTest
                 "content_authority",
                 Uri.parse("content://content_authority/configuration"),
                 "item_type"));
-        sqlHelper = new ConfigurationSQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new ConfigurationSQLHelperDelegate());
 
         ContentValues values = new ContentValues();
         for (String[] pair : POTENTIAL_COLUMNS)

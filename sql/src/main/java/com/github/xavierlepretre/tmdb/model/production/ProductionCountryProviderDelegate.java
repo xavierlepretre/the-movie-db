@@ -39,19 +39,6 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         uriMatcher.addURI(contentAuthority, ProductionCountryContract.PATH + "/*", PRODUCTION_COUNTRY_BY_ID);
     }
 
-    @Override @NonNull public String getCreateQuery()
-    {
-        return "CREATE TABLE " + ProductionCountryContract.TABLE_NAME + "("
-                + ProductionCountryContract._ID + " CHARACTER(2) PRIMARY KEY NOT NULL,"
-                + ProductionCountryContract.COLUMN_NAME + " TEXT NULL"
-                + ");";
-    }
-
-    @NonNull @Override public String getUpgradeQuery(int oldVersion, int newVersion)
-    {
-        return "DROP TABLE IF EXISTS " + ProductionCountryContract.TABLE_NAME + ";";
-    }
-
     @Override public void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch)
     {
         uriMatcher.addURI(contentAuthority, ProductionCountryContract.PATH, outsideMatch);
@@ -90,7 +77,7 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COUNTRIES:
-                return getAllProductionCountrys(readableDb,
+                return getAllProductionCountries(readableDb,
                         projection,
                         selection,
                         selectionArgs,
@@ -113,7 +100,7 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    @Nullable public Cursor getAllProductionCountrys(
+    @Nullable public Cursor getAllProductionCountries(
             @NonNull SQLiteDatabase readableDb,
             @Nullable String[] projection,
             @Nullable String selection,
@@ -267,7 +254,7 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COUNTRIES:
-                return deleteProductionCountrys(writableDb,
+                return deleteProductionCountries(writableDb,
                         selection,
                         selectionArgs);
             case PRODUCTION_COUNTRY_BY_ID:
@@ -280,7 +267,7 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int deleteProductionCountrys(
+    public int deleteProductionCountries(
             @NonNull SQLiteDatabase writableDb,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
@@ -322,7 +309,7 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COUNTRIES:
-                return updateProductionCountrys(writableDb,
+                return updateProductionCountries(writableDb,
                         values,
                         selection,
                         selectionArgs);
@@ -337,7 +324,7 @@ public class ProductionCountryProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int updateProductionCountrys(
+    public int updateProductionCountries(
             @NonNull SQLiteDatabase writableDb,
             @Nullable ContentValues values,
             @Nullable String selection,

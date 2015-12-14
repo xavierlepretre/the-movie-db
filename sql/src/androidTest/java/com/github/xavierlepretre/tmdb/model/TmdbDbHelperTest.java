@@ -17,18 +17,18 @@ import static org.mockito.Mockito.when;
 public class TmdbDbHelperTest
 {
     private static final String DB_NAME = "temp.test.db";
-    EntityProviderDelegate delegate1;
-    EntityProviderDelegate delegate2;
-    SparseArray<EntityProviderDelegate> array;
+    EntitySQLHelperDelegate delegate1;
+    EntitySQLHelperDelegate delegate2;
+    SparseArray<EntitySQLHelperDelegate> array;
 
     @Before
     public void setUp() throws Exception
     {
         InstrumentationRegistry.getContext().deleteDatabase(DB_NAME);
-        delegate1 = mock(EntityProviderDelegate.class);
+        delegate1 = mock(EntitySQLHelperDelegate.class);
         when(delegate1.getCreateQuery()).thenReturn("CREATE TABLE fake1(id INTEGER);");
         when(delegate1.getUpgradeQuery(anyInt(), anyInt())).thenReturn("DROP TABLE fake1;");
-        delegate2 = mock(EntityProviderDelegate.class);
+        delegate2 = mock(EntitySQLHelperDelegate.class);
         when(delegate2.getCreateQuery()).thenReturn("CREATE TABLE fake2(id INTEGER);");
         when(delegate2.getUpgradeQuery(anyInt(), anyInt())).thenReturn("DROP TABLE fake2;");
         array = new SparseArray<>();

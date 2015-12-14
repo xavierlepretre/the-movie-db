@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +21,7 @@ public class CollectionProviderDelegateTest
 {
     private static final String TEMP_DB_NAME = "temp.collection.db";
     private CollectionProviderDelegate providerDelegate;
-    private CollectionSQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Before
     public void setUp() throws Exception
@@ -30,33 +32,18 @@ public class CollectionProviderDelegateTest
                 Uri.parse("content://content_authority/collection"),
                 "dir_type",
                 "item_type"));
-        sqlHelper = new CollectionSQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new CollectionSQLHelperDelegate());
     }
 
     @After
     public void tearDown() throws Exception
     {
         InstrumentationRegistry.getContext().deleteDatabase(TEMP_DB_NAME);
-    }
-
-    @Test
-    public void createRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE collection(backdropPath TEXT NULL,_id INTEGER PRIMARY KEY NOT NULL,name TEXT NULL,posterPath TEXT NULL);"
-        );
-    }
-
-    @Test
-    public void upgradeRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getUpgradeQuery(1, 2)).isEqualTo(
-                "DROP TABLE IF EXISTS collection;"
-        );
     }
 
     @Test

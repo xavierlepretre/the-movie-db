@@ -10,33 +10,33 @@ import android.util.SparseArray;
 
 public class TmdbDbHelper extends SQLiteOpenHelper
 {
-    @NonNull private final SparseArray<EntityProviderDelegate> providerDelegates;
+    @NonNull private final SparseArray<EntitySQLHelperDelegate> helperDelegates;
 
     public TmdbDbHelper(
             @Nullable Context context,
             @NonNull String databaseName,
             @Nullable CursorFactory factory,
             int latestVersion,
-            @NonNull SparseArray<EntityProviderDelegate> providerDelegates)
+            @NonNull SparseArray<EntitySQLHelperDelegate> helperDelegates)
     {
         super(context, databaseName, factory, latestVersion);
-        this.providerDelegates = providerDelegates;
+        this.helperDelegates = helperDelegates;
     }
 
     @Override public void onCreate(SQLiteDatabase db)
     {
-        for (int i = 0; i < providerDelegates.size(); i++)
+        for (int i = 0; i < helperDelegates.size(); i++)
         {
-            db.execSQL(providerDelegates.get(providerDelegates.keyAt(i))
+            db.execSQL(helperDelegates.get(helperDelegates.keyAt(i))
                     .getCreateQuery());
         }
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        for (int i = 0; i < providerDelegates.size(); i++)
+        for (int i = 0; i < helperDelegates.size(); i++)
         {
-            db.execSQL(providerDelegates.get(providerDelegates.keyAt(i))
+            db.execSQL(helperDelegates.get(helperDelegates.keyAt(i))
                     .getUpgradeQuery(oldVersion, newVersion));
         }
         onCreate(db);

@@ -35,6 +35,7 @@ public class TmdbContentProviderTest
     private SQLiteDatabase fakeWritable;
     private UriMatcher uriMatcher;
     private SparseArray<EntityProviderDelegate> delegates;
+    private SparseArray<EntitySQLHelperDelegate> helpers;
     private TmdbContentProvider contentProvider;
     private Cursor result;
 
@@ -81,7 +82,8 @@ public class TmdbContentProviderTest
         delegates.put(10, mock(EntityProviderDelegate.class));
         delegates.put(20, mock(EntityProviderDelegate.class));
         delegates.put(30, mock(EntityProviderDelegate.class));
-        contentProvider = spy(new TmdbContentProvider(uriMatcher, delegates));
+        helpers = new SparseArray<>();
+        contentProvider = spy(new TmdbContentProvider(uriMatcher, delegates, helpers));
         doReturn(dbHelper).when(contentProvider).createHelper(any(Context.class));
         ProviderInfo info = new ProviderInfo();
         info.authority = "authority";

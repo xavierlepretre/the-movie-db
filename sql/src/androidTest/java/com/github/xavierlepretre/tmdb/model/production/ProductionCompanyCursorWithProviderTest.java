@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
 import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 
 import org.junit.After;
@@ -25,7 +26,7 @@ public class ProductionCompanyCursorWithProviderTest
     };
 
     private ProductionCompanyProviderDelegate providerDelegate;
-    private ProductionCompanySQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Parameterized.Parameter
     public ParameterColumnValue parameter;
@@ -45,11 +46,12 @@ public class ProductionCompanyCursorWithProviderTest
                 Uri.parse("content://content_authority/productionCompany"),
                 "dir_type",
                 "item_type"));
-        sqlHelper = new ProductionCompanySQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new ProductionCompanySQLHelperDelegate());
 
         ContentValues values1 = new ContentValues();
         ContentValues values2 = new ContentValues();

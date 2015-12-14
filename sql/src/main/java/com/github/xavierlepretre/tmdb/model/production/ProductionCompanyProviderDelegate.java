@@ -39,19 +39,6 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         uriMatcher.addURI(contentAuthority, ProductionCompanyContract.PATH + "/#", PRODUCTION_COMPANY_BY_ID);
     }
 
-    @Override @NonNull public String getCreateQuery()
-    {
-        return "CREATE TABLE " + ProductionCompanyContract.TABLE_NAME + "("
-                + ProductionCompanyContract._ID + " INTEGER PRIMARY KEY NOT NULL,"
-                + ProductionCompanyContract.COLUMN_NAME + " TEXT NULL"
-                + ");";
-    }
-
-    @NonNull @Override public String getUpgradeQuery(int oldVersion, int newVersion)
-    {
-        return "DROP TABLE IF EXISTS " + ProductionCompanyContract.TABLE_NAME + ";";
-    }
-
     @Override public void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch)
     {
         uriMatcher.addURI(contentAuthority, ProductionCompanyContract.PATH, outsideMatch);
@@ -85,7 +72,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COMPANIES:
-                return getAllProductionCompanys(readableDb,
+                return getAllProductionCompanies(readableDb,
                         projection,
                         selection,
                         selectionArgs,
@@ -108,7 +95,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    @Nullable public Cursor getAllProductionCompanys(
+    @Nullable public Cursor getAllProductionCompanies(
             @NonNull SQLiteDatabase readableDb,
             @Nullable String[] projection,
             @Nullable String selection,
@@ -265,7 +252,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COMPANIES:
-                return deleteProductionCompanys(writableDb,
+                return deleteProductionCompanies(writableDb,
                         selection,
                         selectionArgs);
             case PRODUCTION_COMPANY_BY_ID:
@@ -278,7 +265,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int deleteProductionCompanys(
+    public int deleteProductionCompanies(
             @NonNull SQLiteDatabase writableDb,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
@@ -320,7 +307,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case PRODUCTION_COMPANIES:
-                return updateProductionCompanys(writableDb,
+                return updateProductionCompanies(writableDb,
                         values,
                         selection,
                         selectionArgs);
@@ -335,7 +322,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int updateProductionCompanys(
+    public int updateProductionCompanies(
             @NonNull SQLiteDatabase writableDb,
             @Nullable ContentValues values,
             @Nullable String selection,

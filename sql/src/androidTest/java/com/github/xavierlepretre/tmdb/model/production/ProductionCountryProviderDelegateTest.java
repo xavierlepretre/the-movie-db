@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
 import com.neovisionaries.i18n.CountryCode;
 
 import org.junit.After;
@@ -21,7 +22,7 @@ public class ProductionCountryProviderDelegateTest
 {
     private static final String TEMP_DB_NAME = "temp.productionCountry.db";
     private ProductionCountryProviderDelegate providerDelegate;
-    private ProductionCountrySQLiteOpenHelper sqlHelper;
+    private EntitySQLiteOpenHelper sqlHelper;
 
     @Before
     public void setUp() throws Exception
@@ -32,32 +33,18 @@ public class ProductionCountryProviderDelegateTest
                 Uri.parse("content://content_authority/productionCountry"),
                 "dir_type",
                 "item_type"));
-        sqlHelper = new ProductionCountrySQLiteOpenHelper(
+        sqlHelper = new EntitySQLiteOpenHelper(
                 InstrumentationRegistry.getContext(),
                 TEMP_DB_NAME,
                 null,
-                1);
+                1,
+                new ProductionCountrySQLHelperDelegate());
     }
 
     @After
     public void tearDown() throws Exception
     {
         InstrumentationRegistry.getContext().deleteDatabase(TEMP_DB_NAME);
-    }
-
-    @Test
-    public void createRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getCreateQuery()).isEqualTo(
-                "CREATE TABLE productionCountry(_id CHARACTER(2) PRIMARY KEY NOT NULL,name TEXT NULL);");
-    }
-
-    @Test
-    public void upgradeRequestIsCorrect() throws Exception
-    {
-        assertThat(providerDelegate.getUpgradeQuery(1, 2)).isEqualTo(
-                "DROP TABLE IF EXISTS productionCountry;"
-        );
     }
 
     @Test
