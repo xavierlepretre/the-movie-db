@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.MovieEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCountryEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.SpokenLanguageEntity;
@@ -13,6 +14,7 @@ import com.github.xavierlepretre.tmdb.model.conf.ConfigurationProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.movie.MovieProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCountryProviderDelegate;
 
@@ -21,9 +23,10 @@ public class EntityProviderDelegateFactory
     static final int COLLECTION_PROVIDER = 100;
     static final int CONFIGURATION_PROVIDER = 101;
     static final int GENRE_PROVIDER = 102;
-    static final int PRODUCTION_COMPANY_PROVIDER = 103;
-    static final int PRODUCTION_COUNTRY_PROVIDER = 104;
-    static final int SPOKEN_LANGUAGE_PROVIDER = 105;
+    static final int MOVIE_PROVIDER = 103;
+    static final int PRODUCTION_COMPANY_PROVIDER = 104;
+    static final int PRODUCTION_COUNTRY_PROVIDER = 105;
+    static final int SPOKEN_LANGUAGE_PROVIDER = 106;
 
     @NonNull public SparseArray<EntityProviderDelegate> createProviders()
     {
@@ -31,6 +34,7 @@ public class EntityProviderDelegateFactory
         created.put(COLLECTION_PROVIDER, createCollectionProvider());
         created.put(CONFIGURATION_PROVIDER, createConfigurationProvider());
         created.put(GENRE_PROVIDER, createGenreProvider());
+        created.put(MOVIE_PROVIDER, createMovieProvider());
         created.put(PRODUCTION_COMPANY_PROVIDER, createProductionCompanyProvider());
         created.put(PRODUCTION_COUNTRY_PROVIDER, createProductionCountryProvider());
         created.put(SPOKEN_LANGUAGE_PROVIDER, createSpokenLanguageProvider());
@@ -61,6 +65,15 @@ public class EntityProviderDelegateFactory
                 GenreEntity.CONTENT_URI,
                 GenreEntity.CONTENT_DIR_TYPE,
                 GenreEntity.CONTENT_ITEM_TYPE);
+    }
+
+    @NonNull protected MovieProviderDelegate createMovieProvider()
+    {
+        return new MovieProviderDelegate(
+                TmdbContract.CONTENT_AUTHORITY,
+                MovieEntity.CONTENT_URI,
+                MovieEntity.CONTENT_DIR_TYPE,
+                MovieEntity.CONTENT_ITEM_TYPE);
     }
 
     @NonNull protected ProductionCompanyProviderDelegate createProductionCompanyProvider()

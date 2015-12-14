@@ -15,6 +15,6 @@ public class EntitySQLHelperDelegateFactoryTest
         EntitySQLHelperDelegateFactory factory = spy(new EntitySQLHelperDelegateFactory());
 
         SparseArray<EntitySQLHelperDelegate> sqlHelpers = factory.createHelpers();
-        assertThat(sqlHelpers.size()).isEqualTo(6);
+        assertThat(sqlHelpers.size()).isEqualTo(7);
     }
 }

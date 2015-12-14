@@ -49,10 +49,10 @@ public class ContentValuesGenreFactory
         return values;
     }
 
-    @NonNull public ContentValues createFrom(@NonNull GenreId genreIds)
+    @NonNull public ContentValues createFrom(@NonNull GenreId genreId)
     {
         ContentValues contentValues = new ContentValues();
-        populate(contentValues, genreIds);
+        populate(contentValues, genreId);
         return contentValues;
     }
 
