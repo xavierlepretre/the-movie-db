@@ -30,4 +30,11 @@ public class VideoId
         return obj instanceof VideoId
                 && ((VideoId) obj).getId().equals(id);
     }
+
+    @Override public String toString()
+    {
+        return "VideoId{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

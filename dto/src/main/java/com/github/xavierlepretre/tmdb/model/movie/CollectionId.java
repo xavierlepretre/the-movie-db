@@ -30,4 +30,11 @@ public class CollectionId
         return obj instanceof CollectionId
                 && ((CollectionId) obj).getId() == id;
     }
+
+    @Override public String toString()
+    {
+        return "CollectionId{" +
+                "id=" + id +
+                '}';
+    }
 }

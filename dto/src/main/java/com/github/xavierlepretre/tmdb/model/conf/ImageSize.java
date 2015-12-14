@@ -39,4 +39,11 @@ public final class ImageSize
     {
         return  Integer.parseInt(size.replaceFirst("w(\\d+)", "$1"));
     }
+
+    @Override public String toString()
+    {
+        return "ImageSize{" +
+                "size='" + size + '\'' +
+                '}';
+    }
 }

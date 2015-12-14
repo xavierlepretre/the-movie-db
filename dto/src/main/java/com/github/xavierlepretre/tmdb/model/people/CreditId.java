@@ -30,4 +30,11 @@ public class CreditId
         return obj instanceof CreditId
                 && ((CreditId) obj).getId().equals(id);
     }
+
+    @Override public String toString()
+    {
+        return "CreditId{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

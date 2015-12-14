@@ -30,4 +30,11 @@ public class ReviewId
         return obj instanceof ReviewId
                 && ((ReviewId) obj).getId().equals(id);
     }
+
+    @Override public String toString()
+    {
+        return "ReviewId{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

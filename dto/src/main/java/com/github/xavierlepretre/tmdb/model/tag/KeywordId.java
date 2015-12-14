@@ -30,4 +30,11 @@ public class KeywordId
         return obj instanceof KeywordId
                 && ((KeywordId) obj).getId() == id;
     }
+
+    @Override public String toString()
+    {
+        return "KeywordId{" +
+                "id=" + id +
+                '}';
+    }
 }

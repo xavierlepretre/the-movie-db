@@ -30,4 +30,11 @@ public class MovieId
         return obj instanceof MovieId
                 && ((MovieId) obj).getId() == id;
     }
+
+    @Override public String toString()
+    {
+        return "MovieId{" +
+                "id=" + id +
+                '}';
+    }
 }

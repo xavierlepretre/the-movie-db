@@ -31,4 +31,11 @@ public final class ChangeKey
         return obj instanceof ChangeKey
                 && ((ChangeKey) obj).getKey().equals(key);
     }
+
+    @Override public String toString()
+    {
+        return "ChangeKey{" +
+                "key='" + key + '\'' +
+                '}';
+    }
 }

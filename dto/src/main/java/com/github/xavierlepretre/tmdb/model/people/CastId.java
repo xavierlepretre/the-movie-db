@@ -30,4 +30,11 @@ public class CastId
         return obj instanceof CastId
                 && ((CastId) obj).getId() == id;
     }
+
+    @Override public String toString()
+    {
+        return "CastId{" +
+                "id=" + id +
+                '}';
+    }
 }

@@ -30,4 +30,11 @@ public class ListId
         return obj instanceof ListId
                 && ((ListId) obj).getId().equals(id);
     }
+
+    @Override public String toString()
+    {
+        return "ListId{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

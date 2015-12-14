@@ -30,4 +30,11 @@ public class PersonId
         return obj instanceof PersonId
                 && ((PersonId) obj).getId() == id;
     }
+
+    @Override public String toString()
+    {
+        return "PersonId{" +
+                "id=" + id +
+                '}';
+    }
 }

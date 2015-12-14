@@ -30,4 +30,11 @@ public class ImdbId
         return obj instanceof ImdbId
                 && ((ImdbId) obj).getId().equals(id);
     }
+
+    @Override public String toString()
+    {
+        return "ImdbId{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

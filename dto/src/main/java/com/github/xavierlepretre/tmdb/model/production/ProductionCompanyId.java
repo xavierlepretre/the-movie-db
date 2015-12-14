@@ -30,4 +30,11 @@ public class ProductionCompanyId
         return obj instanceof ProductionCompanyId
                 && ((ProductionCompanyId) obj).getId() == id;
     }
+
+    @Override public String toString()
+    {
+        return "ProductionCompanyId{" +
+                "id=" + id +
+                '}';
+    }
 }
