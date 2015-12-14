@@ -235,16 +235,16 @@ public class ContentResolverCollectionTest
         value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
         value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         ContentValues value2 = new ContentValues();
-        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
-        value2.put(CollectionContract._ID, 646L);
-        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
-        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
-        ContentValues[] values = new ContentValues[]{value1, value2};
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value2.put(CollectionContract._ID, 645L);
+        value2.put(CollectionContract.COLUMN_NAME, "James Bond Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
         ContentValues value3 = new ContentValues();
-        value3.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
-        value3.put(CollectionContract._ID, 645L);
-        value3.put(CollectionContract.COLUMN_NAME, "James Bond Other Collection");
-        value3.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        value3.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value3.put(CollectionContract._ID, 646L);
+        value3.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value3.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 CollectionEntity.CONTENT_URI,

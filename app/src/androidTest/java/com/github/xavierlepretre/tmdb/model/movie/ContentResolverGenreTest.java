@@ -212,12 +212,12 @@ public class ContentResolverGenreTest
         value1.put(GenreContract._ID, 3);
         value1.put(GenreContract.COLUMN_NAME, "Adventure");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
-        ContentValues[] values = new ContentValues[]{value1, value2};
+        value2.put(GenreContract._ID, 3);
+        value2.put(GenreContract.COLUMN_NAME, "Action");
         ContentValues value3 = new ContentValues();
-        value3.put(GenreContract._ID, 3);
-        value3.put(GenreContract.COLUMN_NAME, "Action");
+        value3.put(GenreContract._ID, 4);
+        value3.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 GenreEntity.CONTENT_URI,

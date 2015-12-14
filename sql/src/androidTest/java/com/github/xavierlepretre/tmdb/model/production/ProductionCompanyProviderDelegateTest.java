@@ -344,7 +344,7 @@ public class ProductionCompanyProviderDelegateTest
         ContentValues value3 = new ContentValues();
         value3.put(ProductionCompanyContract._ID, 6);
         value3.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
-        ContentValues[] values = new ContentValues[]{value1, value3, value2};
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
@@ -382,7 +382,7 @@ public class ProductionCompanyProviderDelegateTest
         ContentValues value3 = new ContentValues();
         value3.put(ProductionCompanyContract._ID, 6);
         value3.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
-        ContentValues[] values = new ContentValues[]{value1, value3, value2};
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),

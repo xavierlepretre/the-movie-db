@@ -345,7 +345,7 @@ public class ProductionCountryProviderDelegateTest
         ContentValues value3 = new ContentValues();
         value3.put(ProductionCountryContract._ID, "US");
         value3.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
-        ContentValues[] values = new ContentValues[]{value1, value3, value2};
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
@@ -378,11 +378,11 @@ public class ProductionCountryProviderDelegateTest
         value1.put(ProductionCountryContract._ID, "GB");
         value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
         ContentValues value2 = new ContentValues();
-        value2.put(ProductionCountryContract._ID, "US");
-        value2.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        value2.put(ProductionCountryContract._ID, "GB");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume Uni");
         ContentValues value3 = new ContentValues();
-        value3.put(ProductionCountryContract._ID, "GB");
-        value3.put(ProductionCountryContract.COLUMN_NAME, "Royaume Uni");
+        value3.put(ProductionCountryContract._ID, "US");
+        value3.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
         ContentValues[] values = new ContentValues[]{value1, value2, value3};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),

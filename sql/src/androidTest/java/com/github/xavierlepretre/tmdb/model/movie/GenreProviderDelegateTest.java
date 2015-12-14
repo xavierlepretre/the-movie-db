@@ -360,11 +360,11 @@ public class GenreProviderDelegateTest
         value1.put(GenreContract._ID, 3);
         value1.put(GenreContract.COLUMN_NAME, "Adventure");
         ContentValues value2 = new ContentValues();
-        value2.put(GenreContract._ID, 4);
-        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        value2.put(GenreContract._ID, 3);
+        value2.put(GenreContract.COLUMN_NAME, "Adventure");
         ContentValues value3 = new ContentValues();
-        value3.put(GenreContract._ID, 3);
-        value3.put(GenreContract.COLUMN_NAME, "Adventure");
+        value3.put(GenreContract._ID, 4);
+        value3.put(GenreContract.COLUMN_NAME, "Comic");
         ContentValues[] values = new ContentValues[]{value1, value2, value3};
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),

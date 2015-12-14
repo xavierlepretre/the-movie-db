@@ -105,7 +105,7 @@ public class ContentResolverProductionCountryTest
     public void insert_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
-        values.put(ProductionCountryContract._ID, 5);
+        values.put(ProductionCountryContract._ID, "GB");
         values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
@@ -139,7 +139,7 @@ public class ContentResolverProductionCountryTest
         cursor.registerContentObserver(observer);
 
         ContentValues values = new ContentValues();
-        values.put(ProductionCountryContract._ID, 5);
+        values.put(ProductionCountryContract._ID, "GB");
         values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
         InstrumentationRegistry.getTargetContext().getContentResolver().insert(
                 TmdbContract.ProductionCountryEntity.CONTENT_URI,
@@ -150,7 +150,7 @@ public class ContentResolverProductionCountryTest
                 InstrumentationRegistry.getTargetContext().getContentResolver(),
                 TmdbContract.ProductionCountryEntity.CONTENT_URI);
 
-        values.put(ProductionCountryContract._ID, 6);
+        values.put(ProductionCountryContract._ID, "US");
         values.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
         InstrumentationRegistry.getTargetContext().getContentResolver().insert(
                 TmdbContract.ProductionCountryEntity.CONTENT_URI,
@@ -214,12 +214,12 @@ public class ContentResolverProductionCountryTest
         value1.put(ProductionCountryContract._ID, "GB");
         value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
         ContentValues value2 = new ContentValues();
-        value2.put(ProductionCountryContract._ID, "US");
-        value2.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
-        ContentValues[] values = new ContentValues[]{value1, value2};
+        value2.put(ProductionCountryContract._ID, "GB");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "Royaume-Uni");
         ContentValues value3 = new ContentValues();
-        value3.put(ProductionCountryContract._ID, "GB");
-        value3.put(ProductionCountryContract.COLUMN_NAME, "Royaume-Uni");
+        value3.put(ProductionCountryContract._ID, "US");
+        value3.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 ProductionCountryEntity.CONTENT_URI,

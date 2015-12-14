@@ -213,12 +213,12 @@ public class ContentResolverProductionCompanyTest
         value1.put(ProductionCompanyContract._ID, 5);
         value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
         ContentValues value2 = new ContentValues();
-        value2.put(ProductionCompanyContract._ID, 6);
-        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
-        ContentValues[] values = new ContentValues[]{value1, value2};
+        value2.put(ProductionCompanyContract._ID, 5);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
         ContentValues value3 = new ContentValues();
-        value3.put(ProductionCompanyContract._ID, 5);
-        value3.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
+        value3.put(ProductionCompanyContract._ID, 6);
+        value3.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{value1, value2, value3};
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
                 ProductionCompanyEntity.CONTENT_URI,
