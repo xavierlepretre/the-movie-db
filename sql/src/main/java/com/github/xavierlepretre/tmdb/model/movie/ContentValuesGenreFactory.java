@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -32,7 +33,31 @@ public class ContentValuesGenreFactory
 
     public void populate(@NonNull ContentValues contentValues, @NonNull GenreDTO genreDTO)
     {
-        contentValues.put(GenreContract._ID, genreDTO.getId().getId());
+        populate(contentValues, genreDTO.getId());
         contentValues.put(GenreContract.COLUMN_NAME, genreDTO.getName());
+    }
+
+    @NonNull public Vector<ContentValues> createFrom(
+            @NonNull Collection<GenreId> genreIds,
+            @SuppressWarnings("UnusedParameters") @Nullable GenreId typeQualifier)
+    {
+        Vector<ContentValues> values = new Vector<>(genreIds.size());
+        for (GenreId genreId : genreIds)
+        {
+            values.add(createFrom(genreId));
+        }
+        return values;
+    }
+
+    @NonNull public ContentValues createFrom(@NonNull GenreId genreIds)
+    {
+        ContentValues contentValues = new ContentValues();
+        populate(contentValues, genreIds);
+        return contentValues;
+    }
+
+    public void populate(@NonNull ContentValues contentValues, @NonNull GenreId genreId)
+    {
+        contentValues.put(GenreContract._ID, genreId.getId());
     }
 }
