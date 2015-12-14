@@ -51,7 +51,7 @@ public class ContentResolverGenreTest
         deleteFromTable();
         for (ContentObserver observer : observers)
         {
-            InstrumentationRegistry.getContext().getContentResolver().unregisterContentObserver(observer);
+            InstrumentationRegistry.getTargetContext().getContentResolver().unregisterContentObserver(observer);
         }
         observers.clear();
     }
@@ -108,7 +108,7 @@ public class ContentResolverGenreTest
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
-        InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
+        InstrumentationRegistry.getTargetContext().getContentResolver().registerContentObserver(
                 GenreEntity.CONTENT_URI,
                 true,
                 observer);
@@ -120,6 +120,42 @@ public class ContentResolverGenreTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void insert_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                GenreEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, 3);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                GenreEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                GenreEntity.CONTENT_URI);
+
+        values.put(GenreContract._ID, 4);
+        values.put(GenreContract.COLUMN_NAME, "Comic");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                GenreEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -217,7 +253,7 @@ public class ContentResolverGenreTest
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
-        InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
+        InstrumentationRegistry.getTargetContext().getContentResolver().registerContentObserver(
                 GenreEntity.CONTENT_URI,
                 true,
                 observer);
@@ -229,6 +265,48 @@ public class ContentResolverGenreTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(GenreEntity.CONTENT_URI);
+    }
+
+    @Test
+    public void insertBulk_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                GenreEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract._ID, 3);
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                GenreEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                GenreEntity.CONTENT_URI);
+
+        value1.put(GenreContract._ID, 5);
+        value1.put(GenreContract.COLUMN_NAME, "Comedy");
+        value2.put(GenreContract._ID, 6);
+        value2.put(GenreContract.COLUMN_NAME, "Horror");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                GenreEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -274,7 +352,7 @@ public class ContentResolverGenreTest
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
-        InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
+        InstrumentationRegistry.getTargetContext().getContentResolver().registerContentObserver(
                 GenreEntity.CONTENT_URI,
                 true,
                 observer);
@@ -285,6 +363,47 @@ public class ContentResolverGenreTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void delete_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, 3);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                GenreEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                GenreEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(1);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                GenreEntity.CONTENT_URI,
+                values);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                GenreEntity.CONTENT_URI);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -336,7 +455,7 @@ public class ContentResolverGenreTest
         final CountDownLatch deliverSignal = new CountDownLatch(1);
         CountDownObserver observer = new CountDownObserver(null, deliverSignal);
         observers.add(observer);
-        InstrumentationRegistry.getContext().getContentResolver().registerContentObserver(
+        InstrumentationRegistry.getTargetContext().getContentResolver().registerContentObserver(
                 GenreEntity.CONTENT_URI,
                 true,
                 observer);
@@ -350,6 +469,44 @@ public class ContentResolverGenreTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void update_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, 3);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                GenreEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                GenreEntity.CONTENT_URI, null, null, null, null);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        values.put(GenreContract.COLUMN_NAME, "Comic");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                GenreEntity.CONTENT_URI);
+
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     private static class CountDownObserver extends ContentObserver

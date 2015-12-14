@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
@@ -139,6 +140,47 @@ public class ContentResolverConfigurationTest
         assertThat(observer.latestChanged).isEqualTo(inserted);
     }
 
+    @Test
+    public void insert_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ConfigurationEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues values = new ContentValues();
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url1");
+        values.put(ImagesConfSegment.COLUMN_SECURE_BASE_URL, "url2");
+        values.put(ImagesConfSegment.COLUMN_BACKDROP_SIZES, "w1,w2");
+        values.put(ImagesConfSegment.COLUMN_LOGO_SIZES, "w3,w4");
+        values.put(ImagesConfSegment.COLUMN_POSTER_SIZES, "w5,w6");
+        values.put(ImagesConfSegment.COLUMN_PROFILE_SIZES, "w7,w8");
+        values.put(ImagesConfSegment.COLUMN_STILL_SIZES, "w9,w10");
+        values.put(ConfigurationContract.COLUMN_CHANGE_KEYS, "key1,key2");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ConfigurationEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ConfigurationEntity.CONTENT_URI);
+
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url3");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ConfigurationEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
     @Test(expected = UnsupportedOperationException.class)
     public void cannotInsertBulk() throws Exception
     {
@@ -228,6 +270,53 @@ public class ContentResolverConfigurationTest
     }
 
     @Test
+    public void delete_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url1");
+        values.put(ImagesConfSegment.COLUMN_SECURE_BASE_URL, "url2");
+        values.put(ImagesConfSegment.COLUMN_BACKDROP_SIZES, "w1,w2");
+        values.put(ImagesConfSegment.COLUMN_LOGO_SIZES, "w3,w4");
+        values.put(ImagesConfSegment.COLUMN_POSTER_SIZES, "w5,w6");
+        values.put(ImagesConfSegment.COLUMN_PROFILE_SIZES, "w7,w8");
+        values.put(ImagesConfSegment.COLUMN_STILL_SIZES, "w9,w10");
+        values.put(ConfigurationContract.COLUMN_CHANGE_KEYS, "key1,key2");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ConfigurationEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ConfigurationEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(1);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ConfigurationEntity.CONTENT_URI,
+                values);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ConfigurationEntity.CONTENT_URI);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
+    @Test
     public void canUpdate() throws Exception
     {
         ContentValues values = new ContentValues();
@@ -307,6 +396,50 @@ public class ContentResolverConfigurationTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void update_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url1");
+        values.put(ImagesConfSegment.COLUMN_SECURE_BASE_URL, "url2");
+        values.put(ImagesConfSegment.COLUMN_BACKDROP_SIZES, "w1,w2");
+        values.put(ImagesConfSegment.COLUMN_LOGO_SIZES, "w3,w4");
+        values.put(ImagesConfSegment.COLUMN_POSTER_SIZES, "w5,w6");
+        values.put(ImagesConfSegment.COLUMN_PROFILE_SIZES, "w7,w8");
+        values.put(ImagesConfSegment.COLUMN_STILL_SIZES, "w9,w10");
+        values.put(ConfigurationContract.COLUMN_CHANGE_KEYS, "key1,key2");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ConfigurationEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ConfigurationEntity.CONTENT_URI, null, null, null, null);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url3");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ConfigurationEntity.CONTENT_URI);
+
+        values.put(ImagesConfSegment.COLUMN_BASE_URL, "url1");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     private static class CountDownObserver extends ContentObserver

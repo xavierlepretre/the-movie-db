@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
@@ -127,6 +128,46 @@ public class ContentResolverCollectionTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void insert_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.CollectionEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.CollectionEntity.CONTENT_URI);
+
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        values.put(CollectionContract._ID, 646L);
+        values.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -263,6 +304,56 @@ public class ContentResolverCollectionTest
     }
 
     @Test
+    public void insertBulk_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.CollectionEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues value1 = new ContentValues();
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 646L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.CollectionEntity.CONTENT_URI);
+
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/backdrop1.jpg");
+        value1.put(CollectionContract._ID, 647L);
+        value1.put(CollectionContract.COLUMN_NAME, "Collection1");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/poster1.jpg");
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop2.jpg");
+        value2.put(CollectionContract._ID, 648L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection2");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster2.jpg");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
+    @Test
     public void canDelete() throws Exception
     {
         ContentValues values = new ContentValues();
@@ -320,6 +411,49 @@ public class ContentResolverCollectionTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void delete_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.CollectionEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(1);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.CollectionEntity.CONTENT_URI);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -391,6 +525,46 @@ public class ContentResolverCollectionTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void update_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.CollectionEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.CollectionEntity.CONTENT_URI, null, null, null, null);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        values.put(CollectionContract.COLUMN_NAME, "Collection1");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.CollectionEntity.CONTENT_URI);
+
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     private static class CountDownObserver extends ContentObserver

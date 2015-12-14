@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
+import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
 
 import org.junit.After;
@@ -123,6 +124,42 @@ public class ContentResolverProductionCompanyTest
     }
 
     @Test
+    public void insert_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI);
+
+        values.put(ProductionCompanyContract._ID, 6);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
+    @Test
     public void canInsertBulk() throws Exception
     {
         ContentValues value1 = new ContentValues();
@@ -232,6 +269,48 @@ public class ContentResolverProductionCompanyTest
     }
 
     @Test
+    public void insertBulk_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI);
+
+        value1.put(ProductionCompanyContract._ID, 7);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
+        value2.put(ProductionCompanyContract._ID, 8);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Canal+");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
+    @Test
     public void canDelete() throws Exception
     {
         ContentValues values = new ContentValues();
@@ -285,6 +364,47 @@ public class ContentResolverProductionCompanyTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void delete_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(1);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -350,6 +470,44 @@ public class ContentResolverProductionCompanyTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void update_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI, null, null, null, null);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Fox");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCompanyEntity.CONTENT_URI);
+
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     private static class CountDownObserver extends ContentObserver

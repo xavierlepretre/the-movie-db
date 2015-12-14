@@ -1,5 +1,6 @@
 package com.github.xavierlepretre.tmdb.model.production;
 
+import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCountryEntity;
 import com.neovisionaries.i18n.CountryCode;
 
@@ -124,6 +125,42 @@ public class ContentResolverProductionCountryTest
     }
 
     @Test
+    public void insert_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues values = new ContentValues();
+        values.put(ProductionCountryContract._ID, 5);
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCountryEntity.CONTENT_URI);
+
+        values.put(ProductionCountryContract._ID, 6);
+        values.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
+    @Test
     public void canInsertBulk() throws Exception
     {
         ContentValues value1 = new ContentValues();
@@ -233,6 +270,48 @@ public class ContentResolverProductionCountryTest
     }
 
     @Test
+    public void insertBulk_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(0);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCountryContract._ID, "GB");
+        value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCountryContract._ID, "US");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCountryEntity.CONTENT_URI);
+
+        value1.put(ProductionCountryContract._ID, "FR");
+        value1.put(ProductionCountryContract.COLUMN_NAME, "France");
+        value2.put(ProductionCountryContract._ID, "DE");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "Germany");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
+    }
+
+    @Test
     public void canDelete() throws Exception
     {
         ContentValues values = new ContentValues();
@@ -286,6 +365,47 @@ public class ContentResolverProductionCountryTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void delete_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCountryContract._ID, "GB");
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI, null, null, null, null);
+        //noinspection ConstantConditions
+        assertThat(cursor.getCount()).isEqualTo(1);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCountryEntity.CONTENT_URI);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().delete(
+                inserted, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     @Test
@@ -351,6 +471,44 @@ public class ContentResolverProductionCountryTest
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
         assertThat(observer.latestChanged).isEqualTo(inserted);
+    }
+
+    @Test
+    public void update_notifiesQueryCursorOnlyIfSetNotificationUri() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCountryContract._ID, "GB");
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI,
+                values);
+
+        //noinspection ConstantConditions
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                TmdbContract.ProductionCountryEntity.CONTENT_URI, null, null, null, null);
+
+        final CountDownLatch deliverSignal = new CountDownLatch(1);
+        CountDownObserver observer = new CountDownObserver(null, deliverSignal);
+        observers.add(observer);
+        cursor.registerContentObserver(observer);
+
+        values.put(ProductionCountryContract.COLUMN_NAME, "Royaume-Uni");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        assertThat(deliverSignal.getCount()).isEqualTo(1);
+        cursor.setNotificationUri(
+                InstrumentationRegistry.getTargetContext().getContentResolver(),
+                TmdbContract.ProductionCountryEntity.CONTENT_URI);
+
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver().update(
+                inserted, values, null, null);
+
+        deliverSignal.await(5, TimeUnit.SECONDS);
+        assertThat(deliverSignal.getCount()).isEqualTo(0);
     }
 
     private static class CountDownObserver extends ContentObserver
