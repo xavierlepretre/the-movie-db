@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.fest.assertions.data.Offset;
 import org.junit.Before;
@@ -13,7 +14,6 @@ import org.junit.rules.ExpectedException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -38,7 +38,7 @@ public class MovieShortDTOTest
         assertThat(dto.getBackdropPath()).isEqualTo(new ImagePath("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg"));
         assertThat(dto.getGenreIds()).isEqualTo(Arrays.asList(new GenreId(28), new GenreId(12), new GenreId(80)));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
-        assertThat(dto.getOriginalLanguage()).isEqualTo(new Locale("en"));
+        assertThat(dto.getOriginalLanguage()).isEqualTo(LanguageCode.en);
         assertThat(dto.getOriginalTitle()).isEqualTo("Spectre");
         assertThat(dto.getOverview()).startsWith("A cryptic message from Bond’s");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

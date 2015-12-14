@@ -4,11 +4,10 @@ import com.github.xavierlepretre.tmdb.model.AppendableRequestFactory;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequest;
 import com.github.xavierlepretre.tmdb.model.movie.MovieRequestParameters;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Locale;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -172,7 +171,7 @@ public class TmdbServiceTest
     @Test
     public void getMovieGenreListIsCalled() throws Exception
     {
-        tmdbService.getMovieGenreList(new Locale("hr"));
+        tmdbService.getMovieGenreList(LanguageCode.hr);
         verify(tmdbRetrofit).getMovieGenreList(
                 eq("some_key"),
                 eq("hr"));

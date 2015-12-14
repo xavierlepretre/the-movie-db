@@ -11,6 +11,7 @@ import com.github.xavierlepretre.tmdb.model.show.VideoId;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordId;
 import com.github.xavierlepretre.tmdb.model.tag.ListId;
 import com.neovisionaries.i18n.CountryCode;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.fest.assertions.data.Offset;
 import org.junit.Before;
@@ -20,7 +21,6 @@ import org.junit.rules.ExpectedException;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -48,7 +48,7 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getBackdropPath()).isEqualTo(new ImagePath("/wVTYlkKPKrljJfugXN7UlLNjtuJ.jpg"));
         assertThat(dto.getGenreIds()).isEqualTo(Arrays.asList(new GenreId(28), new GenreId(12), new GenreId(80)));
         assertThat(dto.getId()).isEqualTo(new MovieId(206647));
-        assertThat(dto.getOriginalLanguage()).isEqualTo(new Locale("en"));
+        assertThat(dto.getOriginalLanguage()).isEqualTo(LanguageCode.en);
         assertThat(dto.getOriginalTitle()).isEqualTo("Spectre");
         assertThat(dto.getOverview()).startsWith("A cryptic message from Bond’s");
         assertThat(dto.getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
@@ -59,10 +59,12 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getVoteAverage()).isGreaterThan(5f);
         assertThat(dto.getVoteCount()).isGreaterThanOrEqualTo(453);
         // Alternative titles
+        //noinspection ConstantConditions
         assertThat(dto.getAlternativeTitles().getTitles().size()).isGreaterThanOrEqualTo(6);
         assertThat(dto.getAlternativeTitles().getTitles().get(1).getIso3166Dash1()).isEqualTo(CountryCode.ES);
         assertThat(dto.getAlternativeTitles().getTitles().get(1).getTitle()).isEqualTo("007 James Bond: Spectre");
         // Credits
+        //noinspection ConstantConditions
         assertThat(dto.getCredits().getCast().get(0).getCastId()).isEqualTo(new CastId(1));
         assertThat(dto.getCredits().getCast().get(0).getCharacter()).isEqualTo("James Bond");
         assertThat(dto.getCredits().getCast().get(0).getCreditId()).isEqualTo(new CreditId("52fe4d22c3a368484e1d8d6b"));
@@ -78,11 +80,12 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getCredits().getCrew().get(0).getName()).isEqualTo("Ian Fleming");
         assertThat(dto.getCredits().getCrew().get(0).getProfilePath()).isEqualTo(new ImagePath("/91U37Em6Ru87DiAPMdsocGKyQ0W.jpg"));
         // Images
+        //noinspection ConstantConditions
         assertThat(dto.getImages().getBackdrops().size()).isEqualTo(11);
         assertThat(dto.getImages().getBackdrops().get(8).getAspectRatio()).isEqualTo(1.77777777777778f, Offset.offset(0.001f));
         assertThat(dto.getImages().getBackdrops().get(8).getFilePath()).isEqualTo(new ImagePath("/cNiO22mtARcyeNivzeON9sOvr65.jpg"));
         assertThat(dto.getImages().getBackdrops().get(8).getHeight()).isEqualTo(720);
-        assertThat(dto.getImages().getBackdrops().get(8).getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getImages().getBackdrops().get(8).getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getImages().getBackdrops().get(8).getVoteAverage()).isEqualTo(5.18601190476191f, Offset.offset(0.001f));
         assertThat(dto.getImages().getBackdrops().get(8).getVoteCount()).isEqualTo(1);
         assertThat(dto.getImages().getBackdrops().get(8).getWidth()).isEqualTo(1280);
@@ -90,20 +93,22 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getImages().getPosters().get(4).getAspectRatio()).isEqualTo(0.666666666666667f, Offset.offset(0.001f));
         assertThat(dto.getImages().getPosters().get(4).getFilePath()).isEqualTo(new ImagePath("/1n9D32o30XOHMdMWuIT4AaA5ruI.jpg"));
         assertThat(dto.getImages().getPosters().get(4).getHeight()).isEqualTo(3000);
-        assertThat(dto.getImages().getPosters().get(4).getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getImages().getPosters().get(4).getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getImages().getPosters().get(4).getVoteAverage()).isEqualTo(5.31292517006803f, Offset.offset(0.001f));
         assertThat(dto.getImages().getPosters().get(4).getVoteCount()).isEqualTo(7);
         assertThat(dto.getImages().getPosters().get(4).getWidth()).isEqualTo(2000);
         // Keywords
+        //noinspection ConstantConditions
         assertThat(dto.getKeywords().getKeywords().size()).isEqualTo(4);
         assertThat(dto.getKeywords().getKeywords().get(0).getId()).isEqualTo(new KeywordId(12360));
         assertThat(dto.getKeywords().getKeywords().get(0).getName()).isEqualTo("james bond");
         // Lists
+        //noinspection ConstantConditions
         assertThat(dto.getLists().getPage()).isEqualTo(1);
         assertThat(dto.getLists().getResults().size()).isEqualTo(20);
         assertThat(dto.getLists().getResults().get(0).getDescription()).isEqualTo("James Bond");
         assertThat(dto.getLists().getResults().get(0).getFavoriteCount()).isGreaterThanOrEqualTo(5);
-        assertThat(dto.getLists().getResults().get(0).getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getLists().getResults().get(0).getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getLists().getResults().get(0).getItemCount()).isGreaterThanOrEqualTo(26);
         assertThat(dto.getLists().getResults().get(0).getId()).isEqualTo(new ListId("5308b87fc3a36842010027be"));
         assertThat(dto.getLists().getResults().get(0).getName()).isEqualTo("James Bond - Movie Collection");
@@ -111,6 +116,7 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getLists().getTotalPages()).isGreaterThanOrEqualTo(2);
         assertThat(dto.getLists().getTotalResults()).isGreaterThanOrEqualTo(29);
         // Releases
+        //noinspection ConstantConditions
         assertThat(dto.getReleases().getCountries().size()).isEqualTo(59);
         assertThat(dto.getReleases().getCountries().get(0).getCertification()).isEmpty();
         assertThat(dto.getReleases().getCountries().get(0).getIso3166Dash1()).isEqualTo(CountryCode.GB);
@@ -121,6 +127,7 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getReleases().getCountries().get(1).isPrimary()).isTrue();
         assertThat(dto.getReleases().getCountries().get(1).getReleaseDate()).isEqualTo(formatter.parse("2015-11-06"));
         // Reviews
+        //noinspection ConstantConditions
         assertThat(dto.getReviews().getPage()).isEqualTo(1);
         assertThat(dto.getReviews().getResults().size()).isEqualTo(2);
         assertThat(dto.getReviews().getResults().get(0).getAuthor()).isEqualTo("cutprintchris");
@@ -130,6 +137,7 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getReviews().getTotalPages()).isGreaterThanOrEqualTo(1);
         assertThat(dto.getReviews().getTotalResults()).isGreaterThanOrEqualTo(2);
         // Similar
+        //noinspection ConstantConditions
         assertThat(dto.getSimilar().getPage()).isEqualTo(1);
         assertThat(dto.getSimilar().getResults().size()).isEqualTo(20);
         assertThat(dto.getSimilar().getResults().get(0).getAdult()).isEqualTo(false);
@@ -139,7 +147,7 @@ public class MovieWithExtraDTOTest
                 new GenreId(28),
                 new GenreId(53)));
         assertThat(dto.getSimilar().getResults().get(0).getId()).isEqualTo(new MovieId(658));
-        assertThat(dto.getSimilar().getResults().get(0).getOriginalLanguage()).isEqualTo(new Locale("en"));
+        assertThat(dto.getSimilar().getResults().get(0).getOriginalLanguage()).isEqualTo(LanguageCode.en);
         assertThat(dto.getSimilar().getResults().get(0).getOriginalTitle()).isEqualTo("Goldfinger");
         assertThat(dto.getSimilar().getResults().get(0).getOverview()).startsWith("Bond is in Miami on holiday when");
         assertThat(dto.getSimilar().getResults().get(0).getPosterPath()).isEqualTo(new ImagePath("/vBNbFU3OS6okJIQBOos1aZXpy2Z.jpg"));
@@ -152,14 +160,16 @@ public class MovieWithExtraDTOTest
         assertThat(dto.getSimilar().getTotalPages()).isEqualTo(3);
         assertThat(dto.getSimilar().getTotalResults()).isEqualTo(44);
         // Translations
+        //noinspection ConstantConditions
         assertThat(dto.getTranslations().getTranslations().size()).isEqualTo(22);
         assertThat(dto.getTranslations().getTranslations().get(1).getEnglishName()).isEqualTo("French");
-        assertThat(dto.getTranslations().getTranslations().get(1).getIso639Dash1()).isEqualTo(new Locale("fr"));
+        assertThat(dto.getTranslations().getTranslations().get(1).getIso639Dash1()).isEqualTo(LanguageCode.fr);
         assertThat(dto.getTranslations().getTranslations().get(1).getName()).isEqualTo("Français");
         // Videos
+        //noinspection ConstantConditions
         assertThat(dto.getVideos().getResults().size()).isEqualTo(3);
         assertThat(dto.getVideos().getResults().get(0).getId()).isEqualTo(new VideoId("5641eb2fc3a3685bdc002e0b"));
-        assertThat(dto.getVideos().getResults().get(0).getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getVideos().getResults().get(0).getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getVideos().getResults().get(0).getKey()).isEqualTo("BOVriTeIypQ");
         assertThat(dto.getVideos().getResults().get(0).getName()).isEqualTo("Spectre Ultimate 007 Trailer 2015 HD");
         assertThat(dto.getVideos().getResults().get(0).getSite()).isEqualTo("YouTube");

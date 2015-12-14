@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
+import com.neovisionaries.i18n.LanguageCode;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MovieShortDTO
 {
@@ -16,7 +16,7 @@ public class MovieShortDTO
     @NonNull private final ImagePath backdropPath;
     @NonNull private final List<GenreId> genreIds;
     @NonNull private final MovieId id;
-    @NonNull private final Locale originalLanguage;
+    @NonNull private final LanguageCode originalLanguage;
     @NonNull private final String originalTitle;
     @NonNull private final String overview;
     @NonNull private final Float popularity;
@@ -37,7 +37,7 @@ public class MovieShortDTO
             @JsonProperty(value = "id", required = true) @NonNull
             MovieId id,
             @JsonProperty(value = "original_language", required = true) @NonNull
-            Locale originalLanguage,
+            LanguageCode originalLanguage,
             @JsonProperty(value = "original_title", required = true) @NonNull
             String originalTitle,
             @JsonProperty(value = "overview", required = true) @NonNull
@@ -93,7 +93,7 @@ public class MovieShortDTO
         return id;
     }
 
-    @NonNull public Locale getOriginalLanguage()
+    @NonNull public LanguageCode getOriginalLanguage()
     {
         return originalLanguage;
     }

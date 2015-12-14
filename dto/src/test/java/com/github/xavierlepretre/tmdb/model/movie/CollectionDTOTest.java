@@ -4,16 +4,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
-import org.fest.assertions.data.Offset;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 

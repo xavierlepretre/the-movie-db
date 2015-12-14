@@ -2,14 +2,13 @@ package com.github.xavierlepretre.tmdb.model.image;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.fest.assertions.data.Offset;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -32,7 +31,7 @@ public class ImageDTOTest
         assertThat(dto.getAspectRatio()).isEqualTo(1.77777777777778f, Offset.offset(0.001f));
         assertThat(dto.getFilePath()).isEqualTo(new ImagePath("/cNiO22mtARcyeNivzeON9sOvr65.jpg"));
         assertThat(dto.getHeight()).isEqualTo(720);
-        assertThat(dto.getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getVoteAverage()).isEqualTo(5.18601190476191f, Offset.offset(0.001f));
         assertThat(dto.getVoteCount()).isEqualTo(1);
         assertThat(dto.getWidth()).isEqualTo(1280);

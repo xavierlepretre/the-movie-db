@@ -18,6 +18,7 @@ import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
 import com.github.xavierlepretre.tmdb.model.conf.ImagesConfDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
+import com.neovisionaries.i18n.LanguageCode;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.internal.http.RealResponseBody;
 
@@ -26,7 +27,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Locale;
 
 import retrofit.Call;
 import retrofit.Response;
@@ -69,7 +69,7 @@ public class ConfigurationSyncAdapterTest
     @Test
     public void callsServiceFactoryAndContentProvider() throws Exception
     {
-        TmdbSyncConstants.putLanguage(extras, new Locale("sl"));
+        TmdbSyncConstants.putLanguage(extras, LanguageCode.sl);
         ConfigurationDTO dto = new ConfigurationDTO(
                 new ImagesConfDTO(
                         "http://image.tmdb.org/t/p/",

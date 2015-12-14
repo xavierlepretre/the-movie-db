@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.show;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neovisionaries.i18n.CountryCode;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,7 +12,6 @@ import org.junit.rules.ExpectedException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ public class VideoDTOTest
     {
         VideoDTO dto = mapper.readValue(getClass().getResourceAsStream("video_dto_1.json"), VideoDTO.class);
         assertThat(dto.getId()).isEqualTo(new VideoId("5641eb2fc3a3685bdc002e0b"));
-        assertThat(dto.getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getKey()).isEqualTo("BOVriTeIypQ");
         assertThat(dto.getName()).isEqualTo("Spectre Ultimate 007 Trailer 2015 HD");
         assertThat(dto.getSite()).isEqualTo("YouTube");

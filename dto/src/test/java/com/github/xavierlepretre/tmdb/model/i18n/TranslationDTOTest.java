@@ -2,13 +2,12 @@ package com.github.xavierlepretre.tmdb.model.i18n;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -28,7 +27,7 @@ public class TranslationDTOTest
     public void canDeserialise() throws Exception
     {
         TranslationDTO dto = mapper.readValue(getClass().getResourceAsStream("translation_dto_1.json"), TranslationDTO.class);
-        assertThat(dto.getIso639Dash1()).isEqualTo(new Locale("fr"));
+        assertThat(dto.getIso639Dash1()).isEqualTo(LanguageCode.fr);
         assertThat(dto.getName()).isEqualTo("Français");
         assertThat(dto.getEnglishName()).isEqualTo("French");
     }

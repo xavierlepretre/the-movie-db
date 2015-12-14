@@ -20,8 +20,7 @@ import com.github.xavierlepretre.tmdb.model.show.ReleasesWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.show.VideosWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsWithIdDTO;
 import com.github.xavierlepretre.tmdb.model.tag.ListsWithIdDTO;
-
-import java.util.Locale;
+import com.neovisionaries.i18n.LanguageCode;
 
 import retrofit.Call;
 
@@ -53,11 +52,11 @@ public class TmdbService
 
     @NonNull public Call<MovieWithExtraDTO> getMovie(@NonNull MovieRequest movieRequest)
     {
-        Locale language = movieRequest.getParameters().getLanguage();
+        LanguageCode language = movieRequest.getParameters().getLanguage();
         return tmdbRetrofit.getMovie(
                 movieRequest.getMovieId().getId(),
                 apiKey,
-                language == null ? null : language.getLanguage(),
+                language == null ? null : language.name(),
                 movieRequest.getParameters().getAppendToResponse().toString());
     }
 
@@ -140,17 +139,17 @@ public class TmdbService
     @NonNull public Call<MovieWithExtraDTO> getLatestMovie(
             @NonNull MovieRequestParameters parameters)
     {
-        Locale language = parameters.getLanguage();
+        LanguageCode language = parameters.getLanguage();
         return tmdbRetrofit.getLatestMovie(
                 apiKey,
-                language == null ? null : language.getLanguage(),
+                language == null ? null : language.name(),
                 parameters.getAppendToResponse().toString());
     }
 
-    @NonNull public Call<GenreListDTO> getMovieGenreList(@Nullable Locale language)
+    @NonNull public Call<GenreListDTO> getMovieGenreList(@Nullable LanguageCode language)
     {
         return tmdbRetrofit.getMovieGenreList(
                 apiKey,
-                language == null ? null : language.getLanguage());
+                language == null ? null : language.name());
     }
 }

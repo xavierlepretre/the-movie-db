@@ -15,13 +15,13 @@ import com.github.xavierlepretre.tmdb.model.movie.GenreId;
 import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Locale;
 
 import retrofit.Call;
 import retrofit.Response;
@@ -52,7 +52,7 @@ public class GenreSyncAdapterTest
         //noinspection unchecked
         call = mock(Call.class);
         service = mock(TmdbService.class);
-        when(service.getMovieGenreList(any(Locale.class))).thenReturn(call);
+        when(service.getMovieGenreList(any(LanguageCode.class))).thenReturn(call);
         factory = spy(new ContentValuesGenreFactory());
         syncAdapter = new GenreSyncAdapter(service, factory);
         extras = new Bundle();
@@ -63,7 +63,7 @@ public class GenreSyncAdapterTest
     @Test
     public void callsServiceFactoryAndContentProvider() throws Exception
     {
-        TmdbSyncConstants.putLanguage(extras, new Locale("sl"));
+        TmdbSyncConstants.putLanguage(extras, LanguageCode.sl);
         GenreListDTO dto = new GenreListDTO(
                 Arrays.asList(
                         new GenreDTO(new GenreId(12), "Adventure"),
@@ -84,7 +84,7 @@ public class GenreSyncAdapterTest
         values2.put(GenreContract.COLUMN_NAME, "Action");
         final ContentValues[] wanted = new ContentValues[]{values1, values2};
 
-        verify(service).getMovieGenreList(eq(new Locale("sl")));
+        verify(service).getMovieGenreList(eq(LanguageCode.sl));
         verify(factory).createFrom(eq(dto));
         verify(contentProviderClient).bulkInsert(
                 eq(GenreEntity.CONTENT_URI),

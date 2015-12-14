@@ -18,10 +18,10 @@ import com.github.xavierlepretre.tmdb.model.show.ReleasesDTO;
 import com.github.xavierlepretre.tmdb.model.show.VideosDTO;
 import com.github.xavierlepretre.tmdb.model.tag.KeywordsDTO;
 import com.github.xavierlepretre.tmdb.model.tag.ListsDTO;
+import com.neovisionaries.i18n.LanguageCode;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MovieWithExtraDTO extends MovieDTO
 {
@@ -64,7 +64,7 @@ public class MovieWithExtraDTO extends MovieDTO
             @JsonProperty(Movie.EXTRA_LISTS) @Nullable
             ListsDTO lists,
             @JsonProperty(value = "original_language", required = true) @NonNull
-            Locale originalLanguage,
+            LanguageCode originalLanguage,
             @JsonProperty(value = "original_title", required = true) @NonNull
             String originalTitle,
             @JsonProperty(value = "overview", required = true) @NonNull

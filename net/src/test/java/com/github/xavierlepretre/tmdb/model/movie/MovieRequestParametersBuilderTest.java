@@ -3,11 +3,11 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import com.github.xavierlepretre.tmdb.model.AppendableRequest;
 import com.github.xavierlepretre.tmdb.model.AppendableRequest.Movie;
 import com.github.xavierlepretre.tmdb.model.AppendableRequestSet;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -17,7 +17,7 @@ public class MovieRequestParametersBuilderTest
     public void getValuesInBuildRequest() throws Exception
     {
         MovieRequestParameters request = new MovieRequestParameters.Builder()
-                .language(new Locale("th"))
+                .language(LanguageCode.th)
                 .appendToResponse(new AppendableRequestSet(Arrays.asList(
                         Movie.ALTERNATIVE_TITLES,
                         Movie.CREDITS)))
@@ -26,7 +26,7 @@ public class MovieRequestParametersBuilderTest
         assertThat(request.getAppendToResponse()).containsOnly(
                 Movie.ALTERNATIVE_TITLES,
                 Movie.CREDITS);
-        assertThat(request.getLanguage()).isEqualTo(new Locale("th"));
+        assertThat(request.getLanguage()).isEqualTo(LanguageCode.th);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class MovieRequestParametersBuilderTest
                 .language("th")
                 .build();
 
-        assertThat(request.getLanguage()).isEqualTo(new Locale("th"));
+        assertThat(request.getLanguage()).isEqualTo(LanguageCode.th);
         assertThat(request.getAppendToResponse()).isEmpty();
     }
 

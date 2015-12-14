@@ -5,14 +5,14 @@ import android.support.annotation.Nullable;
 
 import com.github.xavierlepretre.tmdb.model.AppendableRequest;
 import com.github.xavierlepretre.tmdb.model.AppendableRequestSet;
+import com.neovisionaries.i18n.LanguageCode;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Locale;
 
 public class MovieRequestParameters
 {
-    @Nullable private final Locale language;
+    @Nullable private final LanguageCode language;
     @NonNull private final AppendableRequestSet appendToResponse;
 
     public MovieRequestParameters()
@@ -21,14 +21,14 @@ public class MovieRequestParameters
     }
 
     public MovieRequestParameters(
-            @Nullable Locale language,
+            @Nullable LanguageCode language,
             @NonNull AppendableRequestSet appendToResponse)
     {
         this.language = language;
         this.appendToResponse = appendToResponse;
     }
 
-    @Nullable public Locale getLanguage()
+    @Nullable public LanguageCode getLanguage()
     {
         return language;
     }
@@ -59,7 +59,7 @@ public class MovieRequestParameters
 
     public static class Builder
     {
-        @Nullable private Locale language;
+        @Nullable private LanguageCode language;
         @NonNull private AppendableRequestSet appendToResponse;
 
         public Builder()
@@ -67,12 +67,12 @@ public class MovieRequestParameters
             this.appendToResponse = new AppendableRequestSet();
         }
 
-        @Nullable protected Locale getLanguage()
+        @Nullable protected LanguageCode getLanguage()
         {
             return language;
         }
 
-        @NonNull public Builder language(@Nullable Locale language)
+        @NonNull public Builder language(@Nullable LanguageCode language)
         {
             this.language = language;
             return this;
@@ -80,7 +80,7 @@ public class MovieRequestParameters
 
         @NonNull public Builder language(@NonNull String language)
         {
-            this.language = new Locale(language);
+            this.language = LanguageCode.getByCode(language);
             return this;
         }
 

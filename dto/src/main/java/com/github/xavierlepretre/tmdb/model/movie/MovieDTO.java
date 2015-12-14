@@ -7,11 +7,11 @@ import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyDTO;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCountryDTO;
+import com.neovisionaries.i18n.LanguageCode;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MovieDTO extends MovieShortDTO
 {
@@ -46,7 +46,7 @@ public class MovieDTO extends MovieShortDTO
             @JsonProperty(value = "imdb_id", required = true) @NonNull
             ImdbId imdbId,
             @JsonProperty(value = "original_language", required = true) @NonNull
-            Locale originalLanguage,
+            LanguageCode originalLanguage,
             @JsonProperty(value = "original_title", required = true) @NonNull
             String originalTitle,
             @JsonProperty(value = "overview", required = true) @NonNull

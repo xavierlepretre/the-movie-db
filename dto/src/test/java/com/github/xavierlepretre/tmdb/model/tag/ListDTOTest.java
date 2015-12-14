@@ -3,13 +3,12 @@ package com.github.xavierlepretre.tmdb.model.tag;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -31,7 +30,7 @@ public class ListDTOTest
         ListDTO dto = mapper.readValue(getClass().getResourceAsStream("list_dto_1.json"), ListDTO.class);
         assertThat(dto.getDescription()).isEqualTo("James Bond");
         assertThat(dto.getFavoriteCount()).isEqualTo(5);
-        assertThat(dto.getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getItemCount()).isEqualTo(26);
         assertThat(dto.getId()).isEqualTo(new ListId("5308b87fc3a36842010027be"));
         assertThat(dto.getName()).isEqualTo("James Bond - Movie Collection");

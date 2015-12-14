@@ -2,13 +2,12 @@ package com.github.xavierlepretre.tmdb.model.i18n;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Locale;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -28,7 +27,7 @@ public class SpokenLanguageDTOTest
     public void canDeserialise() throws Exception
     {
         SpokenLanguageDTO dto = mapper.readValue(getClass().getResourceAsStream("spoken_language_dto_1.json"), SpokenLanguageDTO.class);
-        assertThat(dto.getIso639Dash1()).isEqualTo(new Locale("en"));
+        assertThat(dto.getIso639Dash1()).isEqualTo(LanguageCode.en);
         assertThat(dto.getName()).isEqualTo("English");
     }
 

@@ -4,15 +4,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Locale;
+import com.neovisionaries.i18n.LanguageCode;
 
 public class ImageDTO
 {
     private final float aspectRatio;
     @NonNull private final ImagePath filePath;
     private final int height;
-    @Nullable private final Locale iso639Dash1;
+    @Nullable private final LanguageCode iso639Dash1;
     private final float voteAverage;
     private final int voteCount;
     private final int width;
@@ -20,7 +19,7 @@ public class ImageDTO
     public ImageDTO(@JsonProperty(value = "aspect_ratio", required = true) float aspectRatio,
                     @JsonProperty(value = "file_path", required = true) @NonNull ImagePath filePath,
                     @JsonProperty(value = "height", required = true) int height,
-                    @JsonProperty(value = "iso_639_1", required = true) @Nullable Locale iso639Dash1,
+                    @JsonProperty(value = "iso_639_1", required = true) @Nullable LanguageCode iso639Dash1,
                     @JsonProperty(value = "vote_average", required = true) float voteAverage,
                     @JsonProperty(value = "vote_count", required = true) int voteCount,
                     @JsonProperty(value = "width", required = true) int width)
@@ -49,7 +48,7 @@ public class ImageDTO
         return height;
     }
 
-    @Nullable public Locale getIso639Dash1()
+    @Nullable public LanguageCode getIso639Dash1()
     {
         return iso639Dash1;
     }

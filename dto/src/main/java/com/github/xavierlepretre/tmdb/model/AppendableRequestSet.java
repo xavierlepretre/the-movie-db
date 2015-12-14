@@ -64,9 +64,4 @@ public class AppendableRequestSet extends HashSet<AppendableRequest>
         }
         return true;
     }
-
-    @Override public boolean add(AppendableRequest appendableRequest)
-    {
-        return super.add(appendableRequest);
-    }
 }

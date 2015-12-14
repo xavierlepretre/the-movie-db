@@ -4,15 +4,14 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
-
-import java.util.Locale;
+import com.neovisionaries.i18n.LanguageCode;
 
 public class ListDTO
 {
     @NonNull private final String description;
     private final int favoriteCount;
     @NonNull private final ListId id;
-    @NonNull private final Locale iso639Dash1;
+    @NonNull private final LanguageCode iso639Dash1;
     private final int itemCount;
     @NonNull private final String name;
     @NonNull private final ImagePath posterPath;
@@ -21,7 +20,7 @@ public class ListDTO
             @JsonProperty(value = "description", required = true) @NonNull String description,
             @JsonProperty(value = "favorite_count", required = true) int favoriteCount,
             @JsonProperty(value = "id", required = true) @NonNull ListId id,
-            @JsonProperty(value = "iso_639_1", required = true) @NonNull Locale iso639Dash1,
+            @JsonProperty(value = "iso_639_1", required = true) @NonNull LanguageCode iso639Dash1,
             @JsonProperty(value = "item_count", required = true) int itemCount,
             @JsonProperty(value = "name", required = true) @NonNull String name,
             @JsonProperty(value = "poster_path", required = true) @NonNull ImagePath posterPath)
@@ -50,7 +49,7 @@ public class ListDTO
         return id;
     }
 
-    @NonNull public Locale getIso639Dash1()
+    @NonNull public LanguageCode getIso639Dash1()
     {
         return iso639Dash1;
     }
