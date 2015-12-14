@@ -103,6 +103,9 @@ public class GenreActivityFragment extends Fragment
 
         @Override public void onLoadFinished(Loader loader, Object data)
         {
+            ((Cursor) data).setNotificationUri(
+                    getActivity().getContentResolver(),
+                    GenreEntity.CONTENT_URI);
             genreAdapter.swapCursor(new GenreCursor((Cursor) data));
         }
 
