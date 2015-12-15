@@ -72,6 +72,7 @@ public class EntityProviderDelegateFactory
         return new MovieProviderDelegate(
                 TmdbContract.CONTENT_AUTHORITY,
                 MovieEntity.CONTENT_URI,
+                CollectionEntity.CONTENT_URI,
                 MovieEntity.CONTENT_DIR_TYPE,
                 MovieEntity.CONTENT_ITEM_TYPE);
     }

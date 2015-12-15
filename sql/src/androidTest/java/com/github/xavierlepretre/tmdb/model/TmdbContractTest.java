@@ -5,6 +5,7 @@ import android.support.test.InstrumentationRegistry;
 
 import com.github.xavierlepretre.tmdb.model.movie.CollectionId;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
+import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyId;
 import com.github.xavierlepretre.tmdb.sql.R;
 import com.neovisionaries.i18n.CountryCode;
@@ -34,6 +35,20 @@ public class TmdbContractTest
     {
         assertThat(TmdbContract.GenreEntity.buildUri(new GenreId(32)))
                 .isEqualTo(Uri.parse("content://com.github.xavierlepretre.tmdb/genre/32"));
+    }
+
+    @Test
+    public void buildUriMovie_isCorrect() throws Exception
+    {
+        assertThat(TmdbContract.MovieEntity.buildUri(new MovieId(32)))
+                .isEqualTo(Uri.parse("content://com.github.xavierlepretre.tmdb/movie/32"));
+    }
+
+    @Test
+    public void buildUriCollectionMovies_isCorrect() throws Exception
+    {
+        assertThat(TmdbContract.MovieEntity.buildCollectionMoviesUri(new CollectionId(32)))
+                .isEqualTo(Uri.parse("content://com.github.xavierlepretre.tmdb/collection/32/movie"));
     }
 
     @Test

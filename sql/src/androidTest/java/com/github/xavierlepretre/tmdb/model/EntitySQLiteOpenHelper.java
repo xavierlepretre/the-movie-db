@@ -7,23 +7,29 @@ import android.support.annotation.NonNull;
 
 public class EntitySQLiteOpenHelper extends SQLiteOpenHelper
 {
-    @NonNull private final EntitySQLHelperDelegate sQLHelperDelegate;
+    @NonNull private final EntitySQLHelperDelegate[] sQLHelperDelegates;
 
     public EntitySQLiteOpenHelper(
             Context context, String name, SQLiteDatabase.CursorFactory factory, int version,
-            @NonNull EntitySQLHelperDelegate sQLHelperDelegate)
+            @NonNull EntitySQLHelperDelegate... sQLHelperDelegates)
     {
         super(context, name, factory, version);
-        this.sQLHelperDelegate = sQLHelperDelegate;
+        this.sQLHelperDelegates = sQLHelperDelegates;
     }
 
     @Override public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(sQLHelperDelegate.getCreateQuery());
+        for (EntitySQLHelperDelegate helper : sQLHelperDelegates)
+        {
+            db.execSQL(helper.getCreateQuery());
+        }
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        db.execSQL(sQLHelperDelegate.getUpgradeQuery(oldVersion, newVersion));
+        for (EntitySQLHelperDelegate helper : sQLHelperDelegates)
+        {
+            db.execSQL(helper.getUpgradeQuery(oldVersion, newVersion));
+        }
     }
 }
