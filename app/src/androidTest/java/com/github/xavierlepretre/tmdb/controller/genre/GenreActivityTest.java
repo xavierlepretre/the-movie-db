@@ -51,6 +51,8 @@ public class GenreActivityTest
                 TmdbContract.GenreEntity.CONTENT_URI,
                 values);
 
+        Thread.sleep(200);
+
         onView(withText("Adventure")).check(matches(isDisplayed()));
         onView(withText("Comic")).check(doesNotExist());
 
@@ -59,6 +61,8 @@ public class GenreActivityTest
         InstrumentationRegistry.getTargetContext().getContentResolver().insert(
                 TmdbContract.GenreEntity.CONTENT_URI,
                 values);
+
+        Thread.sleep(200);
 
         onView(withText("Comic")).check(matches(isDisplayed()));
     }

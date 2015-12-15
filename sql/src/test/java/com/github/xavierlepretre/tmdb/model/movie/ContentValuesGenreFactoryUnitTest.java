@@ -26,11 +26,12 @@ public class ContentValuesGenreFactoryUnitTest
     }
 
     @Test
-    public void populate_works() throws Exception
+    public void populateDto_works() throws Exception
     {
         ContentValues values = mock(ContentValues.class);
         GenreDTO dto = new GenreDTO(new GenreId(12), "Adventure");
         doCallRealMethod().when(factory).populate(any(ContentValues.class), any(GenreDTO.class));
+        doCallRealMethod().when(factory).populate(any(ContentValues.class), any(GenreId.class));
         factory.populate(values, dto);
         verify(values).put(
                 eq(GenreContract._ID),
@@ -41,7 +42,7 @@ public class ContentValuesGenreFactoryUnitTest
     }
 
     @Test
-    public void createSingle_callsPopulate() throws Exception
+    public void createSingleFromDto_callsPopulate() throws Exception
     {
         GenreDTO dto = new GenreDTO(new GenreId(12), "Adventure");
         doCallRealMethod().when(factory).createFrom(any(GenreDTO.class));
@@ -50,7 +51,7 @@ public class ContentValuesGenreFactoryUnitTest
     }
 
     @Test
-    public void createVectorFromCollection_callsSingle() throws Exception
+    public void createVectorFromDtoCollection_callsSingle() throws Exception
     {
         GenreDTO dto1 = new GenreDTO(new GenreId(12), "Adventure");
         GenreDTO dto2 = new GenreDTO(new GenreId(28), "Action");
@@ -69,5 +70,37 @@ public class ContentValuesGenreFactoryUnitTest
         doCallRealMethod().when(factory).createFrom(any(GenreListDTO.class));
         factory.createFrom(listDTO);
         verify(factory).createFrom(eq(listDTO.getGenres()));
+    }
+
+    @Test
+    public void populateId_works() throws Exception
+    {
+        ContentValues values = mock(ContentValues.class);
+        GenreId id = new GenreId(12);
+        doCallRealMethod().when(factory).populate(any(ContentValues.class), any(GenreId.class));
+        factory.populate(values, id);
+        verify(values).put(
+                eq(GenreContract._ID),
+                eq(12));
+    }
+
+    @Test
+    public void createSingleFromId_callsPopulate() throws Exception
+    {
+        GenreId id = new GenreId(12);
+        doCallRealMethod().when(factory).createFrom(any(GenreId.class));
+        factory.createFrom(id);
+        verify(factory).populate(notNull(ContentValues.class), eq(id));
+    }
+
+    @Test
+    public void createVectorFromIdCollection_callsSingle() throws Exception
+    {
+        GenreId id1 = new GenreId(12);
+        GenreId id2 = new GenreId(28);
+        doCallRealMethod().when(factory).createFrom(anyCollectionOf(GenreId.class), any(GenreId.class));
+        factory.createFrom(Arrays.asList(id1, id2), null);
+        verify(factory).createFrom(eq(id1));
+        verify(factory).createFrom(eq(id2));
     }
 }
