@@ -1,19 +1,21 @@
 package com.github.xavierlepretre.tmdb.model.movie;
 
-import com.github.xavierlepretre.tmdb.model.TmdbContract.MovieEntity;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
+
+import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
+import com.github.xavierlepretre.tmdb.model.TmdbContract.MovieEntity;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +62,8 @@ public class ContentResolverMovieTest
     {
         InstrumentationRegistry.getTargetContext().getContentResolver()
                 .delete(MovieEntity.CONTENT_URI, null, null);
+        InstrumentationRegistry.getTargetContext().getContentResolver()
+                .delete(CollectionEntity.CONTENT_URI, null, null);
     }
 
     @Test
@@ -95,6 +99,52 @@ public class ContentResolverMovieTest
         assertThat(movieCursor.moveToFirst()).isTrue();
         Movie movie = movieCursor.getMovie();
         assertThat(movie.getId()).isEqualTo(new MovieId(3));
+        assertThat(movie.getTitle()).isEqualTo("title1");
+        assertThat(movieCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void ifNoCollection_cannotInsert() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+    }
+
+    @Test
+    public void ifHasCollection_canInsert() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+
+        assertThat(inserted).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo(
+                MovieEntity.buildUri(new MovieId(3)).toString());
+
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                inserted, null, null, null, null);
+        assertThat(cursor).isNotNull();
+        MovieCursor movieCursor = new MovieCursor(cursor);
+        assertThat(movieCursor.moveToFirst()).isTrue();
+        Movie movie = movieCursor.getMovie();
+        assertThat(movie.getId()).isEqualTo(new MovieId(3));
+        assertThat(movie.getBelongsToCollectionId()).isEqualTo(new CollectionId(1));
         assertThat(movie.getTitle()).isEqualTo("title1");
         assertThat(movieCursor.moveToNext()).isFalse();
     }
@@ -239,6 +289,62 @@ public class ContentResolverMovieTest
         assertThat(movieCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = SQLiteConstraintException.class)
+    public void ifNoCollection_cannotInsertBulk() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(MovieContract._ID, 3);
+        value1.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        value1.put(MovieContract.COLUMN_TITLE, "title1");
+        ContentValues value2 = new ContentValues();
+        value2.put(MovieContract._ID, 4);
+        value2.put(MovieContract.COLUMN_TITLE, "title2");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                MovieEntity.CONTENT_URI,
+                values);
+    }
+
+    @Test
+    public void ifHasCollection_canInsertBulk() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues value1 = new ContentValues();
+        value1.put(MovieContract._ID, 3);
+        value1.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        value1.put(MovieContract.COLUMN_TITLE, "title1");
+        ContentValues value2 = new ContentValues();
+        value2.put(MovieContract._ID, 4);
+        value2.put(MovieContract.COLUMN_TITLE, "title2");
+        ContentValues[] values = new ContentValues[]{value1, value2};
+
+        assertThat(InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                MovieEntity.CONTENT_URI,
+                values))
+                .isEqualTo(2);
+
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                MovieEntity.CONTENT_URI, null, null, null, null);
+        assertThat(cursor).isNotNull();
+        MovieCursor movieCursor = new MovieCursor(cursor);
+        assertThat(movieCursor.moveToFirst()).isTrue();
+        Movie movie = movieCursor.getMovie();
+        assertThat(movie.getId()).isEqualTo(new MovieId(3));
+        assertThat(movie.getBelongsToCollectionId()).isEqualTo(new CollectionId(1));
+        assertThat(movie.getTitle()).isEqualTo("title1");
+        assertThat(movieCursor.moveToNext()).isTrue();
+        movie = movieCursor.getMovie();
+        assertThat(movie.getId()).isEqualTo(new MovieId(4));
+        assertThat(movie.getTitle()).isEqualTo("title2");
+        assertThat(movieCursor.moveToNext()).isFalse();
+    }
+
     @Test
     public void insertBulk_getsNotified() throws Exception
     {
@@ -335,6 +441,67 @@ public class ContentResolverMovieTest
     }
 
     @Test
+    public void ifHasCollection_canDelete() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+
+        assertThat(inserted).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo(
+                MovieEntity.buildUri(new MovieId(3)).toString());
+
+
+        assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
+                .delete(inserted, null, null))
+                .isEqualTo(1);
+
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                inserted, null, null, null, null);
+        assertThat(cursor).isNotNull();
+        assertThat(cursor.moveToFirst()).isFalse();
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void ifHasCollection_cannotDeleteCollection() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        Uri insertedCollection = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+
+        assertThat(inserted).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo(
+                MovieEntity.buildUri(new MovieId(3)).toString());
+
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver()
+                .delete(insertedCollection, null, null);
+    }
+
+    @Test
     public void delete_getsNotified() throws Exception
     {
         ContentValues values = new ContentValues();
@@ -424,9 +591,7 @@ public class ContentResolverMovieTest
         values.put(MovieContract.COLUMN_TITLE, "title2");
 
         assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
-                .update(inserted,
-                        values,
-                        null, null))
+                .update(inserted, values, null, null))
                 .isEqualTo(1);
 
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
@@ -438,6 +603,103 @@ public class ContentResolverMovieTest
         assertThat(movie.getId()).isEqualTo(new MovieId(3));
         assertThat(movie.getTitle()).isEqualTo("title2");
         assertThat(movieCursor.moveToNext()).isFalse();
+    }
+
+    @Test
+    public void ifHasCollection_canUpdateToNull() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+
+        assertThat(inserted).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo(
+                MovieEntity.buildUri(new MovieId(3)).toString());
+
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, (Integer) null);
+
+        assertThat(InstrumentationRegistry.getTargetContext().getContentResolver()
+                .update(inserted, values, null, null))
+                .isEqualTo(1);
+
+        cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
+                inserted, null, null, null, null);
+        assertThat(cursor).isNotNull();
+        MovieCursor movieCursor = new MovieCursor(cursor);
+        assertThat(movieCursor.moveToFirst()).isTrue();
+        Movie movie = movieCursor.getMovie();
+        assertThat(movie.getId()).isEqualTo(new MovieId(3));
+        assertThat(movie.getBelongsToCollectionId()).isNull();
+        assertThat(movie.getTitle()).isEqualTo("title1");
+        assertThat(movieCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void ifHasCollection_cannotUpdateToOther() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+
+        assertThat(inserted).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo(
+                MovieEntity.buildUri(new MovieId(3)).toString());
+
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 2);
+
+        InstrumentationRegistry.getTargetContext().getContentResolver()
+                .update(inserted, values, null, null);
+    }
+
+    @Test(expected = SQLiteConstraintException.class)
+    public void ifHasCollection_cannotUpdateCollectionId() throws Exception
+    {
+        ContentValues collectionValues = new ContentValues();
+        collectionValues.put(CollectionContract._ID, 1);
+        collectionValues.put(CollectionContract.COLUMN_NAME, "collection1");
+        Uri insertedCollection = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.CONTENT_URI,
+                collectionValues);
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 1);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        Uri inserted = InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.CONTENT_URI,
+                values);
+
+        assertThat(inserted).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(inserted.toString()).isEqualTo(
+                MovieEntity.buildUri(new MovieId(3)).toString());
+
+        collectionValues.put(CollectionContract._ID, 2);
+
+        //noinspection ConstantConditions
+        InstrumentationRegistry.getTargetContext().getContentResolver()
+                .update(insertedCollection, collectionValues, null, null);
     }
 
     @Test

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,6 +73,13 @@ public class TmdbContentProvider extends ContentProvider
                 helperDelegates);
     }
 
+    @NonNull private SQLiteDatabase getWritableDatabase()
+    {
+        SQLiteDatabase writableDb = openHelper.getWritableDatabase();
+        writableDb.execSQL("PRAGMA foreign_keys = ON;");
+        return writableDb;
+    }
+
     private void notifyResolver(@Nullable Uri uri)
     {
         if (uri == null)
@@ -130,7 +138,7 @@ public class TmdbContentProvider extends ContentProvider
         {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        Uri inserted = helper.insert(openHelper.getWritableDatabase(), uri, values);
+        Uri inserted = helper.insert(getWritableDatabase(), uri, values);
         notifyResolver(inserted);
         return inserted;
     }
@@ -143,7 +151,7 @@ public class TmdbContentProvider extends ContentProvider
         {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        int inserted = helper.bulkInsert(openHelper.getWritableDatabase(), uri, values);
+        int inserted = helper.bulkInsert(getWritableDatabase(), uri, values);
         if (inserted > 0)
         {
             notifyResolver(uri);
@@ -163,7 +171,7 @@ public class TmdbContentProvider extends ContentProvider
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         int deleted = helper.delete(
-                openHelper.getWritableDatabase(),
+                getWritableDatabase(),
                 uri,
                 selection,
                 selectionArgs);
@@ -187,7 +195,7 @@ public class TmdbContentProvider extends ContentProvider
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         int updated = helper.update(
-                openHelper.getWritableDatabase(),
+                getWritableDatabase(),
                 uri,
                 values,
                 selection,
