@@ -2,52 +2,57 @@ package com.github.xavierlepretre.tmdb.model.movie;
 
 import android.database.MatrixCursor;
 
-import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class GenreCursorTest
 {
-    private static final String[][] POTENTIAL_COLUMNS = new String[][]{
-            new String[]{GenreContract._ID, "23"},
-            new String[]{GenreContract.COLUMN_NAME, "Action"}
+    private static final String[] COLUMNS = new String[]{
+            GenreContract._ID,
+            GenreContract.COLUMN_NAME
+    };
+    private static final String[] VALUES = new String[]{
+            "23",
+            "Action"
     };
 
-    @Parameterized.Parameter
-    public ParameterColumnValue parameter;
-
-    @Parameterized.Parameters()
-    public static ParameterColumnValue[] getParameters()
+    @Test
+    public void mayCreateGenre() throws Exception
     {
-        return ParameterColumnValue.getPossibleParameters(POTENTIAL_COLUMNS);
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(VALUES);
+        GenreCursor entityCursor = new GenreCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Genre genre = entityCursor.getGenre();
+        assertThat(genre.getId()).isEqualTo(new GenreId(23));
+        assertThat(genre.getName()).isEqualTo("Action");
+    }
+
+    @Test
+    public void mayCreateGenreWithMissing() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(new String[0]);
+        cursor.addRow(new String[0]);
+        GenreCursor entityCursor = new GenreCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Genre genre = entityCursor.getGenre();
+        assertThat(genre.getId()).isNull();
+        assertThat(genre.getName()).isNull();
     }
 
     @Test
     public void mayCreateGenreWithNulls() throws Exception
     {
-        MatrixCursor cursor = new MatrixCursor(parameter.columns.toArray(new String[parameter.columns.size()]));
-        for (List<String> row : parameter.rows)
-        {
-            cursor.addRow(row);
-        }
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(new String[COLUMNS.length]);
         GenreCursor entityCursor = new GenreCursor(cursor);
         entityCursor.moveToFirst();
 
         Genre genre = entityCursor.getGenre();
-        assertThat(genre.getId()).isEqualTo(
-                parameter.columns.contains(GenreContract._ID)
-                        ? new GenreId(23)
-                        : null);
-        assertThat(genre.getName()).isEqualTo(
-                parameter.columns.contains(GenreContract.COLUMN_NAME)
-                        ? "Action"
-                        : null);
+        assertThat(genre.getId()).isNull();
+        assertThat(genre.getName()).isNull();
     }
 }

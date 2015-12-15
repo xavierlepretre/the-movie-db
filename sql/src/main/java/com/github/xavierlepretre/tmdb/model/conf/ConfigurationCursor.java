@@ -36,11 +36,11 @@ public class ConfigurationCursor extends CursorWrapper
                 new ImagesConf(
                         baseUrlCol < 0 ? null : getString(baseUrlCol),
                         secureBaseUrlCol < 0 ? null : getString(secureBaseUrlCol),
-                        backdropSizesCol < 0 ? null : new ImageSizeList(getString(backdropSizesCol)),
-                        logoSizesCol < 0 ? null : new ImageSizeList(getString(logoSizesCol)),
-                        posterSizesCol < 0 ? null : new ImageSizeList(getString(posterSizesCol)),
-                        profileSizesCol < 0 ? null : new ImageSizeList(getString(profileSizesCol)),
-                        stillSizesCol < 0 ? null : new ImageSizeList(getString(stillSizesCol))),
-                changeKeysCol < 0 ? null : new ChangeKeyList(getString(changeKeysCol)));
+                        (backdropSizesCol < 0 || isNull(backdropSizesCol)) ? null : new ImageSizeList(getString(backdropSizesCol)),
+                        (logoSizesCol < 0 || isNull(logoSizesCol)) ? null : new ImageSizeList(getString(logoSizesCol)),
+                        (posterSizesCol < 0 || isNull(posterSizesCol)) ? null : new ImageSizeList(getString(posterSizesCol)),
+                        (profileSizesCol < 0 || isNull(profileSizesCol)) ? null : new ImageSizeList(getString(profileSizesCol)),
+                        (stillSizesCol < 0 || isNull(stillSizesCol)) ? null : new ImageSizeList(getString(stillSizesCol))),
+                (changeKeysCol < 0 || isNull(changeKeysCol)) ? null : new ChangeKeyList(getString(changeKeysCol)));
     }
 }

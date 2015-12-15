@@ -2,53 +2,59 @@ package com.github.xavierlepretre.tmdb.model.i18n;
 
 import android.database.MatrixCursor;
 
-import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class SpokenLanguageCursorTest
 {
-    private static final String[][] POTENTIAL_COLUMNS = new String[][]{
-            new String[]{SpokenLanguageContract._ID, "en"},
-            new String[]{SpokenLanguageContract.COLUMN_NAME, "English"}
+    private static final String[] COLUMNS = new String[]{
+            SpokenLanguageContract._ID,
+            SpokenLanguageContract.COLUMN_NAME
+    };
+    private static final String[] VALUES = new String[]{
+            "en",
+            "English"
     };
 
-    @Parameterized.Parameter
-    public ParameterColumnValue parameter;
-
-    @Parameterized.Parameters()
-    public static ParameterColumnValue[] getParameters()
+    @Test
+    public void mayCreateSpokenLanguage() throws Exception
     {
-        return ParameterColumnValue.getPossibleParameters(POTENTIAL_COLUMNS);
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(VALUES);
+        SpokenLanguageCursor entityCursor = new SpokenLanguageCursor(cursor);
+        entityCursor.moveToFirst();
+
+        SpokenLanguage spokenLanguage = entityCursor.getSpokenLanguage();
+        assertThat(spokenLanguage.getIso639Dash1()).isEqualTo(LanguageCode.en);
+        assertThat(spokenLanguage.getName()).isEqualTo("English");
+    }
+
+    @Test
+    public void mayCreateSpokenLanguageWithMissing() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(new String[0]);
+        cursor.addRow(new String[0]);
+        SpokenLanguageCursor entityCursor = new SpokenLanguageCursor(cursor);
+        entityCursor.moveToFirst();
+
+        SpokenLanguage spokenLanguage = entityCursor.getSpokenLanguage();
+        assertThat(spokenLanguage.getIso639Dash1()).isNull();
+        assertThat(spokenLanguage.getName()).isNull();
     }
 
     @Test
     public void mayCreateSpokenLanguageWithNulls() throws Exception
     {
-        MatrixCursor cursor = new MatrixCursor(parameter.columns.toArray(new String[parameter.columns.size()]));
-        for (List<String> row : parameter.rows)
-        {
-            cursor.addRow(row);
-        }
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(new String[COLUMNS.length]);
         SpokenLanguageCursor entityCursor = new SpokenLanguageCursor(cursor);
         entityCursor.moveToFirst();
 
         SpokenLanguage spokenLanguage = entityCursor.getSpokenLanguage();
-        assertThat(spokenLanguage.getIso639Dash1()).isEqualTo(
-                parameter.columns.contains(SpokenLanguageContract._ID)
-                        ? LanguageCode.en
-                        : null);
-        assertThat(spokenLanguage.getName()).isEqualTo(
-                parameter.columns.contains(SpokenLanguageContract.COLUMN_NAME)
-                        ? "English"
-                        : null);
+        assertThat(spokenLanguage.getIso639Dash1()).isNull();
+        assertThat(spokenLanguage.getName()).isNull();
     }
 }

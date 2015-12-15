@@ -21,7 +21,7 @@ public class ProductionCountryCursor extends CursorWrapper
     @NonNull public ProductionCountry getProductionCountry()
     {
         return new ProductionCountry(
-                iso3166Dash1Col < 0 ? null : CountryCode.getByCode(getString(iso3166Dash1Col)),
+                (iso3166Dash1Col < 0 || isNull(iso3166Dash1Col)) ? null : CountryCode.getByCode(getString(iso3166Dash1Col)),
                 nameCol < 0 ? null : getString(nameCol));
     }
 }

@@ -25,9 +25,9 @@ public class CollectionCursor extends CursorWrapper
     @NonNull public Collection getCollection()
     {
         return new Collection(
-                backdropPathCol < 0 ? null : new ImagePath(getString(backdropPathCol)),
-                idCol < 0 ? null : new CollectionId(getInt(idCol)),
+                (backdropPathCol < 0 || isNull(backdropPathCol)) ? null : new ImagePath(getString(backdropPathCol)),
+                (idCol < 0 || isNull(idCol)) ? null : new CollectionId(getInt(idCol)),
                 nameCol < 0 ? null : getString(nameCol),
-                posterPathCol < 0 ? null : new ImagePath(getString(posterPathCol)));
+                (posterPathCol < 0 || isNull(posterPathCol)) ? null : new ImagePath(getString(posterPathCol)));
     }
 }

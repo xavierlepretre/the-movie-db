@@ -2,84 +2,97 @@ package com.github.xavierlepretre.tmdb.model.conf;
 
 import android.database.MatrixCursor;
 
-import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class ConfigurationCursorTest
 {
-    private static final String[][] POTENTIAL_COLUMNS = new String[][]{
-            new String[]{ImagesConfSegment.COLUMN_BASE_URL, "baseUrl"},
-            new String[]{ImagesConfSegment.COLUMN_SECURE_BASE_URL, "secureBaseUrl"},
-            new String[]{ImagesConfSegment.COLUMN_BACKDROP_SIZES, "w1,w2"},
-            new String[]{ImagesConfSegment.COLUMN_LOGO_SIZES, "w3,w4"},
-            new String[]{ImagesConfSegment.COLUMN_POSTER_SIZES, "w5,w6"},
-            new String[]{ImagesConfSegment.COLUMN_PROFILE_SIZES, "w7,w8"},
-            new String[]{ImagesConfSegment.COLUMN_STILL_SIZES, "w9,w10"},
-            new String[]{ConfigurationContract.COLUMN_CHANGE_KEYS, "key11,key12"}
+    private static final String[] COLUMNS = new String[]{
+            ImagesConfSegment.COLUMN_BASE_URL,
+            ImagesConfSegment.COLUMN_SECURE_BASE_URL,
+            ImagesConfSegment.COLUMN_BACKDROP_SIZES,
+            ImagesConfSegment.COLUMN_LOGO_SIZES,
+            ImagesConfSegment.COLUMN_POSTER_SIZES,
+            ImagesConfSegment.COLUMN_PROFILE_SIZES,
+            ImagesConfSegment.COLUMN_STILL_SIZES,
+            ConfigurationContract.COLUMN_CHANGE_KEYS
+    };
+    private static final String[] VALUES = new String[]{
+            "baseUrl",
+            "secureBaseUrl",
+            "w1,w2",
+            "w3,w4",
+            "w5,w6",
+            "w7,w8",
+            "w9,w10",
+            "key11,key12"
     };
 
-    @Parameterized.Parameter
-    public ParameterColumnValue parameter;
-
-    @Parameterized.Parameters()
-    public static ParameterColumnValue[] getParameters()
-    {
-        return ParameterColumnValue.getPossibleParameters(POTENTIAL_COLUMNS);
-    }
-
     @Test
-    public void testSometimesNull() throws Exception
+    public void mayCreateConfiguration() throws Exception
     {
-        MatrixCursor cursor = new MatrixCursor(parameter.columns.toArray(new String[parameter.columns.size()]));
-        for (List<String> row : parameter.rows)
-        {
-            cursor.addRow(row);
-        }
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(VALUES);
         ConfigurationCursor entityCursor = new ConfigurationCursor(cursor);
         entityCursor.moveToFirst();
 
         Configuration configuration = entityCursor.getConfiguration();
-        assertThat(configuration.getImagesConf().getBaseUrl()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_BASE_URL)
-                        ? "baseUrl"
-                        : null);
-        assertThat(configuration.getImagesConf().getSecureBaseUrl()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_SECURE_BASE_URL)
-                        ? "secureBaseUrl"
-                        : null);
+        assertThat(configuration.getImagesConf().getBaseUrl()).isEqualTo("baseUrl");
+        assertThat(configuration.getImagesConf().getSecureBaseUrl()).isEqualTo("secureBaseUrl");
         assertThat(configuration.getImagesConf().getBackdropSizes()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_BACKDROP_SIZES)
-                        ? Arrays.asList(new ImageSize("w1"), new ImageSize("w2"))
-                        : null);
+                Arrays.asList(new ImageSize("w1"), new ImageSize("w2")));
         assertThat(configuration.getImagesConf().getLogoSizes()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_LOGO_SIZES)
-                        ? Arrays.asList(new ImageSize("w3"), new ImageSize("w4"))
-                        : null);
+                Arrays.asList(new ImageSize("w3"), new ImageSize("w4")));
         assertThat(configuration.getImagesConf().getPosterSizes()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_POSTER_SIZES)
-                        ? Arrays.asList(new ImageSize("w5"), new ImageSize("w6"))
-                        : null);
+                Arrays.asList(new ImageSize("w5"), new ImageSize("w6")));
         assertThat(configuration.getImagesConf().getProfileSizes()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_PROFILE_SIZES)
-                        ? Arrays.asList(new ImageSize("w7"), new ImageSize("w8"))
-                        : null);
+                Arrays.asList(new ImageSize("w7"), new ImageSize("w8")));
         assertThat(configuration.getImagesConf().getStillSizes()).isEqualTo(
-                parameter.columns.contains(ImagesConfSegment.COLUMN_STILL_SIZES)
-                        ? Arrays.asList(new ImageSize("w9"), new ImageSize("w10"))
-                        : null);
+                Arrays.asList(new ImageSize("w9"), new ImageSize("w10")));
         assertThat(configuration.getChangeKeys()).isEqualTo(
-                parameter.columns.contains(ConfigurationContract.COLUMN_CHANGE_KEYS)
-                        ? Arrays.asList(new ChangeKey("key11"), new ChangeKey("key12"))
-                        : null);
+                Arrays.asList(new ChangeKey("key11"), new ChangeKey("key12")));
+    }
+
+    @Test
+    public void mayCreateConfigurationWithMissing() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(new String[0]);
+        cursor.addRow(new String[0]);
+        ConfigurationCursor entityCursor = new ConfigurationCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Configuration configuration = entityCursor.getConfiguration();
+        assertThat(configuration.getImagesConf().getBaseUrl()).isNull();
+        assertThat(configuration.getImagesConf().getSecureBaseUrl()).isNull();
+        assertThat(configuration.getImagesConf().getBackdropSizes()).isNull();
+        assertThat(configuration.getImagesConf().getLogoSizes()).isNull();
+        assertThat(configuration.getImagesConf().getPosterSizes()).isNull();
+        assertThat(configuration.getImagesConf().getProfileSizes()).isNull();
+        assertThat(configuration.getImagesConf().getStillSizes()).isNull();
+        assertThat(configuration.getChangeKeys()).isNull();
+    }
+
+    @Test
+    public void mayCreateConfigurationWithNulls() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(new String[COLUMNS.length]);
+        ConfigurationCursor entityCursor = new ConfigurationCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Configuration configuration = entityCursor.getConfiguration();
+        assertThat(configuration.getImagesConf().getBaseUrl()).isNull();
+        assertThat(configuration.getImagesConf().getSecureBaseUrl()).isNull();
+        assertThat(configuration.getImagesConf().getBackdropSizes()).isNull();
+        assertThat(configuration.getImagesConf().getLogoSizes()).isNull();
+        assertThat(configuration.getImagesConf().getPosterSizes()).isNull();
+        assertThat(configuration.getImagesConf().getProfileSizes()).isNull();
+        assertThat(configuration.getImagesConf().getStillSizes()).isNull();
+        assertThat(configuration.getChangeKeys()).isNull();
     }
 }

@@ -2,53 +2,59 @@ package com.github.xavierlepretre.tmdb.model.production;
 
 import android.database.MatrixCursor;
 
-import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.neovisionaries.i18n.CountryCode;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class ProductionCountryCursorTest
 {
-    private static final String[][] POTENTIAL_COLUMNS = new String[][]{
-            new String[]{ProductionCountryContract._ID, "GB"},
-            new String[]{ProductionCountryContract.COLUMN_NAME, "United Kingdom"}
+    private static final String[] COLUMNS = new String[]{
+            ProductionCountryContract._ID,
+            ProductionCountryContract.COLUMN_NAME
+    };
+    private static final String[] VALUES = new String[]{
+            "GB",
+            "United Kingdom"
     };
 
-    @Parameterized.Parameter
-    public ParameterColumnValue parameter;
-
-    @Parameterized.Parameters()
-    public static ParameterColumnValue[] getParameters()
+    @Test
+    public void mayCreateProductionCountry() throws Exception
     {
-        return ParameterColumnValue.getPossibleParameters(POTENTIAL_COLUMNS);
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(VALUES);
+        ProductionCountryCursor entityCursor = new ProductionCountryCursor(cursor);
+        entityCursor.moveToFirst();
+
+        ProductionCountry productionCountry = entityCursor.getProductionCountry();
+        assertThat(productionCountry.getIso3166Dash1()).isEqualTo(CountryCode.GB);
+        assertThat(productionCountry.getName()).isEqualTo("United Kingdom");
+    }
+
+    @Test
+    public void mayCreateProductionCountryWithMissing() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(new String[0]);
+        cursor.addRow(new String[0]);
+        ProductionCountryCursor entityCursor = new ProductionCountryCursor(cursor);
+        entityCursor.moveToFirst();
+
+        ProductionCountry productionCountry = entityCursor.getProductionCountry();
+        assertThat(productionCountry.getIso3166Dash1()).isNull();
+        assertThat(productionCountry.getName()).isNull();
     }
 
     @Test
     public void mayCreateProductionCountryWithNulls() throws Exception
     {
-        MatrixCursor cursor = new MatrixCursor(parameter.columns.toArray(new String[parameter.columns.size()]));
-        for (List<String> row : parameter.rows)
-        {
-            cursor.addRow(row);
-        }
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(new String[COLUMNS.length]);
         ProductionCountryCursor entityCursor = new ProductionCountryCursor(cursor);
         entityCursor.moveToFirst();
 
         ProductionCountry productionCountry = entityCursor.getProductionCountry();
-        assertThat(productionCountry.getIso3166Dash1()).isEqualTo(
-                parameter.columns.contains(ProductionCountryContract._ID)
-                        ? CountryCode.GB
-                        : null);
-        assertThat(productionCountry.getName()).isEqualTo(
-                parameter.columns.contains(ProductionCountryContract.COLUMN_NAME)
-                        ? "United Kingdom"
-                        : null);
+        assertThat(productionCountry.getIso3166Dash1()).isNull();
+        assertThat(productionCountry.getName()).isNull();
     }
 }

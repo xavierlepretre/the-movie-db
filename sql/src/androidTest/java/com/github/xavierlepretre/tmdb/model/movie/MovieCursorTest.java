@@ -97,4 +97,68 @@ public class MovieCursorTest
         assertThat(movie.getVoteAverage()).isEqualTo(4.5f);
         assertThat(movie.getVoteCount()).isEqualTo(400);
     }
+
+    @Test
+    public void mayCreateMovieWithMissing() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(new String[0]);
+        cursor.addRow(new String[0]);
+        MovieCursor entityCursor = new MovieCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Movie movie = entityCursor.getMovie();
+        assertThat(movie.getAdult()).isNull();
+        assertThat(movie.getBackdropPath()).isNull();
+        assertThat(movie.getBelongsToCollectionId()).isNull();
+        assertThat(movie.getBudget()).isNull();
+        assertThat(movie.getHomepage()).isNull();
+        assertThat(movie.getId()).isNull();
+        assertThat(movie.getImdbId()).isNull();
+        assertThat(movie.getOriginalLanguage()).isNull();
+        assertThat(movie.getOriginalTitle()).isNull();
+        assertThat(movie.getOverview()).isNull();
+        assertThat(movie.getPopularity()).isNull();
+        assertThat(movie.getPosterPath()).isNull();
+        assertThat(movie.getReleaseDate()).isNull();
+        assertThat(movie.getRevenue()).isNull();
+        assertThat(movie.getRuntime()).isNull();
+        assertThat(movie.getStatus()).isNull();
+        assertThat(movie.getTagline()).isNull();
+        assertThat(movie.getTitle()).isNull();
+        assertThat(movie.getVideo()).isNull();
+        assertThat(movie.getVoteAverage()).isNull();
+        assertThat(movie.getVoteCount()).isNull();
+    }
+
+    @Test
+    public void mayCreateMovieWithNulls() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(new String[COLUMNS.length]);
+        MovieCursor entityCursor = new MovieCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Movie movie = entityCursor.getMovie();
+        assertThat(movie.getAdult()).isNull();
+        assertThat(movie.getBackdropPath()).isNull();
+        assertThat(movie.getBelongsToCollectionId()).isNull();
+        assertThat(movie.getBudget()).isNull();
+        assertThat(movie.getHomepage()).isNull();
+        assertThat(movie.getId()).isNull();
+        assertThat(movie.getImdbId()).isNull();
+        assertThat(movie.getOriginalLanguage()).isNull();
+        assertThat(movie.getOriginalTitle()).isNull();
+        assertThat(movie.getOverview()).isNull();
+        assertThat(movie.getPopularity()).isNull();
+        assertThat(movie.getPosterPath()).isNull();
+        assertThat(movie.getReleaseDate()).isNull();
+        assertThat(movie.getRevenue()).isNull();
+        assertThat(movie.getRuntime()).isNull();
+        assertThat(movie.getStatus()).isNull();
+        assertThat(movie.getTagline()).isNull();
+        assertThat(movie.getTitle()).isNull();
+        assertThat(movie.getVideo()).isNull();
+        assertThat(movie.getVoteAverage()).isNull();
+        assertThat(movie.getVoteCount()).isNull();
+    }
 }

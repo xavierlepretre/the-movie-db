@@ -21,7 +21,7 @@ public class SpokenLanguageCursor extends CursorWrapper
     @NonNull public SpokenLanguage getSpokenLanguage()
     {
         return new SpokenLanguage(
-                idCol < 0 ? null : LanguageCode.getByCode(getString(idCol)),
+                (idCol < 0 || isNull(idCol)) ? null : LanguageCode.getByCode(getString(idCol)),
                 nameCol < 0 ? null : getString(nameCol));
     }
 }

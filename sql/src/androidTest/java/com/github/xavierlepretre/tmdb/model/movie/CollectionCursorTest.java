@@ -2,63 +2,69 @@ package com.github.xavierlepretre.tmdb.model.movie;
 
 import android.database.MatrixCursor;
 
-import com.github.xavierlepretre.tmdb.model.ParameterColumnValue;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class CollectionCursorTest
 {
-    private static final String[][] POTENTIAL_COLUMNS = new String[][]{
-            new String[]{CollectionContract.COLUMN_BACKDROP_PATH, "/a123.jpg"},
-            new String[]{CollectionContract._ID, "23"},
-            new String[]{CollectionContract.COLUMN_NAME, "Action"},
-            new String[]{CollectionContract.COLUMN_POSTER_PATH, "/b456.jpg"}
+    private static final String[] COLUMNS = new String[]{
+            CollectionContract.COLUMN_BACKDROP_PATH,
+            CollectionContract._ID,
+            CollectionContract.COLUMN_NAME,
+            CollectionContract.COLUMN_POSTER_PATH
+    };
+    private static final String[] VALUES = new String[]{
+            "/a123.jpg",
+            "23",
+            "Action",
+            "/b456.jpg"
     };
 
-    @Parameterized.Parameter
-    public ParameterColumnValue parameter;
-
-    @Parameterized.Parameters()
-    public static ParameterColumnValue[] getParameters()
+    @Test
+    public void mayCreateCollection() throws Exception
     {
-        return ParameterColumnValue.getPossibleParameters(POTENTIAL_COLUMNS);
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(VALUES);
+        CollectionCursor entityCursor = new CollectionCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Collection collection = entityCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isEqualTo(new ImagePath("/a123.jpg"));
+        assertThat(collection.getId()).isEqualTo(new CollectionId(23));
+        assertThat(collection.getName()).isEqualTo("Action");
+        assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/b456.jpg"));
+    }
+
+    @Test
+    public void mayCreateCollectionWithMissing() throws Exception
+    {
+        MatrixCursor cursor = new MatrixCursor(new String[0]);
+        cursor.addRow(new String[0]);
+        CollectionCursor entityCursor = new CollectionCursor(cursor);
+        entityCursor.moveToFirst();
+
+        Collection collection = entityCursor.getCollection();
+        assertThat(collection.getBackdropPath()).isNull();
+        assertThat(collection.getId()).isNull();
+        assertThat(collection.getName()).isNull();
+        assertThat(collection.getPosterPath()).isNull();
     }
 
     @Test
     public void mayCreateCollectionWithNulls() throws Exception
     {
-        MatrixCursor cursor = new MatrixCursor(parameter.columns.toArray(new String[parameter.columns.size()]));
-        for (List<String> row : parameter.rows)
-        {
-            cursor.addRow(row);
-        }
+        MatrixCursor cursor = new MatrixCursor(COLUMNS);
+        cursor.addRow(new String[COLUMNS.length]);
         CollectionCursor entityCursor = new CollectionCursor(cursor);
         entityCursor.moveToFirst();
 
         Collection collection = entityCursor.getCollection();
-        assertThat(collection.getBackdropPath()).isEqualTo(
-                parameter.columns.contains(CollectionContract.COLUMN_BACKDROP_PATH)
-                        ? new ImagePath("/a123.jpg")
-                        : null);
-        assertThat(collection.getId()).isEqualTo(
-                parameter.columns.contains(CollectionContract._ID)
-                        ? new CollectionId(23)
-                        : null);
-        assertThat(collection.getName()).isEqualTo(
-                parameter.columns.contains(CollectionContract.COLUMN_NAME)
-                        ? "Action"
-                        : null);
-        assertThat(collection.getPosterPath()).isEqualTo(
-                parameter.columns.contains(CollectionContract.COLUMN_POSTER_PATH)
-                        ? new ImagePath("/b456.jpg")
-                        : null);
+        assertThat(collection.getBackdropPath()).isNull();
+        assertThat(collection.getId()).isNull();
+        assertThat(collection.getName()).isNull();
+        assertThat(collection.getPosterPath()).isNull();
     }
 }

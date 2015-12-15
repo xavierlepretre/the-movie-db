@@ -19,7 +19,7 @@ public class GenreCursor extends CursorWrapper
     @NonNull public Genre getGenre()
     {
         return new Genre(
-                idCol < 0 ? null : new GenreId(getInt(idCol)),
-                nameCol < 0 ? null : getString(nameCol));
+                (idCol < 0 || isNull(idCol)) ? null : new GenreId(getInt(idCol)),
+                (nameCol < 0 || isNull(nameCol)) ? null : getString(nameCol));
     }
 }

@@ -19,7 +19,7 @@ public class ProductionCompanyCursor extends CursorWrapper
     @NonNull public ProductionCompany getProductionCompany()
     {
         return new ProductionCompany(
-                idCol < 0 ? null : new ProductionCompanyId(getInt(idCol)),
+                (idCol < 0 || isNull(idCol)) ? null : new ProductionCompanyId(getInt(idCol)),
                 nameCol < 0 ? null : getString(nameCol));
     }
 }

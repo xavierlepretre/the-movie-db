@@ -82,26 +82,26 @@ public class MovieCursor extends CursorWrapper
         {
         }
         return new Movie(
-                adultCol < 0 ? null : (getInt(adultCol) > 0),
-                backdropPathCol < 0 ? null : new ImagePath(getString(backdropPathCol)),
-                belongsToCollectionIdCol < 0 ? null : new CollectionId(getLong(belongsToCollectionIdCol)),
-                budgetCol < 0 ? null : getLong(budgetCol),
-                homepageCol < 0 ? null : getString(homepageCol),
-                idCol < 0 ? null : new MovieId(getInt(idCol)),
-                imdbIdCol < 0 ? null : new ImdbId(getString(imdbIdCol)),
-                originalLanguageCol < 0 ? null : LanguageCode.getByCode(getString(originalLanguageCol)),
+                (adultCol < 0 || isNull(adultCol)) ? null : (getInt(adultCol) > 0),
+                (backdropPathCol < 0 || isNull(backdropPathCol)) ? null : new ImagePath(getString(backdropPathCol)),
+                (belongsToCollectionIdCol < 0 || isNull(belongsToCollectionIdCol)) ? null : new CollectionId(getLong(belongsToCollectionIdCol)),
+                (budgetCol < 0 || isNull(budgetCol)) ? null : getLong(budgetCol),
+                (homepageCol < 0 || isNull(homepageCol)) ? null : getString(homepageCol),
+                (idCol < 0 || isNull(idCol)) ? null : new MovieId(getInt(idCol)),
+                (imdbIdCol < 0 || isNull(imdbIdCol)) ? null : new ImdbId(getString(imdbIdCol)),
+                (originalLanguageCol < 0 || isNull(originalLanguageCol)) ? null : LanguageCode.getByCode(getString(originalLanguageCol)),
                 originalTitleCol < 0 ? null : getString(originalTitleCol),
                 overviewCol < 0 ? null : getString(overviewCol),
-                popularityCol < 0 ? null : getFloat(popularityCol),
-                posterPathCol < 0 ? null : new ImagePath(getString(posterPathCol)),
+                (popularityCol < 0 || isNull(popularityCol)) ? null : getFloat(popularityCol),
+                (posterPathCol < 0 || isNull(posterPathCol)) ? null : new ImagePath(getString(posterPathCol)),
                 releaseDate,
-                revenueCol < 0 ? null : getLong(revenueCol),
-                runtimeCol < 0 ? null : getInt(runtimeCol),
+                (revenueCol < 0 || isNull(revenueCol)) ? null : getLong(revenueCol),
+                (runtimeCol < 0 || isNull(runtimeCol)) ? null : getInt(runtimeCol),
                 statusCol < 0 ? null : getString(statusCol),
                 taglineCol < 0 ? null : getString(taglineCol),
                 titleCol < 0 ? null : getString(titleCol),
-                videoCol < 0 ? null : getInt(videoCol) > 0,
-                voteAverageCol < 0 ? null : getFloat(voteAverageCol),
-                voteCountCol < 0 ? null : getInt(voteCountCol));
+                (videoCol < 0 || isNull(videoCol)) ? null : getInt(videoCol) > 0,
+                (voteAverageCol < 0 || isNull(voteAverageCol)) ? null : getFloat(voteAverageCol),
+                (voteCountCol < 0 || isNull(voteCountCol)) ? null : getInt(voteCountCol));
     }
 }
