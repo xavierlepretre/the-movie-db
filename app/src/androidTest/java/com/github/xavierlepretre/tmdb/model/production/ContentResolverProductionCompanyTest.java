@@ -100,6 +100,17 @@ public class ContentResolverProductionCompanyTest
         assertThat(productionCompanyCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnProductionCompanyById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                TmdbContract.ProductionCompanyEntity.buildUri(new ProductionCompanyId(5)),
+                values);
+    }
+
     @Test
     public void insert_getsNotified() throws Exception
     {
@@ -238,6 +249,20 @@ public class ContentResolverProductionCompanyTest
         assertThat(productionCompany.getId()).isEqualTo(new ProductionCompanyId(6));
         assertThat(productionCompany.getName()).isEqualTo("Danjaq");
         assertThat(productionCompanyCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnProductionCompanyById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                TmdbContract.ProductionCompanyEntity.buildUri(new ProductionCompanyId(5)),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

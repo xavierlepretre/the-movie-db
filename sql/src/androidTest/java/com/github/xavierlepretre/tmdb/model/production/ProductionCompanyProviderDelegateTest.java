@@ -222,6 +222,18 @@ public class ProductionCompanyProviderDelegateTest
                 .isNull();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnProductionCompanyById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCompanyContract._ID, 5);
+        values.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany/5"),
+                values);
+    }
+
     @Test
     public void bulkInsert_with1Null_skips() throws Exception
     {
@@ -406,6 +418,21 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(myProductionCompany.getString(myProductionCompany.getColumnIndex(ProductionCompanyContract.COLUMN_NAME)))
                 .isEqualTo("Danjaq");
         assertThat(myProductionCompany.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnProductionCompanyById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCompanyContract._ID, 5);
+        value1.put(ProductionCompanyContract.COLUMN_NAME, "Columbia Pictures");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCompanyContract._ID, 6);
+        value2.put(ProductionCompanyContract.COLUMN_NAME, "Danjaq");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCompany/5"),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

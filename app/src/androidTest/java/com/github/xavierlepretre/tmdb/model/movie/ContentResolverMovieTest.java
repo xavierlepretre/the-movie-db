@@ -103,6 +103,28 @@ public class ContentResolverMovieTest
         assertThat(movieCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnMovieById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.buildUri(new MovieId(3)),
+                values);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnCollectionMovies_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract._ID, 3);
+        values.put(MovieContract.COLUMN_TITLE, "title1");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                MovieEntity.buildCollectionMoviesUri(new CollectionId(1)),
+                values);
+    }
+
     @Test(expected = SQLiteConstraintException.class)
     public void ifNoCollection_cannotInsert() throws Exception
     {
@@ -287,6 +309,34 @@ public class ContentResolverMovieTest
         assertThat(movie.getId()).isEqualTo(new MovieId(4));
         assertThat(movie.getTitle()).isEqualTo("title3");
         assertThat(movieCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnMovieById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(MovieContract._ID, 3);
+        value1.put(MovieContract.COLUMN_TITLE, "title1");
+        ContentValues value2 = new ContentValues();
+        value2.put(MovieContract._ID, 4);
+        value2.put(MovieContract.COLUMN_TITLE, "title2");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                MovieEntity.buildUri(new MovieId(3)),
+                new ContentValues[]{value1, value2});
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnCollectionMovies_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(MovieContract._ID, 3);
+        value1.put(MovieContract.COLUMN_TITLE, "title1");
+        ContentValues value2 = new ContentValues();
+        value2.put(MovieContract._ID, 4);
+        value2.put(MovieContract.COLUMN_TITLE, "title2");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                MovieEntity.buildCollectionMoviesUri(new CollectionId(1)),
+                new ContentValues[]{value1, value2});
     }
 
     @Test(expected = SQLiteConstraintException.class)

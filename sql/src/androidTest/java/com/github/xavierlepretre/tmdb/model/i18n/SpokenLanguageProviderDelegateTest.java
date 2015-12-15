@@ -223,6 +223,18 @@ public class SpokenLanguageProviderDelegateTest
                 .isNull();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnSpokenLanguageById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(SpokenLanguageContract._ID, "en");
+        values.put(SpokenLanguageContract.COLUMN_NAME, "English");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/spokenLanguage/en"),
+                values);
+    }
+
     @Test
     public void bulkInsert_with1Null_skips() throws Exception
     {
@@ -407,6 +419,21 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(mySpokenLanguage.getString(mySpokenLanguage.getColumnIndex(SpokenLanguageContract.COLUMN_NAME)))
                 .isEqualTo("French");
         assertThat(mySpokenLanguage.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnSpokenLanguageById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(SpokenLanguageContract._ID, "en");
+        value1.put(SpokenLanguageContract.COLUMN_NAME, "English");
+        ContentValues value2 = new ContentValues();
+        value2.put(SpokenLanguageContract._ID, "fr");
+        value2.put(SpokenLanguageContract.COLUMN_NAME, "French");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/spokenLanguage/en"),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

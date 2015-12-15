@@ -99,6 +99,17 @@ public class ContentResolverGenreTest
         assertThat(genreCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnGenreById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, 3);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                GenreEntity.buildUri(new GenreId(3)),
+                values);
+    }
+
     @Test
     public void insert_getsNotified() throws Exception
     {
@@ -237,6 +248,20 @@ public class ContentResolverGenreTest
         assertThat(genre.getId()).isEqualTo(new GenreId(4));
         assertThat(genre.getName()).isEqualTo("Comic");
         assertThat(genreCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnGenreById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract._ID, 3);
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                GenreEntity.buildUri(new GenreId(12)),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

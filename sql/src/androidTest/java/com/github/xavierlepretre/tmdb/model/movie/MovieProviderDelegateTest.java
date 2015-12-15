@@ -1,11 +1,5 @@
 package com.github.xavierlepretre.tmdb.model.movie;
 
-import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -14,6 +8,12 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
+
+import com.github.xavierlepretre.tmdb.model.EntitySQLiteOpenHelper;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -31,6 +31,7 @@ public class MovieProviderDelegateTest
         providerDelegate = spy(new MovieProviderDelegate(
                 "content_authority",
                 Uri.parse("content://content_authority/movie"),
+                Uri.parse("content://content_authority/collection"),
                 "dir_type",
                 "item_type"));
         sqlHelper = new EntitySQLiteOpenHelper(
@@ -112,6 +113,8 @@ public class MovieProviderDelegateTest
         assertThat(matcher.match(Uri.parse("content://content_authority/movie/a"))).isEqualTo(UriMatcher.NO_MATCH);
         assertThat(matcher.match(Uri.parse("content://content_authority/movie/456"))).isEqualTo(number);
         assertThat(matcher.match(Uri.parse("content://content_authority/movie/456/t"))).isEqualTo(UriMatcher.NO_MATCH);
+        assertThat(matcher.match(Uri.parse("content://content_authority/collection/456/movie"))).isEqualTo(number);
+        assertThat(matcher.match(Uri.parse("content://content_authority/collection/456/movie/1"))).isEqualTo(UriMatcher.NO_MATCH);
     }
 
     @Test
@@ -119,6 +122,7 @@ public class MovieProviderDelegateTest
     {
         assertThat(providerDelegate.getType(Uri.parse("content://content_authority/movie"))).isEqualTo("dir_type");
         assertThat(providerDelegate.getType(Uri.parse("content://content_authority/movie/34"))).isEqualTo("item_type");
+        assertThat(providerDelegate.getType(Uri.parse("content://content_authority/collection/34/movie"))).isEqualTo("dir_type");
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -133,20 +137,52 @@ public class MovieProviderDelegateTest
         providerDelegate.getType(Uri.parse("content://content_authority/movie/a"));
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void properTypesFailsOnUnknownCollectionPath() throws Exception
+    {
+        providerDelegate.getType(Uri.parse("content://content_authority/collection/a/movie"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getMovieIdFromPath_doesNotAcceptFake() throws Exception
+    {
+        providerDelegate.getMovieId(Uri.parse("content://anything/fake/2"));
+    }
+
     @Test
-    public void getMovieFromPath_isOk() throws Exception
+    public void getMovieIdFromPath_isOk() throws Exception
     {
         assertThat(providerDelegate.getMovieId(Uri.parse("content://content_authority/movie/1"))).isEqualTo("1");
         assertThat(providerDelegate.getMovieId(Uri.parse("content://content_authority/movie/a"))).isEqualTo("a");
+        assertThat(providerDelegate.getMovieId(Uri.parse("content://anything/movie/1"))).isEqualTo("1");
         assertThat(providerDelegate.getMovieId(Uri.parse("content://anything/movie/a"))).isEqualTo("a");
-        assertThat(providerDelegate.getMovieId(Uri.parse("content://anything/fake/a"))).isEqualTo("a");
-        assertThat(providerDelegate.getMovieId(Uri.parse("content://anything/fake/2"))).isEqualTo("2");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getCollectionIdFromPath_doesNotAcceptFake() throws Exception
+    {
+        providerDelegate.getCollectionId(Uri.parse("content://anything/fake/2/movie"));
+    }
+
+    @Test
+    public void getCollectionIdFromPath_isOk() throws Exception
+    {
+        assertThat(providerDelegate.getCollectionId(Uri.parse("content://content_authority/collection/1/movie"))).isEqualTo("1");
+        assertThat(providerDelegate.getCollectionId(Uri.parse("content://content_authority/collection/a/movie"))).isEqualTo("a");
+        assertThat(providerDelegate.getCollectionId(Uri.parse("content://anything/collection/1/movie"))).isEqualTo("1");
+        assertThat(providerDelegate.getCollectionId(Uri.parse("content://anything/collection/a/movie"))).isEqualTo("a");
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void getMovieFromPath_canFail() throws Exception
+    public void getMovieIdFromPath_canFail() throws Exception
     {
         providerDelegate.getMovieId(Uri.parse("content://content_authority/movie"));
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void getCollectionIdFromPath_canFail() throws Exception
+    {
+        providerDelegate.getCollectionId(Uri.parse("content://content_authority/collection"));
     }
 
     @Test
@@ -157,6 +193,16 @@ public class MovieProviderDelegateTest
                 .isEqualTo(Uri.parse("content://something/60"));
         assertThat(providerDelegate.buildMovieLocation(new MovieId(870)))
                 .isEqualTo(Uri.parse("content://content_authority/movie/870"));
+    }
+
+    @Test
+    public void buildCollectionMoviesLocation_isOk() throws Exception
+    {
+        assertThat(MovieProviderDelegate.buildCollectionMoviesLocation(
+                Uri.parse("content://something"), new CollectionId(60)))
+                .isEqualTo(Uri.parse("content://something/60/movie"));
+        assertThat(providerDelegate.buildCollectionMoviesLocation(new CollectionId(870)))
+                .isEqualTo(Uri.parse("content://content_authority/collection/870/movie"));
     }
 
     @Test(expected = SQLiteException.class)
@@ -281,6 +327,24 @@ public class MovieProviderDelegateTest
         assertThat(myMovie.isNull(myMovie.getColumnIndex(MovieContract.COLUMN_VIDEO)));
         assertThat(myMovie.isNull(myMovie.getColumnIndex(MovieContract.COLUMN_VOTE_AVERAGE)));
         assertThat(myMovie.isNull(myMovie.getColumnIndex(MovieContract.COLUMN_VOTE_COUNT)));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnMovieById_fails() throws Exception
+    {
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/movie/12"),
+                getMovie12());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnCollectionMovies_fails() throws Exception
+    {
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection/33/movie"),
+                getMovie12());
     }
 
     @Test
@@ -452,6 +516,24 @@ public class MovieProviderDelegateTest
         assertThat(myMovie.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnMovieById_fails() throws Exception
+    {
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/movie/12"),
+                new ContentValues[]{getMovie12()});
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnCollectionMovies_fails() throws Exception
+    {
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection/12/movie"),
+                new ContentValues[]{getMovie12()});
+    }
+
     @Test
     public void queryListFromDb_isOk() throws Exception
     {
@@ -555,6 +637,91 @@ public class MovieProviderDelegateTest
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
+                null,
+                MovieContract.COLUMN_TITLE + "=?",
+                new String[]{"title2"},
+                null, null, null, null);
+
+        assertThat(found).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void queryMoviesInCollection_isOk() throws Exception
+    {
+        ContentValues values1 = getMovie12();
+        ContentValues values2 = new ContentValues();
+        values2.put(MovieContract._ID, 13);
+        values2.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 33L);
+        values2.put(MovieContract.COLUMN_TITLE, "title2");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/movie"),
+                new ContentValues[]{values1, values2});
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/collection/33/movie"),
+                null, null, null, null, null, null, null);
+
+        assertThat(found).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(2);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThatIsMovie12(found);
+        assertThat(found.moveToNext()).isTrue();
+        assertThat(found.getLong(found.getColumnIndex(MovieContract._ID)))
+                .isEqualTo(13);
+        assertThat(found.getString(found.getColumnIndex(MovieContract.COLUMN_TITLE)))
+                .isEqualTo("title2");
+        assertThat(found.moveToNext()).isFalse();
+    }
+
+    @Test
+    public void queryMoviesInCollectionWithSelection_isOk() throws Exception
+    {
+        ContentValues values1 = getMovie12();
+        ContentValues values2 = new ContentValues();
+        values2.put(MovieContract._ID, 13);
+        values2.put(MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID, 33L);
+        values2.put(MovieContract.COLUMN_TITLE, "title2");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/movie"),
+                new ContentValues[]{values1, values2});
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/collection/33/movie"),
+                null,
+                MovieContract.COLUMN_TITLE + "=?",
+                new String[]{"title1"},
+                null, null, null, null);
+
+        assertThat(found).isNotNull();
+        //noinspection ConstantConditions
+        assertThat(found.getCount()).isEqualTo(1);
+        assertThat(found.moveToFirst()).isTrue();
+        assertThatIsMovie12(found);
+        assertThat(found.moveToNext()).isFalse();
+    }
+
+    @Test
+    public void queryMoviesInCollectionWithContradictorySelection_returnsEmpty() throws Exception
+    {
+        ContentValues values1 = getMovie12();
+        ContentValues values2 = new ContentValues();
+        values2.put(MovieContract._ID, 13);
+        values2.put(MovieContract.COLUMN_TITLE, "title2");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/movie"),
+                new ContentValues[]{values1, values2});
+
+        Cursor found = providerDelegate.query(
+                sqlHelper.getReadableDatabase(),
+                Uri.parse("content://content_authority/collection/33/movie"),
                 null,
                 MovieContract.COLUMN_TITLE + "=?",
                 new String[]{"title2"},

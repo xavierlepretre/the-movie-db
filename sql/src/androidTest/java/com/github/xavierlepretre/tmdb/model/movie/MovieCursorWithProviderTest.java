@@ -57,6 +57,7 @@ public class MovieCursorWithProviderTest
         providerDelegate = spy(new MovieProviderDelegate(
                 "content_authority",
                 Uri.parse("content://content_authority/movie"),
+                Uri.parse("content://content_authority/collection"),
                 "dir_type",
                 "item_type"));
         sqlHelper = new EntitySQLiteOpenHelper(

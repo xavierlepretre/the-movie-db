@@ -105,6 +105,19 @@ public class ContentResolverCollectionTest
         assertThat(collectionCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnCollectionById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                CollectionEntity.buildUri(new CollectionId(645)),
+                values);
+    }
+
     @Test
     public void insert_getsNotified() throws Exception
     {
@@ -269,6 +282,24 @@ public class ContentResolverCollectionTest
         assertThat(collection.getName()).isEqualTo("Other Collection");
         assertThat(collection.getPosterPath()).isEqualTo(new ImagePath("/other_poster.jpg"));
         assertThat(collectionCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnCollectionById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 12L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                CollectionEntity.buildUri(new CollectionId(645)),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

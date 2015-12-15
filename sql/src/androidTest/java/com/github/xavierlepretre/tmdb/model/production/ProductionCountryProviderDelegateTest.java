@@ -223,6 +223,18 @@ public class ProductionCountryProviderDelegateTest
                 .isNull();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnProductionCountryById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCountryContract._ID, "GB");
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry/GB"),
+                values);
+    }
+
     @Test
     public void bulkInsert_with1Null_skips() throws Exception
     {
@@ -407,6 +419,21 @@ public class ProductionCountryProviderDelegateTest
         assertThat(myProductionCountry.getString(myProductionCountry.getColumnIndex(ProductionCountryContract.COLUMN_NAME)))
                 .isEqualTo("United States of America");
         assertThat(myProductionCountry.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnProductionCountryById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCountryContract._ID, "GB");
+        value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCountryContract._ID, "US");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/productionCountry/GB"),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

@@ -84,6 +84,11 @@ public class TmdbContract
         {
             return MovieProviderDelegate.buildMovieLocation(CONTENT_URI, movieId);
         }
+
+        @NonNull public static Uri buildCollectionMoviesUri(@NonNull CollectionId collectionId)
+        {
+            return MovieProviderDelegate.buildCollectionMoviesLocation(CollectionEntity.CONTENT_URI, collectionId);
+        }
     }
 
     public static final class ProductionCompanyEntity extends ProductionCompanyContract

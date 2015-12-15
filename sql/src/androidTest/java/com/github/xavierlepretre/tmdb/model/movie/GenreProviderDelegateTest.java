@@ -216,6 +216,18 @@ public class GenreProviderDelegateTest
                 .isNull();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnGenreById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(GenreContract._ID, 3);
+        values.put(GenreContract.COLUMN_NAME, "Adventure");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre/3"),
+                values);
+    }
+
     @Test
     public void bulkInsert_with1Null_skips() throws Exception
     {
@@ -390,6 +402,21 @@ public class GenreProviderDelegateTest
         assertThat(myGenre.getString(myGenre.getColumnIndex(GenreContract.COLUMN_NAME)))
                 .isEqualTo("Comic");
         assertThat(myGenre.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnGenreById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(GenreContract._ID, 3);
+        value1.put(GenreContract.COLUMN_NAME, "Adventure");
+        ContentValues value2 = new ContentValues();
+        value2.put(GenreContract._ID, 4);
+        value2.put(GenreContract.COLUMN_NAME, "Comic");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/genre/12"),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

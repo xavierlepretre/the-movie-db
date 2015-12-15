@@ -242,6 +242,20 @@ public class CollectionProviderDelegateTest
                 .isNull();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnCollectionById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        values.put(CollectionContract._ID, 645L);
+        values.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        values.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        providerDelegate.insert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection/645"),
+                values);
+    }
+
     @Test
     public void bulkInsert_with1Null_skips() throws Exception
     {
@@ -481,6 +495,25 @@ public class CollectionProviderDelegateTest
                 .isEqualTo("/yet_another_poster.jpg");
 
         assertThat(myCollection.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnCollectionById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(CollectionContract.COLUMN_BACKDROP_PATH, "/dOSECZImeyZldoq0ObieBE0lwie.jpg");
+        value1.put(CollectionContract._ID, 645L);
+        value1.put(CollectionContract.COLUMN_NAME, "James Bond Collection");
+        value1.put(CollectionContract.COLUMN_POSTER_PATH, "/HORpg5CSkmeQlAolx3bKMrKgfi.jpg");
+        ContentValues value2 = new ContentValues();
+        value2.put(CollectionContract.COLUMN_BACKDROP_PATH, "/other_backdrop.jpg");
+        value2.put(CollectionContract._ID, 12L);
+        value2.put(CollectionContract.COLUMN_NAME, "Other Collection");
+        value2.put(CollectionContract.COLUMN_POSTER_PATH, "/other_poster.jpg");
+        providerDelegate.bulkInsert(
+                sqlHelper.getWritableDatabase(),
+                Uri.parse("content://content_authority/collection/645"),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

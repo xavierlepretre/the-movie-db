@@ -100,6 +100,17 @@ public class ContentResolverSpokenLanguageTest
         assertThat(spokenLanguageCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnSpokenLanguageById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(SpokenLanguageContract._ID, "en");
+        values.put(SpokenLanguageContract.COLUMN_NAME, "English");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                SpokenLanguageEntity.buildUri(LanguageCode.en),
+                values);
+    }
+
     @Test
     public void insert_getsNotified() throws Exception
     {
@@ -238,6 +249,20 @@ public class ContentResolverSpokenLanguageTest
         assertThat(spokenLanguage.getIso639Dash1()).isEqualTo(LanguageCode.fr);
         assertThat(spokenLanguage.getName()).isEqualTo("French");
         assertThat(spokenLanguageCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnSpokenLanguageById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(SpokenLanguageContract._ID, "en");
+        value1.put(SpokenLanguageContract.COLUMN_NAME, "English");
+        ContentValues value2 = new ContentValues();
+        value2.put(SpokenLanguageContract._ID, "fr");
+        value2.put(SpokenLanguageContract.COLUMN_NAME, "French");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                SpokenLanguageEntity.buildUri(LanguageCode.en),
+                new ContentValues[]{value1, value2});
     }
 
     @Test

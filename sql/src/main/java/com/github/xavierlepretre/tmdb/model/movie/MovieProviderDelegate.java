@@ -12,14 +12,18 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 public class MovieProviderDelegate implements EntityProviderDelegate
 {
     private static final int MOVIES = 100;
     private static final int MOVIE_BY_ID = 101;
+    private static final int MOVIES_IN_COLLECTION = 102;
     private static final int INDEX_INSERT_RESOLVE_CONFLICT_REPLACE = 5;
 
     @NonNull private final String contentAuthority;
     @NonNull private final Uri entityContentUri;
+    @NonNull private final Uri collectionEntityContentUri;
     @NonNull private final String contentDirType;
     @NonNull private final String contentItemType;
     @NonNull private final UriMatcher uriMatcher;
@@ -27,22 +31,26 @@ public class MovieProviderDelegate implements EntityProviderDelegate
     public MovieProviderDelegate(
             @NonNull String contentAuthority,
             @NonNull Uri entityContentUri,
+            @NonNull Uri collectionEntityContentUri,
             @NonNull String contentDirType,
             @NonNull String contentItemType)
     {
         this.contentAuthority = contentAuthority;
         this.entityContentUri = entityContentUri;
+        this.collectionEntityContentUri = collectionEntityContentUri;
         this.contentDirType = contentDirType;
         this.contentItemType = contentItemType;
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(contentAuthority, MovieContract.PATH, MOVIES);
         uriMatcher.addURI(contentAuthority, MovieContract.PATH + "/#", MOVIE_BY_ID);
+        uriMatcher.addURI(contentAuthority, CollectionContract.PATH + "/#/" + MovieContract.PATH, MOVIES_IN_COLLECTION);
     }
 
     @Override public void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch)
     {
         uriMatcher.addURI(contentAuthority, MovieContract.PATH, outsideMatch);
         uriMatcher.addURI(contentAuthority, MovieContract.PATH + "/#", outsideMatch);
+        uriMatcher.addURI(contentAuthority, CollectionContract.PATH + "/#/" + MovieContract.PATH, outsideMatch);
     }
 
     @Override @Nullable public String getType(@NonNull Uri uri)
@@ -50,6 +58,7 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         switch (uriMatcher.match(uri))
         {
             case MOVIES:
+            case MOVIES_IN_COLLECTION:
                 return contentDirType;
             case MOVIE_BY_ID:
                 return contentItemType;
@@ -82,6 +91,16 @@ public class MovieProviderDelegate implements EntityProviderDelegate
                         limit);
             case MOVIE_BY_ID:
                 return getMovieById(readableDb,
+                        uri,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        groupBy,
+                        having,
+                        sortOrder,
+                        limit);
+            case MOVIES_IN_COLLECTION:
+                return getMoviesInCollection(readableDb,
                         uri,
                         projection,
                         selection,
@@ -152,9 +171,59 @@ public class MovieProviderDelegate implements EntityProviderDelegate
                 limit);
     }
 
+    @Nullable public Cursor getMoviesInCollection(
+            @NonNull SQLiteDatabase readableDb,
+            @NonNull Uri uri,
+            @Nullable String[] projection,
+            @Nullable String selection,
+            @Nullable String[] selectionArgs,
+            @Nullable String groupBy,
+            @Nullable String having,
+            @Nullable String sortOrder,
+            @Nullable String limit)
+    {
+        String id = getCollectionId(uri);
+        String newSelection = MovieContract.TABLE_NAME + "." + MovieContract.COLUMN_BELONGS_TO_COLLECTION_ID + "=?";
+        String[] newSelectionArgs = new String[selectionArgs == null ? 1 : selectionArgs.length + 1];
+        int i = 0;
+        if (selectionArgs != null)
+        {
+            for (i = 0; i < selectionArgs.length; i++)
+            {
+                newSelectionArgs[i] = selectionArgs[i];
+            }
+        }
+        newSelectionArgs[i] = id;
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(MovieContract.TABLE_NAME);
+        return queryBuilder.query(readableDb,
+                projection,
+                selection == null ? newSelection : selection + " AND " + newSelection,
+                newSelectionArgs,
+                groupBy,
+                having,
+                sortOrder,
+                limit);
+    }
+
     @NonNull public String getMovieId(@NonNull Uri uri)
     {
-        return uri.getPathSegments().get(1);
+        List<String> pathSegments = uri.getPathSegments();
+        if (!pathSegments.get(0).equals(MovieContract.PATH))
+        {
+            throw new IllegalArgumentException(uri.toString() + " does not describe a movie");
+        }
+        return pathSegments.get(1);
+    }
+
+    @NonNull public String getCollectionId(@NonNull Uri uri)
+    {
+        List<String> pathSegments = uri.getPathSegments();
+        if (!pathSegments.get(0).equals(CollectionContract.PATH))
+        {
+            throw new IllegalArgumentException(uri.toString() + " does not describe a collection");
+        }
+        return pathSegments.get(1);
     }
 
     @Override @Nullable public Uri insert(
@@ -242,6 +311,29 @@ public class MovieProviderDelegate implements EntityProviderDelegate
     {
         return entityContentUri.buildUpon()
                 .appendPath(Long.toString(id))
+                .build();
+    }
+
+    @NonNull public Uri buildCollectionMoviesLocation(@NonNull CollectionId id)
+    {
+        return buildCollectionMoviesLocation(collectionEntityContentUri, id.getId());
+    }
+
+    @NonNull private Uri buildCollectionMoviesLocation(long id)
+    {
+        return buildCollectionMoviesLocation(collectionEntityContentUri, id);
+    }
+
+    @NonNull public static Uri buildCollectionMoviesLocation(@NonNull Uri collectionEntityContentUri, @NonNull CollectionId id)
+    {
+        return buildCollectionMoviesLocation(collectionEntityContentUri, id.getId());
+    }
+
+    @NonNull private static Uri buildCollectionMoviesLocation(@NonNull Uri collectionEntityContentUri, long id)
+    {
+        return collectionEntityContentUri.buildUpon()
+                .appendPath(Long.toString(id))
+                .appendPath(MovieContract.PATH)
                 .build();
     }
 

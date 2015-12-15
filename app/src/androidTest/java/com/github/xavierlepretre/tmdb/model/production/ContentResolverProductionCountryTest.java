@@ -101,6 +101,17 @@ public class ContentResolverProductionCountryTest
         assertThat(productionCountryCursor.moveToNext()).isFalse();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void insertOnProductionCountryById_fails() throws Exception
+    {
+        ContentValues values = new ContentValues();
+        values.put(ProductionCountryContract._ID, "GB");
+        values.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        InstrumentationRegistry.getTargetContext().getContentResolver().insert(
+                ProductionCountryEntity.buildUri(CountryCode.GB),
+                values);
+    }
+
     @Test
     public void insert_getsNotified() throws Exception
     {
@@ -239,6 +250,20 @@ public class ContentResolverProductionCountryTest
         assertThat(productionCountry.getIso3166Dash1()).isEqualTo(CountryCode.US);
         assertThat(productionCountry.getName()).isEqualTo("United States of America");
         assertThat(productionCountryCursor.moveToNext()).isFalse();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void bulkInsertOnProductionCountryById_fails() throws Exception
+    {
+        ContentValues value1 = new ContentValues();
+        value1.put(ProductionCountryContract._ID, "GB");
+        value1.put(ProductionCountryContract.COLUMN_NAME, "United Kingdom");
+        ContentValues value2 = new ContentValues();
+        value2.put(ProductionCountryContract._ID, "US");
+        value2.put(ProductionCountryContract.COLUMN_NAME, "United States of America");
+        InstrumentationRegistry.getTargetContext().getContentResolver().bulkInsert(
+                ProductionCountryEntity.buildUri(CountryCode.GB),
+                new ContentValues[]{value1, value2});
     }
 
     @Test
