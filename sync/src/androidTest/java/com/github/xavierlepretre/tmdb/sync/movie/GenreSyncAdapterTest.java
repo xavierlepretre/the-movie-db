@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
-import com.github.xavierlepretre.tmdb.model.movie.ContentValuesGenreFactory;
+import com.github.xavierlepretre.tmdb.model.movie.GenreContentValuesFactory;
 import com.github.xavierlepretre.tmdb.model.movie.GenreContract;
 import com.github.xavierlepretre.tmdb.model.movie.GenreDTO;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
@@ -40,7 +40,7 @@ public class GenreSyncAdapterTest
 {
     private Call<GenreListDTO> call;
     private TmdbService service;
-    private ContentValuesGenreFactory factory;
+    private GenreContentValuesFactory factory;
     private GenreSyncAdapter syncAdapter;
     private Bundle extras;
     private ContentProviderClient contentProviderClient;
@@ -53,7 +53,7 @@ public class GenreSyncAdapterTest
         call = mock(Call.class);
         service = mock(TmdbService.class);
         when(service.getMovieGenreList(any(LanguageCode.class))).thenReturn(call);
-        factory = spy(new ContentValuesGenreFactory());
+        factory = spy(new GenreContentValuesFactory());
         syncAdapter = new GenreSyncAdapter(service, factory);
         extras = new Bundle();
         contentProviderClient = mock(ContentProviderClient.class);

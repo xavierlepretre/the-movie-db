@@ -11,14 +11,14 @@ import java.util.Vector;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
-public class ContentValuesProductionCompanyFactoryTest
+public class ProductionCompanyContentValuesFactoryTest
 {
-    private ContentValuesProductionCompanyFactory factory;
+    private ProductionCompanyContentValuesFactory factory;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = spy(new ContentValuesProductionCompanyFactory());
+        factory = spy(new ProductionCompanyContentValuesFactory());
     }
 
     @Test

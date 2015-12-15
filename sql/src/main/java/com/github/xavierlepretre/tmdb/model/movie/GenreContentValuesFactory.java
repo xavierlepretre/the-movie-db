@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import java.util.Collection;
 import java.util.Vector;
 
-public class ContentValuesGenreFactory
+public class GenreContentValuesFactory
 {
     @NonNull public Vector<ContentValues> createFrom(@NonNull GenreListDTO genreDTOs)
     {

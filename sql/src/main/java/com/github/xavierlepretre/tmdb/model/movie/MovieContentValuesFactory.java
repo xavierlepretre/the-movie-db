@@ -10,12 +10,12 @@ import java.util.Collection;
 import java.util.TimeZone;
 import java.util.Vector;
 
-public class ContentValuesMovieFactory
+public class MovieContentValuesFactory
 {
     @NonNull private final SimpleDateFormat formatter;
 
     @SuppressLint("SimpleDateFormat")
-    public ContentValuesMovieFactory()
+    public MovieContentValuesFactory()
     {
         formatter = new SimpleDateFormat(MovieContract.RELEASE_DATE_FORMAT);
         formatter.setTimeZone(TimeZone.getTimeZone(MovieContract.RELEASE_DATE_TIME_ZONE));

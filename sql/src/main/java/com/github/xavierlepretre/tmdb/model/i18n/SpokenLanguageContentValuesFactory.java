@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.Collection;
 import java.util.Vector;
 
-public class ContentValuesSpokenLanguageFactory
+public class SpokenLanguageContentValuesFactory
 {
     @NonNull public Vector<ContentValues> createFrom(@NonNull Collection<SpokenLanguageDTO> spokenLanguageDTOs)
     {

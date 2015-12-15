@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 
-public class ContentValuesConfigurationFactory
+public class ConfigurationContentValuesFactory
 {
     @NonNull public ContentValues createFrom(@NonNull ConfigurationDTO configurationDTO)
     {

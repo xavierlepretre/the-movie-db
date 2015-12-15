@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.Collection;
 import java.util.Vector;
 
-public class ContentValuesProductionCompanyFactory
+public class ProductionCompanyContentValuesFactory
 {
     @NonNull public Vector<ContentValues> createFrom(@NonNull Collection<ProductionCompanyDTO> productionCompanyDTOs)
     {

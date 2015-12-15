@@ -23,17 +23,17 @@ import java.util.Vector;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
-public class ContentValuesMovieFactoryTest
+public class MovieContentValuesFactoryTest
 {
     private SimpleDateFormat formatter;
-    private ContentValuesMovieFactory factory;
+    private MovieContentValuesFactory factory;
 
     @Before
     public void setUp() throws Exception
     {
         formatter = new SimpleDateFormat(MovieContract.RELEASE_DATE_FORMAT);
         formatter.setTimeZone(TimeZone.getTimeZone(MovieContract.RELEASE_DATE_TIME_ZONE));
-        factory = spy(new ContentValuesMovieFactory());
+        factory = spy(new MovieContentValuesFactory());
     }
 
     @NonNull  private MovieDTO getMovie1() throws Exception

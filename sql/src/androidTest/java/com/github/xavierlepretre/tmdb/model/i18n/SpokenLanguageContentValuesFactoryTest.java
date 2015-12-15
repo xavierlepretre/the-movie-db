@@ -13,14 +13,14 @@ import java.util.Vector;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
-public class ContentValuesSpokenLanguageFactoryTest
+public class SpokenLanguageContentValuesFactoryTest
 {
-    private ContentValuesSpokenLanguageFactory factory;
+    private SpokenLanguageContentValuesFactory factory;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = spy(new ContentValuesSpokenLanguageFactory());
+        factory = spy(new SpokenLanguageContentValuesFactory());
     }
 
     @Test

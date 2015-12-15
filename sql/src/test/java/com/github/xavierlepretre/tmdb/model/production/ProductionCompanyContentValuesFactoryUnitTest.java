@@ -2,8 +2,6 @@ package com.github.xavierlepretre.tmdb.model.production;
 
 import android.content.ContentValues;
 
-import com.neovisionaries.i18n.CountryCode;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,36 +15,36 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ContentValuesProductionCountryFactoryUnitTest
+public class ProductionCompanyContentValuesFactoryUnitTest
 {
-    private ContentValuesProductionCountryFactory factory;
+    private ProductionCompanyContentValuesFactory factory;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = mock(ContentValuesProductionCountryFactory.class);
+        factory = mock(ProductionCompanyContentValuesFactory.class);
     }
 
     @Test
     public void populate_works() throws Exception
     {
         ContentValues values = mock(ContentValues.class);
-        ProductionCountryDTO dto = new ProductionCountryDTO(CountryCode.GB, "United Kingdom");
-        doCallRealMethod().when(factory).populate(any(ContentValues.class), any(ProductionCountryDTO.class));
+            ProductionCompanyDTO dto = new ProductionCompanyDTO(new ProductionCompanyId(5), "Columbia Pictures");
+        doCallRealMethod().when(factory).populate(any(ContentValues.class), any(ProductionCompanyDTO.class));
         factory.populate(values, dto);
         verify(values).put(
-                eq(ProductionCountryContract._ID),
-                eq("GB"));
+                eq(ProductionCompanyContract._ID),
+                eq(5));
         verify(values).put(
-                eq(ProductionCountryContract.COLUMN_NAME),
-                eq("United Kingdom"));
+                eq(ProductionCompanyContract.COLUMN_NAME),
+                eq("Columbia Pictures"));
     }
 
     @Test
     public void createSingle_callsPopulate() throws Exception
     {
-        ProductionCountryDTO dto = new ProductionCountryDTO(CountryCode.GB, "United Kingdom");
-        doCallRealMethod().when(factory).createFrom(any(ProductionCountryDTO.class));
+        ProductionCompanyDTO dto = new ProductionCompanyDTO(new ProductionCompanyId(5), "Columbia Pictures");
+        doCallRealMethod().when(factory).createFrom(any(ProductionCompanyDTO.class));
         factory.createFrom(dto);
         verify(factory).populate(notNull(ContentValues.class), eq(dto));
     }
@@ -54,9 +52,9 @@ public class ContentValuesProductionCountryFactoryUnitTest
     @Test
     public void createVectorFromCollection_callsSingle() throws Exception
     {
-        ProductionCountryDTO dto1 = new ProductionCountryDTO(CountryCode.GB, "United Kingdom");
-        ProductionCountryDTO dto2 = new ProductionCountryDTO(CountryCode.US, "United States of America");
-        doCallRealMethod().when(factory).createFrom(anyCollectionOf(ProductionCountryDTO.class));
+        ProductionCompanyDTO dto1 = new ProductionCompanyDTO(new ProductionCompanyId(5), "Columbia Pictures");
+        ProductionCompanyDTO dto2 = new ProductionCompanyDTO(new ProductionCompanyId(10761), "Danjaq");
+        doCallRealMethod().when(factory).createFrom(anyCollectionOf(ProductionCompanyDTO.class));
         factory.createFrom(Arrays.asList(dto1, dto2));
         verify(factory).createFrom(eq(dto1));
         verify(factory).createFrom(eq(dto2));

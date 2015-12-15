@@ -13,15 +13,15 @@ import java.util.Arrays;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
-public class ContentValuesConfigurationFactoryTest
+public class ConfigurationContentValuesFactoryTest
 {
-    private ContentValuesConfigurationFactory factory;
+    private ConfigurationContentValuesFactory factory;
     private ConfigurationDTO dto1;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = spy(new ContentValuesConfigurationFactory());
+        factory = spy(new ConfigurationContentValuesFactory());
         dto1 = new ConfigurationDTO(
                 new ImagesConfDTO(
                         "http://image.tmdb.org/t/p/",

@@ -16,15 +16,15 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ContentValuesConfigurationFactoryUnitTest
+public class ConfigurationContentValuesFactoryUnitTest
 {
-    private ContentValuesConfigurationFactory factory;
+    private ConfigurationContentValuesFactory factory;
     private ConfigurationDTO dto1;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = mock(ContentValuesConfigurationFactory.class);
+        factory = mock(ConfigurationContentValuesFactory.class);
         dto1 = new ConfigurationDTO(
                 new ImagesConfDTO(
                         "http://image.tmdb.org/t/p/",

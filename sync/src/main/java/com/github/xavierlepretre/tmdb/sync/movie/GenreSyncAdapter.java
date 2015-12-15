@@ -11,7 +11,7 @@ import android.support.annotation.WorkerThread;
 
 import com.github.xavierlepretre.tmdb.TmdbRetrofitException;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
-import com.github.xavierlepretre.tmdb.model.movie.ContentValuesGenreFactory;
+import com.github.xavierlepretre.tmdb.model.movie.GenreContentValuesFactory;
 import com.github.xavierlepretre.tmdb.model.movie.GenreListDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
@@ -24,10 +24,10 @@ import retrofit.Response;
 public class GenreSyncAdapter
 {
     @NonNull private final TmdbService tmdbService;
-    @NonNull private final ContentValuesGenreFactory factory;
+    @NonNull private final GenreContentValuesFactory factory;
 
     public GenreSyncAdapter(@NonNull TmdbService tmdbService,
-                            @NonNull ContentValuesGenreFactory factory)
+                            @NonNull GenreContentValuesFactory factory)
     {
         this.tmdbService = tmdbService;
         this.factory = factory;

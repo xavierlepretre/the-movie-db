@@ -17,14 +17,14 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ContentValuesCollectionFactoryUnitTest
+public class CollectionContentValuesFactoryUnitTest
 {
-    private ContentValuesCollectionFactory factory;
+    private CollectionContentValuesFactory factory;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = mock(ContentValuesCollectionFactory.class);
+        factory = mock(CollectionContentValuesFactory.class);
     }
 
     @Test

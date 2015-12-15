@@ -11,8 +11,8 @@ import android.support.annotation.WorkerThread;
 
 import com.github.xavierlepretre.tmdb.TmdbRetrofitException;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
+import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContentValuesFactory;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
-import com.github.xavierlepretre.tmdb.model.conf.ContentValuesConfigurationFactory;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 
 import java.io.IOException;
@@ -22,10 +22,10 @@ import retrofit.Response;
 public class ConfigurationSyncAdapter
 {
     @NonNull private final TmdbService tmdbService;
-    @NonNull private final ContentValuesConfigurationFactory factory;
+    @NonNull private final ConfigurationContentValuesFactory factory;
 
     public ConfigurationSyncAdapter(@NonNull TmdbService tmdbService,
-                                    @NonNull ContentValuesConfigurationFactory factory)
+                                    @NonNull ConfigurationContentValuesFactory factory)
     {
         this.tmdbService = tmdbService;
         this.factory = factory;

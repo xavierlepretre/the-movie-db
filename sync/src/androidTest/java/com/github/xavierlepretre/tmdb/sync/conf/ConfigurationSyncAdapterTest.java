@@ -10,10 +10,10 @@ import android.os.RemoteException;
 import com.github.xavierlepretre.tmdb.TmdbRetrofitException;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ChangeKey;
+import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContentValuesFactory;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
-import com.github.xavierlepretre.tmdb.model.conf.ContentValuesConfigurationFactory;
 import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
 import com.github.xavierlepretre.tmdb.model.conf.ImagesConfDTO;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
@@ -46,7 +46,7 @@ public class ConfigurationSyncAdapterTest
 {
     private Call<ConfigurationDTO> call;
     private TmdbService service;
-    private ContentValuesConfigurationFactory factory;
+    private ConfigurationContentValuesFactory factory;
     private ConfigurationSyncAdapter syncAdapter;
     private Bundle extras;
     private ContentProviderClient contentProviderClient;
@@ -59,7 +59,7 @@ public class ConfigurationSyncAdapterTest
         call = mock(Call.class);
         service = mock(TmdbService.class);
         when(service.getConfiguration()).thenReturn(call);
-        factory = spy(new ContentValuesConfigurationFactory());
+        factory = spy(new ConfigurationContentValuesFactory());
         syncAdapter = new ConfigurationSyncAdapter(service, factory);
         extras = new Bundle();
         contentProviderClient = mock(ContentProviderClient.class);

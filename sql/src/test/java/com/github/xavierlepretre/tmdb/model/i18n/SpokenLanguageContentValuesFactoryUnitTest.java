@@ -1,4 +1,6 @@
-package com.github.xavierlepretre.tmdb.model.production;
+package com.github.xavierlepretre.tmdb.model.i18n;
+
+import com.neovisionaries.i18n.LanguageCode;
 
 import android.content.ContentValues;
 
@@ -15,36 +17,36 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ContentValuesProductionCompanyFactoryUnitTest
+public class SpokenLanguageContentValuesFactoryUnitTest
 {
-    private ContentValuesProductionCompanyFactory factory;
+    private SpokenLanguageContentValuesFactory factory;
 
     @Before
     public void setUp() throws Exception
     {
-        factory = mock(ContentValuesProductionCompanyFactory.class);
+        factory = mock(SpokenLanguageContentValuesFactory.class);
     }
 
     @Test
     public void populate_works() throws Exception
     {
         ContentValues values = mock(ContentValues.class);
-            ProductionCompanyDTO dto = new ProductionCompanyDTO(new ProductionCompanyId(5), "Columbia Pictures");
-        doCallRealMethod().when(factory).populate(any(ContentValues.class), any(ProductionCompanyDTO.class));
+        SpokenLanguageDTO dto = new SpokenLanguageDTO(LanguageCode.en, "English");
+        doCallRealMethod().when(factory).populate(any(ContentValues.class), any(SpokenLanguageDTO.class));
         factory.populate(values, dto);
         verify(values).put(
-                eq(ProductionCompanyContract._ID),
-                eq(5));
+                eq(SpokenLanguageContract._ID),
+                eq("en"));
         verify(values).put(
-                eq(ProductionCompanyContract.COLUMN_NAME),
-                eq("Columbia Pictures"));
+                eq(SpokenLanguageContract.COLUMN_NAME),
+                eq("English"));
     }
 
     @Test
     public void createSingle_callsPopulate() throws Exception
     {
-        ProductionCompanyDTO dto = new ProductionCompanyDTO(new ProductionCompanyId(5), "Columbia Pictures");
-        doCallRealMethod().when(factory).createFrom(any(ProductionCompanyDTO.class));
+        SpokenLanguageDTO dto = new SpokenLanguageDTO(LanguageCode.en, "English");
+        doCallRealMethod().when(factory).createFrom(any(SpokenLanguageDTO.class));
         factory.createFrom(dto);
         verify(factory).populate(notNull(ContentValues.class), eq(dto));
     }
@@ -52,9 +54,9 @@ public class ContentValuesProductionCompanyFactoryUnitTest
     @Test
     public void createVectorFromCollection_callsSingle() throws Exception
     {
-        ProductionCompanyDTO dto1 = new ProductionCompanyDTO(new ProductionCompanyId(5), "Columbia Pictures");
-        ProductionCompanyDTO dto2 = new ProductionCompanyDTO(new ProductionCompanyId(10761), "Danjaq");
-        doCallRealMethod().when(factory).createFrom(anyCollectionOf(ProductionCompanyDTO.class));
+        SpokenLanguageDTO dto1 = new SpokenLanguageDTO(LanguageCode.en, "English");
+        SpokenLanguageDTO dto2 = new SpokenLanguageDTO(LanguageCode.fr, "French");
+        doCallRealMethod().when(factory).createFrom(anyCollectionOf(SpokenLanguageDTO.class));
         factory.createFrom(Arrays.asList(dto1, dto2));
         verify(factory).createFrom(eq(dto1));
         verify(factory).createFrom(eq(dto2));
