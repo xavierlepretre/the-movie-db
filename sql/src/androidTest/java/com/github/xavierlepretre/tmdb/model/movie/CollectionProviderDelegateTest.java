@@ -153,7 +153,7 @@ public class CollectionProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/collection/645");
 
@@ -184,7 +184,7 @@ public class CollectionProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/collection/645");
 
@@ -193,7 +193,7 @@ public class CollectionProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/collection/645");
 
@@ -222,7 +222,7 @@ public class CollectionProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/collection/645");
 
@@ -269,7 +269,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -290,7 +290,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -312,7 +312,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -333,7 +333,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -371,7 +371,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(0);
 
         Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -394,7 +394,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                value1))
+                value1).getInserted())
                 .isEqualTo(Uri.parse("content://content_authority/collection/645"));
 
         ContentValues value2 = new ContentValues();
@@ -411,7 +411,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -465,7 +465,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myCollection = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -691,7 +691,7 @@ public class CollectionProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection/645"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -722,7 +722,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection/645"),
                 CollectionContract.COLUMN_NAME + "=?",
-                new String[]{"James Bond Collection"})).isEqualTo(1);
+                new String[]{"James Bond Collection"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -753,7 +753,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection/645"),
                 CollectionContract.COLUMN_NAME + "=?",
-                new String[]{"Other Collection"})).isEqualTo(0);
+                new String[]{"Other Collection"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -793,7 +793,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection/645"),
                 CollectionContract.COLUMN_NAME + "=?",
-                new String[]{"Other Collection"})).isEqualTo(0);
+                new String[]{"Other Collection"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -842,7 +842,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection"),
                 CollectionContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"James%"})).isEqualTo(2);
+                new String[]{"James%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -875,7 +875,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection/645"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -918,7 +918,7 @@ public class CollectionProviderDelegateTest
                 Uri.parse("content://content_authority/collection/645"),
                 newValues,
                 CollectionContract.COLUMN_NAME + "=?",
-                new String[]{"James Bond Collection"})).isEqualTo(1);
+                new String[]{"James Bond Collection"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -962,7 +962,7 @@ public class CollectionProviderDelegateTest
                 Uri.parse("content://content_authority/collection/645"),
                 newValues,
                 CollectionContract.COLUMN_NAME + "=?",
-                new String[]{"James Bond Collection"})).isEqualTo(1);
+                new String[]{"James Bond Collection"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1015,7 +1015,7 @@ public class CollectionProviderDelegateTest
                 Uri.parse("content://content_authority/collection/645"),
                 newValues,
                 CollectionContract.COLUMN_NAME + "=?",
-                new String[]{"Fake Collection"})).isEqualTo(0);
+                new String[]{"Fake Collection"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1057,7 +1057,7 @@ public class CollectionProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/collection/645"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1109,7 +1109,7 @@ public class CollectionProviderDelegateTest
                 Uri.parse("content://content_authority/collection"),
                 newValues,
                 null,
-                null)).isEqualTo(2);
+                null).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1190,7 +1190,7 @@ public class CollectionProviderDelegateTest
                 Uri.parse("content://content_authority/collection"),
                 newValues,
                 CollectionContract.TABLE_NAME + "." + CollectionContract._ID + "<=?",
-                new String[]{"12"})).isEqualTo(2);
+                new String[]{"12"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

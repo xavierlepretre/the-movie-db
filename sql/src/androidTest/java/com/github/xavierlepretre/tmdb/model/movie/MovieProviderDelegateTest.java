@@ -244,7 +244,7 @@ public class MovieProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/movie/12");
 
@@ -264,7 +264,7 @@ public class MovieProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/movie/12");
 
@@ -273,7 +273,7 @@ public class MovieProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/movie/12");
 
@@ -296,7 +296,7 @@ public class MovieProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/movie/12");
 
@@ -357,7 +357,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -373,7 +373,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -391,7 +391,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -406,7 +406,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myMovie = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -430,7 +430,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(0);
 
         Cursor myMovie = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -449,7 +449,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                value1))
+                value1).getInserted())
                 .isEqualTo(Uri.parse("content://content_authority/movie/12"));
 
         value1.put(MovieContract.COLUMN_TITLE, "title2");
@@ -460,7 +460,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myMovie = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -494,7 +494,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myMovie = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -744,7 +744,7 @@ public class MovieProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -771,7 +771,7 @@ public class MovieProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
                 MovieContract.COLUMN_TITLE + "=?",
-                new String[]{"title1"})).isEqualTo(1);
+                new String[]{"title1"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -798,7 +798,7 @@ public class MovieProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
                 MovieContract.COLUMN_TITLE + "=?",
-                new String[]{"title2"})).isEqualTo(0);
+                new String[]{"title2"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -832,7 +832,7 @@ public class MovieProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
                 MovieContract.COLUMN_TITLE + "=?",
-                new String[]{"title2"})).isEqualTo(0);
+                new String[]{"title2"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -873,7 +873,7 @@ public class MovieProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie"),
                 MovieContract.COLUMN_TITLE + " LIKE ?",
-                new String[]{"title%"})).isEqualTo(2);
+                new String[]{"title%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -902,7 +902,7 @@ public class MovieProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -935,7 +935,7 @@ public class MovieProviderDelegateTest
                 Uri.parse("content://content_authority/movie/12"),
                 newValues,
                 MovieContract.COLUMN_TITLE + "=?",
-                new String[]{"title1"})).isEqualTo(1);
+                new String[]{"title1"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -969,7 +969,7 @@ public class MovieProviderDelegateTest
                 Uri.parse("content://content_authority/movie/12"),
                 newValues,
                 MovieContract.COLUMN_TITLE + "=?",
-                new String[]{"title1"})).isEqualTo(1);
+                new String[]{"title1"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1012,7 +1012,7 @@ public class MovieProviderDelegateTest
                 Uri.parse("content://content_authority/movie/12"),
                 newValues,
                 MovieContract.COLUMN_TITLE + "=?",
-                new String[]{"title2"})).isEqualTo(0);
+                new String[]{"title2"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1043,7 +1043,7 @@ public class MovieProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/movie/12"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1084,7 +1084,7 @@ public class MovieProviderDelegateTest
                 Uri.parse("content://content_authority/movie"),
                 newValues,
                 null,
-                null)).isEqualTo(2);
+                null).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1145,7 +1145,7 @@ public class MovieProviderDelegateTest
                 Uri.parse("content://content_authority/movie"),
                 newValues,
                 MovieContract.TABLE_NAME + "." + MovieContract._ID + "<=?",
-                new String[]{"13"})).isEqualTo(2);
+                new String[]{"13"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

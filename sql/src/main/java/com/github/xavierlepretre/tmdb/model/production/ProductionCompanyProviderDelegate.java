@@ -11,6 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.xavierlepretre.tmdb.model.EntityProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListInsert;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListWithCount;
+
+import java.util.Collections;
 
 public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
 {
@@ -157,7 +161,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         return uri.getPathSegments().get(1);
     }
 
-    @Override @Nullable public Uri insert(
+    @NonNull @Override public NotificationListInsert insert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values)
@@ -176,15 +180,16 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
                         INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                 if (id <= 0)
                 {
-                    return null;
+                    return new NotificationListInsert(Collections.<Uri>emptyList(), null);
                 }
-                return buildProductionCompanyLocation(id);
+                Uri inserted = buildProductionCompanyLocation(id);
+                return new NotificationListInsert(Collections.singleton(inserted), inserted);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
 
-    @Override public int bulkInsert(
+    @NonNull @Override public NotificationListWithCount bulkInsert(
             @NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @NonNull ContentValues[] values)
     {
         switch (uriMatcher.match(uri))
@@ -217,7 +222,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
                 {
                     writableDb.endTransaction();
                 }
-                return returnCount;
+                return new NotificationListWithCount(Collections.singleton(uri), returnCount);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -247,7 +252,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         return entityContentUri.buildUpon().appendPath(Long.toString(id)).build();
     }
 
-    @Override public int delete(
+    @NonNull @Override public NotificationListWithCount delete(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
@@ -257,6 +262,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         {
             case PRODUCTION_COMPANIES:
                 return deleteProductionCompanies(writableDb,
+                        uri,
                         selection,
                         selectionArgs);
             case PRODUCTION_COMPANY_BY_ID:
@@ -269,15 +275,21 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int deleteProductionCompanies(
+    @NonNull public NotificationListWithCount deleteProductionCompanies(
             @NonNull SQLiteDatabase writableDb,
+            @NonNull Uri uri,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
     {
-        return writableDb.delete(ProductionCompanyContract.TABLE_NAME, selection, selectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.delete(
+                        ProductionCompanyContract.TABLE_NAME,
+                        selection,
+                        selectionArgs));
     }
 
-    public int deleteProductionCompanyById(
+    @NonNull public NotificationListWithCount deleteProductionCompanyById(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
@@ -295,13 +307,15 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
             }
         }
         newSelectionArgs[i] = id;
-        return writableDb.delete(
-                ProductionCompanyContract.TABLE_NAME,
-                selection == null ? newSelection : selection + " AND " + newSelection,
-                newSelectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.delete(
+                        ProductionCompanyContract.TABLE_NAME,
+                        selection == null ? newSelection : selection + " AND " + newSelection,
+                        newSelectionArgs));
     }
 
-    @Override public int update(
+    @NonNull @Override public NotificationListWithCount update(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,
@@ -312,6 +326,7 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         {
             case PRODUCTION_COMPANIES:
                 return updateProductionCompanies(writableDb,
+                        uri,
                         values,
                         selection,
                         selectionArgs);
@@ -326,17 +341,20 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int updateProductionCompanies(
+    @NonNull public NotificationListWithCount updateProductionCompanies(
             @NonNull SQLiteDatabase writableDb,
+            @NonNull Uri uri,
             @Nullable ContentValues values,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
     {
-        return writableDb.update(ProductionCompanyContract.TABLE_NAME,
-                values, selection, selectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.update(ProductionCompanyContract.TABLE_NAME,
+                        values, selection, selectionArgs));
     }
 
-    public int updateProductionCompanyById(
+    @NonNull public NotificationListWithCount updateProductionCompanyById(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,
@@ -355,10 +373,12 @@ public class ProductionCompanyProviderDelegate implements EntityProviderDelegate
             }
         }
         newSelectionArgs[i] = id;
-        return writableDb.update(
-                ProductionCompanyContract.TABLE_NAME,
-                values,
-                selection == null ? newSelection : selection + " AND " + newSelection,
-                newSelectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.update(
+                    ProductionCompanyContract.TABLE_NAME,
+                    values,
+                    selection == null ? newSelection : selection + " AND " + newSelection,
+                    newSelectionArgs));
     }
 }

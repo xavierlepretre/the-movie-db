@@ -1,5 +1,8 @@
 package com.github.xavierlepretre.tmdb.model;
 
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListInsert;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListWithCount;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +13,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
+
+import java.util.Collection;
 
 public class TmdbContentProvider extends ContentProvider
 {
@@ -80,18 +85,17 @@ public class TmdbContentProvider extends ContentProvider
         return writableDb;
     }
 
-    private void notifyResolver(@Nullable Uri uri)
+    private void notifyResolver(@NonNull Collection<Uri> uris)
     {
-        if (uri == null)
-        {
-            return;
-        }
         Context context = getContext();
         if (context == null)
         {
             return;
         }
-        context.getContentResolver().notifyChange(uri, null);
+        for (Uri uri : uris)
+        {
+            context.getContentResolver().notifyChange(uri, null);
+        }
     }
 
     @Nullable @Override public String getType(@NonNull Uri uri)
@@ -138,9 +142,9 @@ public class TmdbContentProvider extends ContentProvider
         {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        Uri inserted = helper.insert(getWritableDatabase(), uri, values);
-        notifyResolver(inserted);
-        return inserted;
+        NotificationListInsert inserted = helper.insert(getWritableDatabase(), uri, values);
+        notifyResolver(inserted.getToNotify());
+        return inserted.getInserted();
     }
 
     @Override public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values)
@@ -151,12 +155,9 @@ public class TmdbContentProvider extends ContentProvider
         {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        int inserted = helper.bulkInsert(getWritableDatabase(), uri, values);
-        if (inserted > 0)
-        {
-            notifyResolver(uri);
-        }
-        return inserted;
+        NotificationListWithCount inserted = helper.bulkInsert(getWritableDatabase(), uri, values);
+        notifyResolver(inserted.getToNotify());
+        return inserted.getCount();
     }
 
     @Override public int delete(
@@ -170,16 +171,13 @@ public class TmdbContentProvider extends ContentProvider
         {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        int deleted = helper.delete(
+        NotificationListWithCount deleted = helper.delete(
                 getWritableDatabase(),
                 uri,
                 selection,
                 selectionArgs);
-        if (deleted > 0)
-        {
-            notifyResolver(uri);
-        }
-        return deleted;
+        notifyResolver(deleted.getToNotify());
+        return deleted.getCount();
     }
 
     @Override public int update(
@@ -194,17 +192,14 @@ public class TmdbContentProvider extends ContentProvider
         {
             throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        int updated = helper.update(
+        NotificationListWithCount updated = helper.update(
                 getWritableDatabase(),
                 uri,
                 values,
                 selection,
                 selectionArgs);
-        if (updated > 0)
-        {
-            notifyResolver(uri);
-        }
-        return updated;
+        notifyResolver(updated.getToNotify());
+        return updated.getCount();
     }
 
     // You do not need to call this method. This is a method specifically to assist the testing

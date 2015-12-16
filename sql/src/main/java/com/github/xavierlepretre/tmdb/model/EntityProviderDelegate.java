@@ -1,5 +1,8 @@
 package com.github.xavierlepretre.tmdb.model;
 
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListInsert;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListWithCount;
+
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -25,23 +28,23 @@ public interface EntityProviderDelegate
             @Nullable String sortOrder,
             @Nullable String limit);
 
-    @Nullable Uri insert(
+    @NonNull NotificationListInsert insert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values);
 
-    int bulkInsert(
+    @NonNull NotificationListWithCount bulkInsert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @NonNull ContentValues[] values);
 
-    int delete(
+    @NonNull NotificationListWithCount delete(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
             @Nullable String[] selectionArgs);
 
-    int update(
+    @NonNull NotificationListWithCount update(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,

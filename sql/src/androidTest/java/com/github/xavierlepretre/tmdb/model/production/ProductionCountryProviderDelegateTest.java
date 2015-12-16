@@ -148,7 +148,7 @@ public class ProductionCountryProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/productionCountry/GB");
 
@@ -173,7 +173,7 @@ public class ProductionCountryProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/productionCountry/GB");
 
@@ -182,7 +182,7 @@ public class ProductionCountryProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/productionCountry/GB");
 
@@ -207,7 +207,7 @@ public class ProductionCountryProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/productionCountry/GB");
 
@@ -246,7 +246,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -263,7 +263,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -281,7 +281,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -298,7 +298,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -327,7 +327,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(0);
 
         Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -348,7 +348,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                value1))
+                value1).getInserted())
                 .isEqualTo(Uri.parse("content://content_authority/productionCountry/GB"));
 
         ContentValues value2 = new ContentValues();
@@ -361,7 +361,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -399,7 +399,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myProductionCountry = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -580,7 +580,7 @@ public class ProductionCountryProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -609,7 +609,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 ProductionCountryContract.COLUMN_NAME + "=?",
-                new String[]{"United Kingdom"})).isEqualTo(1);
+                new String[]{"United Kingdom"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -638,7 +638,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 ProductionCountryContract.COLUMN_NAME + "=?",
-                new String[]{"United States of America"})).isEqualTo(0);
+                new String[]{"United States of America"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -674,7 +674,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 ProductionCountryContract.COLUMN_NAME + "=?",
-                new String[]{"United States of America"})).isEqualTo(0);
+                new String[]{"United States of America"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -717,7 +717,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry"),
                 ProductionCountryContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"United%"})).isEqualTo(2);
+                new String[]{"United%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -748,7 +748,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -783,7 +783,7 @@ public class ProductionCountryProviderDelegateTest
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 newValues,
                 ProductionCountryContract.COLUMN_NAME + "=?",
-                new String[]{"United Kingdom"})).isEqualTo(1);
+                new String[]{"United Kingdom"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -819,7 +819,7 @@ public class ProductionCountryProviderDelegateTest
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 newValues,
                 ProductionCountryContract.COLUMN_NAME + "=?",
-                new String[]{"United Kingdom"})).isEqualTo(1);
+                new String[]{"United Kingdom"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -864,7 +864,7 @@ public class ProductionCountryProviderDelegateTest
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 newValues,
                 ProductionCountryContract.COLUMN_NAME + "=?",
-                new String[]{"United States of America"})).isEqualTo(0);
+                new String[]{"United States of America"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -898,7 +898,7 @@ public class ProductionCountryProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCountry/GB"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -940,7 +940,7 @@ public class ProductionCountryProviderDelegateTest
                 Uri.parse("content://content_authority/productionCountry"),
                 newValues,
                 null,
-                null)).isEqualTo(2);
+                null).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1003,7 +1003,7 @@ public class ProductionCountryProviderDelegateTest
                 Uri.parse("content://content_authority/productionCountry"),
                 newValues,
                 ProductionCountryContract.TABLE_NAME + "." + ProductionCountryContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"United%"})).isEqualTo(2);
+                new String[]{"United%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

@@ -85,7 +85,7 @@ public class ConfigurationProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                null);
+                null).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
@@ -130,7 +130,7 @@ public class ConfigurationProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
@@ -177,7 +177,7 @@ public class ConfigurationProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
@@ -222,7 +222,7 @@ public class ConfigurationProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
@@ -231,7 +231,7 @@ public class ConfigurationProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/configuration");
 
@@ -269,7 +269,7 @@ public class ConfigurationProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/configuration");
 
@@ -411,7 +411,7 @@ public class ConfigurationProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -446,7 +446,7 @@ public class ConfigurationProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
                 ConfigurationContract.COLUMN_CHANGE_KEYS + "=?",
-                new String[]{"key1,key2"})).isEqualTo(1);
+                new String[]{"key1,key2"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -481,7 +481,7 @@ public class ConfigurationProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
                 ConfigurationContract.COLUMN_CHANGE_KEYS + "=?",
-                new String[]{"key2,key1"})).isEqualTo(0);
+                new String[]{"key2,key1"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -518,7 +518,7 @@ public class ConfigurationProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/configuration"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -575,7 +575,7 @@ public class ConfigurationProviderDelegateTest
                 Uri.parse("content://content_authority/configuration"),
                 newValues,
                 ImagesConfSegment.COLUMN_SECURE_BASE_URL + "=?",
-                new String[]{"url2"})).isEqualTo(1);
+                new String[]{"url2"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -632,7 +632,7 @@ public class ConfigurationProviderDelegateTest
                 Uri.parse("content://content_authority/configuration"),
                 newValues,
                 ImagesConfSegment.COLUMN_SECURE_BASE_URL + "=?",
-                new String[]{"url3"})).isEqualTo(0);
+                new String[]{"url3"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

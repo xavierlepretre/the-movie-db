@@ -148,7 +148,7 @@ public class SpokenLanguageProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/spokenLanguage/en");
 
@@ -173,7 +173,7 @@ public class SpokenLanguageProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/spokenLanguage/en");
 
@@ -182,7 +182,7 @@ public class SpokenLanguageProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/spokenLanguage/en");
 
@@ -207,7 +207,7 @@ public class SpokenLanguageProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/spokenLanguage/en");
 
@@ -246,7 +246,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -263,7 +263,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -281,7 +281,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -298,7 +298,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor mySpokenLanguage = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -327,7 +327,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(0);
 
         Cursor mySpokenLanguage = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -348,7 +348,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                value1))
+                value1).getInserted())
                 .isEqualTo(Uri.parse("content://content_authority/spokenLanguage/en"));
 
         ContentValues value2 = new ContentValues();
@@ -361,7 +361,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor mySpokenLanguage = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -399,7 +399,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor mySpokenLanguage = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -580,7 +580,7 @@ public class SpokenLanguageProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage/en"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -609,7 +609,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 SpokenLanguageContract.COLUMN_NAME + "=?",
-                new String[]{"English"})).isEqualTo(1);
+                new String[]{"English"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -638,7 +638,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 SpokenLanguageContract.COLUMN_NAME + "=?",
-                new String[]{"French"})).isEqualTo(0);
+                new String[]{"French"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -674,7 +674,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 SpokenLanguageContract.COLUMN_NAME + "=?",
-                new String[]{"French"})).isEqualTo(0);
+                new String[]{"French"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -717,7 +717,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage"),
                 SpokenLanguageContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"E%"})).isEqualTo(2);
+                new String[]{"E%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -748,7 +748,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -783,7 +783,7 @@ public class SpokenLanguageProviderDelegateTest
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 newValues,
                 SpokenLanguageContract.COLUMN_NAME + "=?",
-                new String[]{"English"})).isEqualTo(1);
+                new String[]{"English"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -819,7 +819,7 @@ public class SpokenLanguageProviderDelegateTest
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 newValues,
                 SpokenLanguageContract.COLUMN_NAME + "=?",
-                new String[]{"English"})).isEqualTo(1);
+                new String[]{"English"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -864,7 +864,7 @@ public class SpokenLanguageProviderDelegateTest
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 newValues,
                 SpokenLanguageContract.COLUMN_NAME + "=?",
-                new String[]{"French"})).isEqualTo(0);
+                new String[]{"French"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -898,7 +898,7 @@ public class SpokenLanguageProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/spokenLanguage/en"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -940,7 +940,7 @@ public class SpokenLanguageProviderDelegateTest
                 Uri.parse("content://content_authority/spokenLanguage"),
                 newValues,
                 null,
-                null)).isEqualTo(2);
+                null).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1003,7 +1003,7 @@ public class SpokenLanguageProviderDelegateTest
                 Uri.parse("content://content_authority/spokenLanguage"),
                 newValues,
                 SpokenLanguageContract.TABLE_NAME + "." + SpokenLanguageContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"E%"})).isEqualTo(2);
+                new String[]{"E%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

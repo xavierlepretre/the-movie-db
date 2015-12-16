@@ -147,7 +147,7 @@ public class ProductionCompanyProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/productionCompany/5");
 
@@ -172,7 +172,7 @@ public class ProductionCompanyProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/productionCompany/5");
 
@@ -181,7 +181,7 @@ public class ProductionCompanyProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/productionCompany/5");
 
@@ -206,7 +206,7 @@ public class ProductionCompanyProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/productionCompany/5");
 
@@ -245,7 +245,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -262,7 +262,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -280,7 +280,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
     
@@ -297,7 +297,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -326,7 +326,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(0);
 
         Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -347,7 +347,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                value1))
+                value1).getInserted())
                 .isEqualTo(Uri.parse("content://content_authority/productionCompany/5"));
 
         ContentValues value2 = new ContentValues();
@@ -360,7 +360,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -398,7 +398,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myProductionCompany = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -579,7 +579,7 @@ public class ProductionCompanyProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany/5"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -608,7 +608,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany/5"),
                 ProductionCompanyContract.COLUMN_NAME + "=?",
-                new String[]{"Columbia Pictures"})).isEqualTo(1);
+                new String[]{"Columbia Pictures"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -637,7 +637,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany/5"),
                 ProductionCompanyContract.COLUMN_NAME + "=?",
-                new String[]{"Danjaq"})).isEqualTo(0);
+                new String[]{"Danjaq"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -673,7 +673,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany/5"),
                 ProductionCompanyContract.COLUMN_NAME + "=?",
-                new String[]{"Danjaq"})).isEqualTo(0);
+                new String[]{"Danjaq"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -716,7 +716,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany"),
                 ProductionCompanyContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"Danj%"})).isEqualTo(2);
+                new String[]{"Danj%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -747,7 +747,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany/5"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -782,7 +782,7 @@ public class ProductionCompanyProviderDelegateTest
                 Uri.parse("content://content_authority/productionCompany/5"),
                 newValues,
                 ProductionCompanyContract.COLUMN_NAME + "=?",
-                new String[]{"Columbia Pictures"})).isEqualTo(1);
+                new String[]{"Columbia Pictures"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -818,7 +818,7 @@ public class ProductionCompanyProviderDelegateTest
                 Uri.parse("content://content_authority/productionCompany/5"),
                 newValues,
                 ProductionCompanyContract.COLUMN_NAME + "=?",
-                new String[]{"Columbia Pictures"})).isEqualTo(1);
+                new String[]{"Columbia Pictures"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -863,7 +863,7 @@ public class ProductionCompanyProviderDelegateTest
                 Uri.parse("content://content_authority/productionCompany/5"),
                 newValues,
                 ProductionCompanyContract.COLUMN_NAME + "=?",
-                new String[]{"Danjaq"})).isEqualTo(0);
+                new String[]{"Danjaq"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -897,7 +897,7 @@ public class ProductionCompanyProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/productionCompany/5"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -939,7 +939,7 @@ public class ProductionCompanyProviderDelegateTest
                 Uri.parse("content://content_authority/productionCompany"),
                 newValues,
                 null,
-                null)).isEqualTo(2);
+                null).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -1002,7 +1002,7 @@ public class ProductionCompanyProviderDelegateTest
                 Uri.parse("content://content_authority/productionCompany"),
                 newValues,
                 ProductionCompanyContract.TABLE_NAME + "." + ProductionCompanyContract._ID + "<=?",
-                new String[]{"6"})).isEqualTo(2);
+                new String[]{"6"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

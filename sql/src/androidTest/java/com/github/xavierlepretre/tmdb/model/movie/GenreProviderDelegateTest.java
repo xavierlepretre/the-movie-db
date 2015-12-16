@@ -147,7 +147,7 @@ public class GenreProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/genre/3");
 
@@ -170,7 +170,7 @@ public class GenreProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/genre/3");
 
@@ -179,7 +179,7 @@ public class GenreProviderDelegateTest
         Uri replaced = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(replaced.toString()).isEqualTo("content://content_authority/genre/3");
 
@@ -202,7 +202,7 @@ public class GenreProviderDelegateTest
         Uri inserted = providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values);
+                values).getInserted();
         //noinspection ConstantConditions
         assertThat(inserted.toString()).isEqualTo("content://content_authority/genre/3");
 
@@ -239,7 +239,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -256,7 +256,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -274,7 +274,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(1);
     }
 
@@ -291,7 +291,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -316,7 +316,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(0);
 
         Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -337,7 +337,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.insert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                value1))
+                value1).getInserted())
                 .isEqualTo(Uri.parse("content://content_authority/genre/3"));
 
         ContentValues value2 = new ContentValues();
@@ -348,7 +348,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(2);
 
         Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -382,7 +382,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.bulkInsert(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
-                values))
+                values).getCount())
                 .isEqualTo(3);
 
         Cursor myGenre = providerDelegate.query(sqlHelper.getReadableDatabase(),
@@ -563,7 +563,7 @@ public class GenreProviderDelegateTest
         assertThat(providerDelegate.delete(
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre/3"),
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -592,7 +592,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre/3"),
                 GenreContract.COLUMN_NAME + "=?",
-                new String[]{"Adventure"})).isEqualTo(1);
+                new String[]{"Adventure"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -621,7 +621,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre/3"),
                 GenreContract.COLUMN_NAME + "=?",
-                new String[]{"Comic"})).isEqualTo(0);
+                new String[]{"Comic"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -657,7 +657,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre/3"),
                 GenreContract.COLUMN_NAME + "=?",
-                new String[]{"Comic"})).isEqualTo(0);
+                new String[]{"Comic"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -700,7 +700,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre"),
                 GenreContract.COLUMN_NAME + " LIKE ?",
-                new String[]{"A%"})).isEqualTo(2);
+                new String[]{"A%"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -731,7 +731,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre/3"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -766,7 +766,7 @@ public class GenreProviderDelegateTest
                 Uri.parse("content://content_authority/genre/3"),
                 newValues,
                 GenreContract.COLUMN_NAME + "=?",
-                new String[]{"Adventure"})).isEqualTo(1);
+                new String[]{"Adventure"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -802,7 +802,7 @@ public class GenreProviderDelegateTest
                 Uri.parse("content://content_authority/genre/3"),
                 newValues,
                 GenreContract.COLUMN_NAME + "=?",
-                new String[]{"Adventure"})).isEqualTo(1);
+                new String[]{"Adventure"}).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -847,7 +847,7 @@ public class GenreProviderDelegateTest
                 Uri.parse("content://content_authority/genre/3"),
                 newValues,
                 GenreContract.COLUMN_NAME + "=?",
-                new String[]{"Comic"})).isEqualTo(0);
+                new String[]{"Comic"}).getCount()).isEqualTo(0);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -881,7 +881,7 @@ public class GenreProviderDelegateTest
                 sqlHelper.getWritableDatabase(),
                 Uri.parse("content://content_authority/genre/3"),
                 newValues,
-                null, null)).isEqualTo(1);
+                null, null).getCount()).isEqualTo(1);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -923,7 +923,7 @@ public class GenreProviderDelegateTest
                 Uri.parse("content://content_authority/genre"),
                 newValues,
                 null,
-                null)).isEqualTo(2);
+                null).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),
@@ -986,7 +986,7 @@ public class GenreProviderDelegateTest
                 Uri.parse("content://content_authority/genre"),
                 newValues,
                 GenreContract.TABLE_NAME + "." + GenreContract._ID + "<=?",
-                new String[]{"4"})).isEqualTo(2);
+                new String[]{"4"}).getCount()).isEqualTo(2);
 
         Cursor found = providerDelegate.query(
                 sqlHelper.getReadableDatabase(),

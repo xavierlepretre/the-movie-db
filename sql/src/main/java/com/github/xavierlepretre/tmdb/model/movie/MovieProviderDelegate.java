@@ -1,6 +1,8 @@
 package com.github.xavierlepretre.tmdb.model.movie;
 
 import com.github.xavierlepretre.tmdb.model.EntityProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListInsert;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListWithCount;
 
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -12,6 +14,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MovieProviderDelegate implements EntityProviderDelegate
@@ -226,7 +229,7 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         return pathSegments.get(1);
     }
 
-    @Override @Nullable public Uri insert(
+    @NonNull @Override public NotificationListInsert insert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values)
@@ -245,15 +248,16 @@ public class MovieProviderDelegate implements EntityProviderDelegate
                         INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                 if (id <= 0)
                 {
-                    return null;
+                    return new NotificationListInsert(Collections.<Uri>emptyList(), null);
                 }
-                return buildMovieLocation(id);
+                Uri inserted = buildMovieLocation(id);
+                return new NotificationListInsert(Collections.singleton(inserted), inserted);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
 
-    @Override public int bulkInsert(
+    @NonNull @Override public NotificationListWithCount bulkInsert(
             @NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @NonNull ContentValues[] values)
     {
         switch (uriMatcher.match(uri))
@@ -286,7 +290,7 @@ public class MovieProviderDelegate implements EntityProviderDelegate
                 {
                     writableDb.endTransaction();
                 }
-                return returnCount;
+                return new NotificationListWithCount(Collections.singleton(uri), returnCount);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -324,12 +328,16 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         return buildCollectionMoviesLocation(collectionEntityContentUri, id);
     }
 
-    @NonNull public static Uri buildCollectionMoviesLocation(@NonNull Uri collectionEntityContentUri, @NonNull CollectionId id)
+    @NonNull public static Uri buildCollectionMoviesLocation(
+            @NonNull Uri collectionEntityContentUri,
+            @NonNull CollectionId id)
     {
         return buildCollectionMoviesLocation(collectionEntityContentUri, id.getId());
     }
 
-    @NonNull private static Uri buildCollectionMoviesLocation(@NonNull Uri collectionEntityContentUri, long id)
+    @NonNull private static Uri buildCollectionMoviesLocation(
+            @NonNull Uri collectionEntityContentUri,
+            long id)
     {
         return collectionEntityContentUri.buildUpon()
                 .appendPath(Long.toString(id))
@@ -337,7 +345,7 @@ public class MovieProviderDelegate implements EntityProviderDelegate
                 .build();
     }
 
-    @Override public int delete(
+    @NonNull @Override public NotificationListWithCount delete(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
@@ -347,6 +355,7 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         {
             case MOVIES:
                 return deleteMovies(writableDb,
+                        uri,
                         selection,
                         selectionArgs);
             case MOVIE_BY_ID:
@@ -359,15 +368,17 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int deleteMovies(
+    @NonNull public NotificationListWithCount deleteMovies(
             @NonNull SQLiteDatabase writableDb,
+            @NonNull Uri uri,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
     {
-        return writableDb.delete(MovieContract.TABLE_NAME, selection, selectionArgs);
+        return new NotificationListWithCount(Collections.singleton(uri),
+                writableDb.delete(MovieContract.TABLE_NAME, selection, selectionArgs));
     }
 
-    public int deleteMovieById(
+    @NonNull public NotificationListWithCount deleteMovieById(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
@@ -385,13 +396,15 @@ public class MovieProviderDelegate implements EntityProviderDelegate
             }
         }
         newSelectionArgs[i] = id;
-        return writableDb.delete(
-                MovieContract.TABLE_NAME,
-                selection == null ? newSelection : selection + " AND " + newSelection,
-                newSelectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.delete(
+                    MovieContract.TABLE_NAME,
+                    selection == null ? newSelection : selection + " AND " + newSelection,
+                    newSelectionArgs));
     }
 
-    @Override public int update(
+    @NonNull @Override public NotificationListWithCount update(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,
@@ -402,6 +415,7 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         {
             case MOVIES:
                 return updateMovies(writableDb,
+                        uri,
                         values,
                         selection,
                         selectionArgs);
@@ -416,17 +430,20 @@ public class MovieProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int updateMovies(
+    @NonNull public NotificationListWithCount updateMovies(
             @NonNull SQLiteDatabase writableDb,
+            @NonNull Uri uri,
             @Nullable ContentValues values,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
     {
-        return writableDb.update(MovieContract.TABLE_NAME,
-                values, selection, selectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.update(MovieContract.TABLE_NAME,
+                        values, selection, selectionArgs));
     }
 
-    public int updateMovieById(
+    @NonNull public NotificationListWithCount updateMovieById(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,
@@ -445,10 +462,12 @@ public class MovieProviderDelegate implements EntityProviderDelegate
             }
         }
         newSelectionArgs[i] = id;
-        return writableDb.update(
-                MovieContract.TABLE_NAME,
-                values,
-                selection == null ? newSelection : selection + " AND " + newSelection,
-                newSelectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.update(
+                    MovieContract.TABLE_NAME,
+                    values,
+                    selection == null ? newSelection : selection + " AND " + newSelection,
+                    newSelectionArgs));
     }
 }

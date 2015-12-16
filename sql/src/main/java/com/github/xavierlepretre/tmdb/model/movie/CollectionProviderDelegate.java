@@ -11,6 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.xavierlepretre.tmdb.model.EntityProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListInsert;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListWithCount;
+
+import java.util.Collections;
 
 public class CollectionProviderDelegate implements EntityProviderDelegate
 {
@@ -157,7 +161,7 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         return uri.getPathSegments().get(1);
     }
 
-    @Override @Nullable public Uri insert(
+    @NonNull @Override public NotificationListInsert insert(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values)
@@ -176,15 +180,16 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
                         INDEX_INSERT_RESOLVE_CONFLICT_REPLACE);
                 if (id <= 0)
                 {
-                    return null;
+                    return new NotificationListInsert(Collections.<Uri>emptyList(), null);
                 }
-                return buildCollectionLocation(id);
+                Uri inserted = buildCollectionLocation(id);
+                return new NotificationListInsert(Collections.singleton(inserted), inserted);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
 
-    @Override public int bulkInsert(
+    @NonNull @Override public NotificationListWithCount bulkInsert(
             @NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @NonNull ContentValues[] values)
     {
         switch (uriMatcher.match(uri))
@@ -217,7 +222,7 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
                 {
                     writableDb.endTransaction();
                 }
-                return returnCount;
+                return new NotificationListWithCount(Collections.singleton(uri), returnCount);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -249,7 +254,7 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
                 .build();
     }
 
-    @Override public int delete(
+    @NonNull @Override public NotificationListWithCount delete(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
@@ -259,6 +264,7 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         {
             case COLLECTIONS:
                 return deleteCollections(writableDb,
+                        uri,
                         selection,
                         selectionArgs);
             case COLLECTION_BY_ID:
@@ -271,15 +277,18 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int deleteCollections(
+    @NonNull public NotificationListWithCount deleteCollections(
             @NonNull SQLiteDatabase writableDb,
+            @NonNull Uri uri,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
     {
-        return writableDb.delete(CollectionContract.TABLE_NAME, selection, selectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.delete(CollectionContract.TABLE_NAME, selection, selectionArgs));
     }
 
-    public int deleteCollectionById(
+    @NonNull public NotificationListWithCount deleteCollectionById(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable String selection,
@@ -297,13 +306,15 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
             }
         }
         newSelectionArgs[i] = id;
-        return writableDb.delete(
-                CollectionContract.TABLE_NAME,
-                selection == null ? newSelection : selection + " AND " + newSelection,
-                newSelectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.delete(
+                        CollectionContract.TABLE_NAME,
+                        selection == null ? newSelection : selection + " AND " + newSelection,
+                        newSelectionArgs));
     }
 
-    @Override public int update(
+    @NonNull @Override public NotificationListWithCount update(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,
@@ -314,6 +325,7 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         {
             case COLLECTIONS:
                 return updateCollections(writableDb,
+                        uri,
                         values,
                         selection,
                         selectionArgs);
@@ -328,17 +340,20 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
         }
     }
 
-    public int updateCollections(
+    @NonNull public NotificationListWithCount updateCollections(
             @NonNull SQLiteDatabase writableDb,
+            @NonNull Uri uri,
             @Nullable ContentValues values,
             @Nullable String selection,
             @Nullable String[] selectionArgs)
     {
-        return writableDb.update(CollectionContract.TABLE_NAME,
-                values, selection, selectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.update(CollectionContract.TABLE_NAME,
+                        values, selection, selectionArgs));
     }
 
-    public int updateCollectionById(
+    @NonNull public NotificationListWithCount updateCollectionById(
             @NonNull SQLiteDatabase writableDb,
             @NonNull Uri uri,
             @Nullable ContentValues values,
@@ -357,10 +372,12 @@ public class CollectionProviderDelegate implements EntityProviderDelegate
             }
         }
         newSelectionArgs[i] = id;
-        return writableDb.update(
-                CollectionContract.TABLE_NAME,
-                values,
-                selection == null ? newSelection : selection + " AND " + newSelection,
-                newSelectionArgs);
+        return new NotificationListWithCount(
+                Collections.singleton(uri),
+                writableDb.update(
+                        CollectionContract.TABLE_NAME,
+                        values,
+                        selection == null ? newSelection : selection + " AND " + newSelection,
+                        newSelectionArgs));
     }
 }

@@ -1,5 +1,8 @@
 package com.github.xavierlepretre.tmdb.model;
 
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListInsert;
+import com.github.xavierlepretre.tmdb.model.notify.NotificationListWithCount;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -8,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.util.SparseArray;
 
@@ -79,9 +83,9 @@ public class TmdbContentProviderTest
         uriMatcher.addURI("authority", "second", 20);
         uriMatcher.addURI("authority", "third", 30);
         delegates = new SparseArray<>();
-        delegates.put(10, mock(EntityProviderDelegate.class));
-        delegates.put(20, mock(EntityProviderDelegate.class));
-        delegates.put(30, mock(EntityProviderDelegate.class));
+        delegates.put(10, spy(new FakeEntityProviderDelegate()));
+        delegates.put(20, spy(new FakeEntityProviderDelegate()));
+        delegates.put(30, spy(new FakeEntityProviderDelegate()));
         helpers = new SparseArray<>();
         contentProvider = spy(new TmdbContentProvider(uriMatcher, delegates, helpers));
         doReturn(dbHelper).when(contentProvider).createHelper(any(Context.class));
@@ -241,5 +245,47 @@ public class TmdbContentProviderTest
                 eq(new String[]{"b"}));
 
         verifyNonMatchesAreNotCalled();
+    }
+
+    public static class FakeEntityProviderDelegate implements EntityProviderDelegate
+    {
+        @Override public void registerWith(@NonNull UriMatcher uriMatcher, int outsideMatch)
+        {
+        }
+
+        @Nullable @Override public String getType(@NonNull Uri uri)
+        {
+            return null;
+        }
+
+        @Nullable @Override
+        public Cursor query(@NonNull SQLiteDatabase readableDb, @NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String groupBy, @Nullable String having, @Nullable String sortOrder, @Nullable String limit)
+        {
+            return null;
+        }
+
+        @NonNull @Override
+        public NotificationListInsert insert(@NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @Nullable ContentValues values)
+        {
+            return mock(NotificationListInsert.class);
+        }
+
+        @NonNull @Override
+        public NotificationListWithCount bulkInsert(@NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @NonNull ContentValues[] values)
+        {
+            return mock(NotificationListWithCount.class);
+        }
+
+        @NonNull @Override
+        public NotificationListWithCount delete(@NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs)
+        {
+            return mock(NotificationListWithCount.class);
+        }
+
+        @NonNull @Override
+        public NotificationListWithCount update(@NonNull SQLiteDatabase writableDb, @NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs)
+        {
+            return mock(NotificationListWithCount.class);
+        }
     }
 }
