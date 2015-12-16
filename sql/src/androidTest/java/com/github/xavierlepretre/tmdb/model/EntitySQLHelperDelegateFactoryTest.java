@@ -19,7 +19,7 @@ public class EntitySQLHelperDelegateFactoryTest
 
         SparseArray<EntitySQLHelperDelegate> sqlHelpers = factory.createHelpers();
 
-        int expectedSize = 7;
+        int expectedSize = 8;
         assertThat(sqlHelpers.size()).isEqualTo(expectedSize);
 
         Set<Class<? extends EntitySQLHelperDelegate>> classes = new HashSet<>();

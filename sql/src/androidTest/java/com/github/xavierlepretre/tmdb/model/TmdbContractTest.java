@@ -52,6 +52,17 @@ public class TmdbContractTest
     }
 
     @Test
+    public void buildUriMovieGenre_isCorrect() throws Exception
+    {
+        assertThat(TmdbContract.MovieGenreEntity.buildMovieGenreUri(new GenreId(32), new MovieId(31)))
+                .isEqualTo(Uri.parse("content://com.github.xavierlepretre.tmdb/genre/32/movie/31"));
+        assertThat(TmdbContract.MovieGenreEntity.buildMovieGenreUri(new GenreId(32)))
+                .isEqualTo(Uri.parse("content://com.github.xavierlepretre.tmdb/genre/32/movie"));
+        assertThat(TmdbContract.MovieGenreEntity.buildMovieGenreUri(new MovieId(32)))
+                .isEqualTo(Uri.parse("content://com.github.xavierlepretre.tmdb/movie/32/genre"));
+    }
+
+    @Test
     public void buildUriProductionCompany_isCorrect() throws Exception
     {
         assertThat(TmdbContract.ProductionCompanyEntity.buildUri(new ProductionCompanyId(32)))

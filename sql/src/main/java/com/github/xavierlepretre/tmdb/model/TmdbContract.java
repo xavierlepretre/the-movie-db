@@ -14,6 +14,8 @@ import com.github.xavierlepretre.tmdb.model.movie.GenreContract;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.MovieContract;
+import com.github.xavierlepretre.tmdb.model.movie.MovieGenreContract;
+import com.github.xavierlepretre.tmdb.model.movie.MovieGenreProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.MovieId;
 import com.github.xavierlepretre.tmdb.model.movie.MovieProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyContract;
@@ -88,6 +90,32 @@ public class TmdbContract
         @NonNull public static Uri buildCollectionMoviesUri(@NonNull CollectionId collectionId)
         {
             return MovieProviderDelegate.buildCollectionMoviesLocation(CollectionEntity.CONTENT_URI, collectionId);
+        }
+    }
+
+    public static final class MovieGenreEntity extends MovieGenreContract
+    {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
+
+        public static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH;
+
+        @NonNull public static Uri buildMovieGenreUri(@NonNull GenreId genreId, @NonNull MovieId movieId)
+        {
+            return MovieGenreProviderDelegate.buildMovieGenreLocation(GenreEntity.CONTENT_URI, genreId, movieId);
+        }
+
+        @NonNull public static Uri buildMovieGenreUri(@NonNull GenreId genreId)
+        {
+            return MovieGenreProviderDelegate.buildMovieGenreLocation(GenreEntity.CONTENT_URI, genreId);
+        }
+
+        @NonNull public static Uri buildMovieGenreUri(@NonNull MovieId movieId)
+        {
+            return MovieGenreProviderDelegate.buildMovieGenreLocation(MovieEntity.CONTENT_URI, movieId);
         }
     }
 

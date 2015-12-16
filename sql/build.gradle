@@ -35,6 +35,7 @@ dependencies {
     testCompile "junit:junit:$JUNIT"
     testCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"
     testCompile "org.mockito:mockito-core:$MOCKITO"
+    testCompile "nl.jqno.equalsverifier:equalsverifier:$EQUALS_VERIFIER"
 
     androidTestCompile "junit:junit:$JUNIT"
     androidTestCompile "org.easytesting:fest-assert-core:$FEST_ASSERT"

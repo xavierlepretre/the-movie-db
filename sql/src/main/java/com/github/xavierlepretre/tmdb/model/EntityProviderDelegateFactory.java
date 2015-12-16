@@ -14,6 +14,7 @@ import com.github.xavierlepretre.tmdb.model.conf.ConfigurationProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.i18n.SpokenLanguageProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.CollectionProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.GenreProviderDelegate;
+import com.github.xavierlepretre.tmdb.model.movie.MovieGenreProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.movie.MovieProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCompanyProviderDelegate;
 import com.github.xavierlepretre.tmdb.model.production.ProductionCountryProviderDelegate;
@@ -24,9 +25,10 @@ public class EntityProviderDelegateFactory
     static final int CONFIGURATION_PROVIDER = 101;
     static final int GENRE_PROVIDER = 102;
     static final int MOVIE_PROVIDER = 103;
-    static final int PRODUCTION_COMPANY_PROVIDER = 104;
-    static final int PRODUCTION_COUNTRY_PROVIDER = 105;
-    static final int SPOKEN_LANGUAGE_PROVIDER = 106;
+    static final int MOVIE_GENRE_PROVIDER = 104;
+    static final int PRODUCTION_COMPANY_PROVIDER = 105;
+    static final int PRODUCTION_COUNTRY_PROVIDER = 106;
+    static final int SPOKEN_LANGUAGE_PROVIDER = 107;
 
     @NonNull public SparseArray<EntityProviderDelegate> createProviders()
     {
@@ -35,6 +37,7 @@ public class EntityProviderDelegateFactory
         created.put(CONFIGURATION_PROVIDER, createConfigurationProvider());
         created.put(GENRE_PROVIDER, createGenreProvider());
         created.put(MOVIE_PROVIDER, createMovieProvider());
+        created.put(MOVIE_GENRE_PROVIDER, createMovieGenreProvider());
         created.put(PRODUCTION_COMPANY_PROVIDER, createProductionCompanyProvider());
         created.put(PRODUCTION_COUNTRY_PROVIDER, createProductionCountryProvider());
         created.put(SPOKEN_LANGUAGE_PROVIDER, createSpokenLanguageProvider());
@@ -75,6 +78,19 @@ public class EntityProviderDelegateFactory
                 CollectionEntity.CONTENT_URI,
                 MovieEntity.CONTENT_DIR_TYPE,
                 MovieEntity.CONTENT_ITEM_TYPE);
+    }
+
+    @NonNull protected MovieGenreProviderDelegate createMovieGenreProvider()
+    {
+        return new MovieGenreProviderDelegate(
+                TmdbContract.CONTENT_AUTHORITY,
+                TmdbContract.MovieGenreEntity.CONTENT_URI,
+                TmdbContract.MovieGenreEntity.CONTENT_DIR_TYPE,
+                TmdbContract.MovieGenreEntity.CONTENT_ITEM_TYPE,
+                GenreEntity.CONTENT_URI,
+                GenreEntity.CONTENT_DIR_TYPE,
+                MovieEntity.CONTENT_URI,
+                MovieEntity.CONTENT_DIR_TYPE);
     }
 
     @NonNull protected ProductionCompanyProviderDelegate createProductionCompanyProvider()

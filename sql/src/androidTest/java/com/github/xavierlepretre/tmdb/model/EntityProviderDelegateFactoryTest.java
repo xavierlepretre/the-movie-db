@@ -20,7 +20,7 @@ public class EntityProviderDelegateFactoryTest
 
         SparseArray<EntityProviderDelegate> created = factory.createProviders();
 
-        int expectedSize = 7;
+        int expectedSize = 8;
         assertThat(created.size()).isEqualTo(expectedSize);
         verify(factory).createCollectionProvider();
         verify(factory).createConfigurationProvider();
