@@ -3,6 +3,8 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.HasBackdropPathDTO;
+import com.github.xavierlepretre.tmdb.model.image.HasPosterPathDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.neovisionaries.i18n.LanguageCode;
 
@@ -10,7 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class MovieShortDTO
+public class MovieShortDTO implements HasBackdropPathDTO, HasPosterPathDTO
 {
     @NonNull private final Boolean adult;
     @NonNull private final ImagePath backdropPath;
@@ -78,7 +80,7 @@ public class MovieShortDTO
         return adult;
     }
 
-    @NonNull public ImagePath getBackdropPath()
+    @NonNull @Override public ImagePath getBackdropPath()
     {
         return backdropPath;
     }
@@ -118,7 +120,7 @@ public class MovieShortDTO
         return popularity;
     }
 
-    @NonNull public ImagePath getPosterPath()
+    @NonNull @Override public ImagePath getPosterPath()
     {
         return posterPath;
     }

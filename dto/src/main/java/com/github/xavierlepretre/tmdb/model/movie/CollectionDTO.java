@@ -3,9 +3,10 @@ package com.github.xavierlepretre.tmdb.model.movie;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.HasBackdropPathDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
-public class CollectionDTO
+public class CollectionDTO implements HasBackdropPathDTO
 {
     @NonNull private final ImagePath backdropPath;
     @NonNull private final CollectionId id;
@@ -24,7 +25,7 @@ public class CollectionDTO
         this.posterPath = posterPath;
     }
 
-    @NonNull public ImagePath getBackdropPath()
+    @NonNull @Override public ImagePath getBackdropPath()
     {
         return backdropPath;
     }

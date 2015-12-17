@@ -3,10 +3,11 @@ package com.github.xavierlepretre.tmdb.model.tag;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.HasPosterPathDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 import com.neovisionaries.i18n.LanguageCode;
 
-public class ListDTO
+public class ListDTO implements HasPosterPathDTO
 {
     @NonNull private final String description;
     private final int favoriteCount;
@@ -64,7 +65,7 @@ public class ListDTO
         return name;
     }
 
-    @NonNull public ImagePath getPosterPath()
+    @NonNull @Override public ImagePath getPosterPath()
     {
         return posterPath;
     }

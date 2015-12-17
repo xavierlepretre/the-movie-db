@@ -3,9 +3,10 @@ package com.github.xavierlepretre.tmdb.model.people;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.HasProfilePathDTO;
 import com.github.xavierlepretre.tmdb.model.image.ImagePath;
 
-public class PersonDTO
+public class PersonDTO implements HasProfilePathDTO
 {
     @NonNull private final CreditId creditId;
     @NonNull private final PersonId id;
@@ -39,7 +40,7 @@ public class PersonDTO
         return name;
     }
 
-    @NonNull public ImagePath getProfilePath()
+    @NonNull @Override public ImagePath getProfilePath()
     {
         return profilePath;
     }
