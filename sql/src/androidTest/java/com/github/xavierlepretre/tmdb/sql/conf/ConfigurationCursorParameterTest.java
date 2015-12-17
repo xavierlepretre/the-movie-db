@@ -7,7 +7,7 @@ import com.github.xavierlepretre.tmdb.model.conf.ChangeKey;
 import com.github.xavierlepretre.tmdb.model.conf.Configuration;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
-import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

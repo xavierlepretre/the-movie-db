@@ -14,8 +14,8 @@ import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContentValuesFacto
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationDTO;
-import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
 import com.github.xavierlepretre.tmdb.model.conf.ImagesConfDTO;
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
 import com.github.xavierlepretre.tmdb.net.TmdbService;
 import com.github.xavierlepretre.tmdb.sync.TmdbSyncConstants;
 import com.neovisionaries.i18n.LanguageCode;

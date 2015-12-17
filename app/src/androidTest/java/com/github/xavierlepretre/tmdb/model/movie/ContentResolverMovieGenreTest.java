@@ -680,7 +680,7 @@ public class ContentResolverMovieGenreTest
 
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
-        assertThat(observer.changedSet).containsExactly(
+        assertThat(observer.changedSet).containsOnly(
                 MovieGenreEntity.CONTENT_URI,
                 MovieGenreEntity.buildMovieGenreUri(new GenreId(2)),
                 MovieGenreEntity.buildMovieGenreUri(new MovieId(1)),
@@ -717,7 +717,7 @@ public class ContentResolverMovieGenreTest
 
         deliverSignal.await(5, TimeUnit.SECONDS);
         assertThat(deliverSignal.getCount()).isEqualTo(0);
-        assertThat(observer.changedSet).containsExactly(
+        assertThat(observer.changedSet).containsOnly(
                 MovieGenreEntity.CONTENT_URI,
                 MovieGenreEntity.buildMovieGenreUri(new GenreId(2)),
                 MovieGenreEntity.buildMovieGenreUri(new GenreId(4)),

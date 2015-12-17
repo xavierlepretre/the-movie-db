@@ -6,11 +6,11 @@ import android.support.test.InstrumentationRegistry;
 
 import com.github.xavierlepretre.tmdb.model.conf.ChangeKey;
 import com.github.xavierlepretre.tmdb.model.conf.Configuration;
-import com.github.xavierlepretre.tmdb.model.conf.ImageSize;
-import com.github.xavierlepretre.tmdb.sql.EntitySQLiteOpenHelper;
-import com.github.xavierlepretre.tmdb.sql.ParameterColumnValue;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
+import com.github.xavierlepretre.tmdb.sql.EntitySQLiteOpenHelper;
+import com.github.xavierlepretre.tmdb.sql.ParameterColumnValue;
 
 import org.junit.After;
 import org.junit.Before;

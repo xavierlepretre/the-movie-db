@@ -1,4 +1,4 @@
-package com.github.xavierlepretre.tmdb.model.conf;
+package com.github.xavierlepretre.tmdb.model.image;
 
 import org.junit.Test;
 

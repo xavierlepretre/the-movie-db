@@ -2,6 +2,8 @@ package com.github.xavierlepretre.tmdb.model.conf;
 
 import android.support.annotation.Nullable;
 
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
+
 import java.util.Collections;
 import java.util.List;
 

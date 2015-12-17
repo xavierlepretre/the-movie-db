@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.conf;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
 
 import java.util.Collections;
 import java.util.List;

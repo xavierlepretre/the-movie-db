@@ -3,6 +3,7 @@ package com.github.xavierlepretre.tmdb.model.conf;
 import android.content.ContentValues;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -8,8 +8,8 @@ import com.github.xavierlepretre.tmdb.model.conf.ChangeKeyList;
 import com.github.xavierlepretre.tmdb.model.conf.Configuration;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
-import com.github.xavierlepretre.tmdb.model.conf.ImageSizeList;
 import com.github.xavierlepretre.tmdb.model.conf.ImagesConf;
+import com.github.xavierlepretre.tmdb.model.image.ImageSizeList;
 
 public class ConfigurationCursor extends CursorWrapper
 {

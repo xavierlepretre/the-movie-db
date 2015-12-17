@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.conf;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.xavierlepretre.tmdb.model.image.ImageSize;
 
 import org.junit.Before;
 import org.junit.Rule;

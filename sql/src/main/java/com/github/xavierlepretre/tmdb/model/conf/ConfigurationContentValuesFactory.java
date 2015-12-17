@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
+import com.github.xavierlepretre.tmdb.model.image.ImageSizeList;
 
 public class ConfigurationContentValuesFactory
 {
