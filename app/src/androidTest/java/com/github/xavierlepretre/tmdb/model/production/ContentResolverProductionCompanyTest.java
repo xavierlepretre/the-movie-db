@@ -11,6 +11,7 @@ import android.support.test.InstrumentationRegistry;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCompanyEntity;
+import com.github.xavierlepretre.tmdb.sql.production.ProductionCompanyCursor;
 
 import org.junit.After;
 import org.junit.Before;

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.xavierlepretre.tmdb.controller.CursorRecyclerViewAdapter;
-import com.github.xavierlepretre.tmdb.model.movie.GenreCursor;
+import com.github.xavierlepretre.tmdb.sql.movie.GenreCursor;
 
 public class GenreAdapter extends CursorRecyclerViewAdapter<GenreItemViewHolder>
 {

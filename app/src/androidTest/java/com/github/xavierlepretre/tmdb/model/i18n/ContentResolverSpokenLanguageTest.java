@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.SpokenLanguageEntity;
+import com.github.xavierlepretre.tmdb.sql.i18n.SpokenLanguageCursor;
 import com.neovisionaries.i18n.LanguageCode;
 
 import org.junit.After;

@@ -12,6 +12,7 @@ import android.support.test.InstrumentationRegistry;
 import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ConfigurationEntity;
 import com.github.xavierlepretre.tmdb.model.conf.ConfigurationContract.ImagesConfSegment;
+import com.github.xavierlepretre.tmdb.sql.conf.ConfigurationCursor;
 
 import org.junit.After;
 import org.junit.Before;

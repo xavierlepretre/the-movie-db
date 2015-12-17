@@ -12,6 +12,7 @@ import android.support.test.InstrumentationRegistry;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.CollectionEntity;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.MovieEntity;
+import com.github.xavierlepretre.tmdb.sql.movie.MovieCursor;
 
 import org.junit.After;
 import org.junit.Before;

@@ -2,6 +2,7 @@ package com.github.xavierlepretre.tmdb.model.production;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.ProductionCountryEntity;
+import com.github.xavierlepretre.tmdb.sql.production.ProductionCountryCursor;
 import com.neovisionaries.i18n.CountryCode;
 
 import org.junit.After;

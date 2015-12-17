@@ -2,9 +2,9 @@ package com.github.xavierlepretre.tmdb.controller.genre;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 import com.github.xavierlepretre.tmdb.model.TmdbContract;
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
 import com.github.xavierlepretre.tmdb.model.movie.GenreContract;
-import com.github.xavierlepretre.tmdb.model.movie.GenreCursor;
 import com.github.xavierlepretre.tmdb.model.movie.GenreId;
+import com.github.xavierlepretre.tmdb.sql.movie.GenreCursor;
 import com.github.xavierlepretre.tmdb.themoviedblibrary.R;
 
 public class GenreActivityFragment extends Fragment

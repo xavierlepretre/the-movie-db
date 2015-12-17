@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 
 import com.github.xavierlepretre.tmdb.model.TmdbContract.GenreEntity;
+import com.github.xavierlepretre.tmdb.sql.movie.GenreCursor;
 
 import org.junit.After;
 import org.junit.Before;
